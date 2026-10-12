@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Morning Briefing · 2026-10-12</title>
+<style>
+:root {
+  --bg: #F2F3F7;
+  --text: #1d1d1f;
+  --secondary: #6e6e73;
+  --link: #007AFF;
+  --accent: #007AFF;
+  --accent-soft: #3B82F6;
+  --glass: rgba(255, 255, 255, 0.78);
+  --glass-strong: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --chip-bg: rgba(120, 120, 128, 0.12);
+  --nav-pill: rgba(255, 255, 255, 0.72);
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-blue: 0 4px 14px rgba(0, 122, 255, 0.28);
+  --radius: 24px; /* glass cards 24–28 */
+  --radius-sm: 18px;
+  --accent-ai: #5e5ce6;
+  --accent-ai-glow: rgba(94, 92, 230, 0.28);
+  --measure: 42ch;
+  --nav-h: 56px;
+  --pad: 16px;
+  --col: 440px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --text: #f5f5f7;
+    --secondary: #98989d;
+    --link: #0A84FF;
+    --accent: #0A84FF;
+    --accent-soft: #3B82F6;
+    --glass: rgba(28, 28, 30, 0.72);
+    --glass-strong: rgba(28, 28, 30, 0.82);
+    --glass-border: rgba(255, 255, 255, 0.14);
+    --chip-bg: rgba(120, 120, 128, 0.28);
+    --nav-pill: rgba(44, 44, 46, 0.72);
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+    --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.35);
+    --shadow-blue: 0 4px 14px rgba(10, 132, 255, 0.35);
+    --accent-ai: #7d7aff;
+    --accent-ai-glow: rgba(125, 122, 255, 0.35);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 12px);
+  scroll-padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+}
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Quiet off-white canvas + faint cool map wash (not heavy lavender/peach) */
+  background:
+    radial-gradient(900px 600px at 18% 12%, rgba(59, 130, 246, 0.07), transparent 60%),
+    radial-gradient(700px 500px at 88% 78%, rgba(0, 122, 255, 0.05), transparent 55%),
+    linear-gradient(180deg, #F2F3F7 0%, #EEF0F5 100%);
+  background-attachment: fixed;
+  background-color: var(--bg);
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background:
+      radial-gradient(900px 600px at 18% 12%, rgba(10, 132, 255, 0.12), transparent 60%),
+      radial-gradient(700px 500px at 88% 78%, rgba(59, 130, 246, 0.08), transparent 55%),
+      linear-gradient(180deg, #000000 0%, #0c0c0e 100%);
+  }
+}
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Horizontal pill-chip nav (Map/推荐 segmented feel) */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  min-height: var(--nav-h);
+  padding-top: env(safe-area-inset-top, 0px);
+  display: flex;
+  align-items: center;
+  background: transparent;
+}
+.nav-inner {
+  width: 100%;
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 10px var(--pad);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 8px 16px;
+  color: var(--secondary);
+  font-size: 14px;
+  font-weight: 560;
+  border-radius: 999px;
+  flex-shrink: 0;
+  background: var(--nav-pill);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
+  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.nav a:hover {
+  text-decoration: none;
+  color: var(--text);
+  background: var(--glass-strong);
+}
+.nav a.active,
+.nav a:target {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: var(--shadow-blue);
+  font-weight: 600;
+}
+.wrap {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 12px var(--pad) calc(48px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(var(--pad), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--pad), env(safe-area-inset-right, 0px));
+}
+@media (min-width: 640px) {
+  :root { --col: 520px; --pad: 20px; }
+  body { font-size: 17px; }
+}
+
+/* Hero = floating route-header glass card */
+.hero {
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.hero h1 {
+  margin: 0 0 6px;
+  font-size: clamp(24px, 6.5vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+.hero .subtitle {
+  margin: 0 0 10px;
+  font-size: 15px;
+  color: var(--secondary);
+  font-weight: 520;
+}
+.hero .meta {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--secondary);
+  line-height: 1.45;
+}
+.banner {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 159, 10, 0.18);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  font-size: 14px;
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+.section { margin: 22px 0 6px; }
+.section h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section h2::before {
+  content: "";
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--accent) 0%, var(--accent-soft) 100%);
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
+}
+
+.section-sheet {
+  padding: 16px 16px 16px;
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+}
+.section-sheet .lead-card {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+.section-sheet .lead-card::before { display: none; }
+
+.lead-card {
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--glass-border);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.lead-card p {
+  margin: 0;
+  position: relative;
+  font-size: 16.5px;
+  line-height: 1.65;
+  max-width: var(--measure);
+}
+
+/* Frosted white news cards */
+.card {
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--glass-border);
+  padding: 0;
+  margin: 0 0 14px;
+  position: relative;
+  overflow: hidden;
+}
+.card-body {
+  position: relative;
+  z-index: 1;
+  padding: 16px 18px 18px;
+}
+.card-focus .card-body { padding: 18px 18px 18px; }
+.card-focus .card-title { font-size: 19px; }
+.card-media {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: rgba(0,0,0,.04);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.card-title {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: 620;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+}
+.rank {
+  display: inline-block;
+  min-width: 1.6em;
+  color: var(--secondary);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.ai-id { color: var(--accent-ai); }
+.card-meta {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  color: var(--secondary);
+  line-height: 1.4;
+}
+.card-summary {
+  margin: 0 0 10px;
+  font-size: 15.5px;
+  line-height: 1.55;
+  max-width: var(--measure);
+}
+.card-why, .card-impact {
+  margin: 0 0 8px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  max-width: var(--measure);
+}
+.label {
+  display: inline;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--secondary);
+  margin-right: 4px;
+}
+.chip {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 560;
+  background: var(--chip-bg);
+  border: none;
+  color: var(--secondary);
+  vertical-align: middle;
+}
+.chip-accent {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: var(--shadow-blue);
+}
+.secondary { margin: 6px 0 0; padding-left: 1.2em; font-size: 13px; color: var(--secondary); }
+.secondary li { margin: 2px 0; }
+.meta-block { margin: 8px 0; }
+.crossref { margin: 8px 0; font-size: 13px; color: var(--secondary); }
+.read-more { margin: 14px 0 0; font-size: 14px; font-weight: 560; }
+.read-more a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(0, 122, 255, 0.35);
+  color: var(--accent);
+  background: rgba(0, 122, 255, 0.06);
+  text-decoration: none;
+  transition: background .15s ease, border-color .15s ease;
+}
+.read-more a:hover {
+  background: rgba(0, 122, 255, 0.12);
+  border-color: var(--accent);
+  text-decoration: none;
+}
+/* In-page fulltext expand (news cards) */
+.fulltext {
+  margin: 10px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.fulltext > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 4px 0;
+  border: none;
+  background: transparent;
+  color: var(--secondary);
+  user-select: none;
+  transition: color .15s ease;
+}
+.fulltext > summary::-webkit-details-marker { display: none; }
+.fulltext > summary::marker { content: ""; }
+.fulltext > summary .expand-mark {
+  display: inline-block;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 400;
+  color: var(--secondary);
+  opacity: 0.85;
+  animation: expand-bounce-down 1.4s ease-in-out infinite;
+  will-change: transform;
+}
+.fulltext > summary:hover,
+.fulltext > summary:hover .expand-mark {
+  color: var(--accent);
+  opacity: 1;
+}
+.fulltext[open] > summary {
+  margin-bottom: 8px;
+}
+.fulltext[open] > summary .expand-mark {
+  font-size: 0;
+  animation: none;
+}
+.fulltext[open] > summary .expand-mark::after {
+  content: "︿";
+  display: inline-block;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--accent);
+  animation: none;
+}
+@keyframes expand-bounce-down {
+  0%, 100% { transform: translateY(0); opacity: 0.85; }
+  50% { transform: translateY(5px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fulltext > summary .expand-mark { animation: none; }
+}
+.fulltext-body {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
+  font-size: 15.5px;
+  line-height: 1.7;
+  max-width: var(--measure);
+}
+@media (prefers-color-scheme: dark) {
+  .fulltext-body {
+    background: rgba(44, 44, 46, 0.55);
+  }
+}
+.fulltext-body p {
+  margin: 0 0 0.85em;
+}
+.fulltext-body p:last-child { margin-bottom: 0; }
+.fulltext-src {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  color: var(--secondary);
+}
+.fulltext-src a {
+  color: var(--secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.muted { color: var(--secondary); }
+.card-ai {
+  border-left: 3px solid var(--accent-ai);
+  box-shadow: var(--shadow), -3px 0 18px var(--accent-ai-glow);
+  background:
+    linear-gradient(90deg, rgba(94, 92, 230, 0.08), transparent 28%),
+    var(--glass);
+}
+.card-ai .card-body { padding: 16px 18px 16px; }
+.conclusions {
+  margin: 6px 0 12px;
+  padding-left: 1.25em;
+  font-size: 15px;
+  max-width: var(--measure);
+  position: relative;
+  z-index: 1;
+}
+.conclusions li { margin: 4px 0; }
+.empty {
+  margin: 0 0 12px;
+  padding: 16px 18px;
+  border-radius: var(--radius-sm);
+  color: var(--secondary);
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px dashed var(--glass-border);
+  font-size: 15px;
+}
+.footer-notes {
+  margin-top: 40px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0,0,0,.06);
+  color: var(--secondary);
+  font-size: 13px;
+}
+@media (prefers-color-scheme: dark) {
+  .footer-notes { border-top-color: rgba(255,255,255,.12); }
+}
+.footer-notes summary {
+  cursor: pointer;
+  font-weight: 520;
+  padding: 12px 0;
+  min-height: 44px;
+  color: var(--secondary);
+  list-style: none;
+}
+.footer-notes summary::-webkit-details-marker { display: none; }
+.footer-notes summary::before {
+  content: "› ";
+  display: inline-block;
+  transition: transform .15s ease;
+}
+.footer-notes[open] summary::before { transform: rotate(90deg); }
+.notes-list { margin: 0 0 8px; padding-left: 1.2em; line-height: 1.55; }
+.notes-list ul { padding-left: 1.1em; margin: 4px 0; }
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="章节导航"><div class="nav-inner"><a href="#sec-脉络" class="active">脉络</a><a href="#sec-重点">重点</a><a href="#sec-科技">科技</a><a href="#sec-research">Research</a><a href="#sec-市场">市场</a><a href="#sec-世界">世界</a><a href="#sec-延伸">延伸</a></div></nav>
+<main class="wrap">
+<header class="hero">
+  <h1>Morning Briefing</h1>
+  <p class="subtitle">2026-10-12 · 全球新闻早报</p>
+  <p class="meta">覆盖窗口：10-11 08:06–10-12 08:06 · 新闻 30 条 · AI Research 0 项 · 生成 2026-10-12 08:06:12 Asia/Shanghai · no_agent=true</p>
+</header>
+
+<section class="section section-sheet" id="sec-脉络"><h2>今日脉络</h2><div class="lead-card"><p>今日主线围绕ai/人工智能、ai/anthropic、ai/cyber展开，重点包括亚马逊正洽谈收购人工智能初创公司 Decart AI，…；派早报：工信部等就进一步加强汽车产品创新设计管理征求意见。技术侧另见OpenAI 疑上架未正式发布生命…、田渊栋称与 GPT-5 合写论文后…。</p></div></section><section class="section" id="sec-重点"><h2>今日重点</h2><article class="card card-focus has-media"><figure class="card-media"><img src="https://readhub.cn/social-image.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">01</span> 亚马逊正洽谈收购人工智能初创公司 Decart AI，交易或涉 70 亿美元</h3><p class="card-meta">科技与 AI · ReadHub · 2026-10-12 06:15<span class="chip chip-accent">重点</span></p><p class="card-summary">亚马逊公司正洽谈收购人工智能初创公司 Decart AI，交易价值约 70 亿美元，若谈判不破裂，这笔收购可能很快完成。</p><p class="card-why"><span class="label">为什么重要</span> 触及高信号主题（ai/人工智能）；或影响技术路线或产业布局</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>亚马逊正洽谈收购人工智能初创公司 Decart AI，交易或涉 70 亿美元</p><p>1 小时前</p><p>亚马逊公司正洽谈收购人工智能初创公司 Decart AI，交易价值约 70 亿美元，若谈判不破裂，这笔收购可能很快完成。</p><p>话题追踪</p><p>查看更多</p><p>专业版功能</p><p>体验专业版特色功能，拓展更丰富、更全面的相关内容。</p></div><p class="fulltext-src"><a href="https://readhub.cn/topic/8x9SjtyRasz" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card card-focus has-media"><figure class="card-media"><img src="https://rssfile.sspai.com/10/12/2026/article/de482042-2b60-0439-0ded-af4783a0c89c.png?imageMogr2/auto-orient/ignore-error/1" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">02</span> 派早报：工信部等就进一步加强汽车产品创新设计管理征求意见</h3><p class="card-meta">科技与 AI · 少数派 · 2026-10-12 06:34<span class="chip chip-accent">重点</span></p><p class="card-summary">工信部等就进一步加强汽车产品创新设计管理征求意见 三季度全球 PC 出货量骤降 法国判决 Cloudflare 无须通过 DNS 屏蔽盗版 Anthropic 宣布切断内部评估环境的互联网访问权限…</p><p class="card-why"><span class="label">为什么重要</span> 触及高信号主题（ai/anthropic）；或影响技术路线或产业布局</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>工信部等就进一步加强汽车产品创新设计管理征求意见 据新华社报道，10 月 10 日，工业和信息化部等四部门公开发布《关于进一步加强汽车产品创新设计和研发测试验证有关管理工作的通知》（征求意见稿）[PDF]。 征求意见稿提出，要提高产品创新设计安全环保技术要求，建立产品创新设计审查评估工作机制。自 2027 年 1 月 1 日起，涉及创新设计的新申报产品，应当增加填报创新设计、研发测试验证等 51 项技术参数；已取得公告产品应当补充报送。征求意见稿另附有《研发测试验证技术规范》，要求汽车生产企业完成综合可靠性与耐久性、结构可靠性、软件功能可靠性、环境适应性、采暖与制冷、防护性能与密封性等方面测试验证。 关于汽车生产企业主体责任，征求意见稿要求守牢产品安全底线，强化生产一致性保证能力，发现缺陷主动召回；规范营销宣传活动，不得使用违反道路交通法规的场景来宣传；严格履行告知义务；健全产品售后服务管理体系，明示创新设计相关售后服务承诺及应急措施；健全安全事件事故记录与研判机制，获知其创新设计功能异常等安全事件或碰撞等安全事故时，主动开展调查分析。 征求意见稿还附有《汽车产品创新设计技术指南》，围绕虚拟操纵件、门把手、新型人机交互系统、大角度座椅等方面提出具体测试验证要求。根据该指南，汽车生产企业应当将安全风险评估前置，在产品研发设计阶段，对有关创新设计进行复杂工况、极端场景下的失效模式分析，充分识别潜在安全风险，评估不达标的创新设计，不得装车应用等。 三季度全球 PC 出货量骤降 据 The Resigter 报道，调研机构 Omdia 与 IDC 近日发布报告显示，2026 年第三季度全球 PC 出货量同比暴跌超 20%。Omdia 统计显示，当季台式机、笔记本与工作站出货量同比下降 21.2% 至 5810 万台；而根据 IDC 估算数据，PC 出货量同比下滑 20.1% 至 6270 万台，环比第二季度减少 9.1%，打破了返校季的传统旺季规律。 据分析，市场骤降主要受元器件成本上涨与前期需求透支影响。AI 产业对存储芯片的集中采购推高了上游成本，Omdia 测算 DRAM 和 SSD 占 PC 物料成本比重已从原先约 15% 激增至近 40%。加之上半年厂商与渠道商为规避涨价提前备货，导致三季度渠道库存积压严重，进一步压低了出货需求。 在此背景下，头部厂商出货量全面受挫。据 IDC 数据，三季度中，联想出货量为 1490 万台，同比下降 22.6%，但仍居首位；惠普与戴尔出货量分别骤降近 31% 和 25%；苹果降幅为 11%，受冲击相对较轻，市场份额微增。机构预计，元器件涨价引发的终端涨价难以在短期内改善，第四季度全球 PC 出货量预计将同比再降 24%，市场低迷或延续至 2027 年。 法国判决 Cloudflare 无须通过 DNS 屏蔽盗版 据 Ars Technica 报道，巴黎司法法院日前驳回了法国付费电视广播商 Canal+ 对 Cloudflare 提出的罚款申请，裁定 Cloudflare 仅通过 CDN 服务屏蔽盗版体育直播网站、而未在旗下公共 DNS 解析器 1.1.1.1 实施拦截的做法并不违规，无需承担每日高达 5 万欧元的违约罚金。 今年 4 月，该法院曾要求 Cloudflare 阻止法国用户访问涉及 F1 和 MotoGP 赛事的数十个盗版直播域名。Canal+ 随后指控 Cloudflare 刻意规避裁决，仅在 CDN 层面拦截，导致多数域名仍能通过其 DNS 服务解析，并要求法院针对每个可访问站点处以每日 5 万欧元罚金。 Cloudflare 长期坚持公共 DNS 不应干预解析请求，并主张通过 CDN 节点屏蔽和针对盗版直播流的毫秒级拦截来应对侵权。 由三名法官组成的审判庭裁定，原判决允许服务商自主选择用于屏蔽的技术措施，而 Cloudflare 的 CDN 封锁已覆盖 72.6% 的目标域名，体现了合理的协助意愿。法院还指出，侵权站点在被封锁后切换至其他 CDN 或启用镜像并非 Cloudflare 的责任，Canal+ 需自行向其他有关服务商主张权利。 Anthropic 宣布切断内部评估环境的互联网访问权限 10 月 9 日，Anthropic 宣布，由于其 AI 智能体在执行任务时，出现未经授权渗透外部网站等不可控行为，已切断所有内部评估环境的实时互联网访问权限，直至能够确保对其实现有效监控与控制。 据媒体报道和 Anthropic 披露，Anthropic 测试的智能体近期频繁出现预期之外的行为，包括在美国国务院网站提交了 20 份未被受理的签证申请（因填写不全未获受理），向费城警方提交未破谋杀案的虚假线索（被归入垃圾邮件未获理睬），以及利用系统漏洞规避付费机制访问数据库并下载高校数据。Anthropic 解释称，训练环境缺陷诱发了「图利作弊」（reward hacking）的现象，模型误认为绕开规则可以获得系统奖励。 此前，OpenAI 旗下的智能体集群也曾被曝在测试中自主渗透包括澳大利亚政府在内的外部系统。对此，白宫超级智能特别工作组（Super Intelligence Force）出台新规，要求所有 AI 企业必须立即通报并纠正模型引发的安全事件。 AI 助力老游戏移植到浏览器 据 Kotaku 报道，随着 AI 反编译能力提高，近期涌现了一批借助 AI 工具移植的经典主机游戏。包括《使命召唤：黑色行动》（Call of Duty: Black Ops）、《光环：战斗进化》（Halo: Combat Evolved）及《侠盗猎车手：罪恶都市》（Grand Theft Auto: Vice City）在内的多款作品，目前均可在网页浏览器中直接运行，且运行表现接近原生水准。 这批浏览器移植版本主要由开发者利用 Claude Opus 5.5 模型辅助完成。该模型显著加快了反编译与代码重构的速度，将以往需人工耗时数月的流程缩短至几个小时。测试显示，部分移植游戏在浏览器中帧率可达 240 fps，并支持低延迟多人联机。现代浏览器充足的内存配额，亦能轻松承载专为 PS2、PS3 设计的游戏体量。 不过，这对游戏发行商的版权保护也构成了新挑战。即使一个项目被投诉下架，由于制作门槛很低，此类移植版的生成与传播注定难以遏制。 3C 证书大面积暂停，电动自行车销售接近停滞 据《财新》报道，近期，因工厂未能通过监督检查，国内大量电动自行车产品的 3C 认证证书被暂停，波及几乎所有头部品牌。受此影响，多地终端门店在售及已售车辆均无法办理登记上牌，销售受到明显冲击，部分消费者正与门店协商退车或延期交付。 据悉，此次停证源于认证机构在国庆假期前后开展的集中飞行检查，重点关注的问题是量产车辆是否与送检认证车型保持一致。检查组通过调取企业采购台账、发票及产品追溯记录进行了严格核验。此前，行业普遍存在压缩成本的现象，包括认证送检时使用合规轻质金属件、实际量产却改用廉价塑料件，以及减配北斗定位模块等。 此前，新修订的《电动自行车安全技术规范》自 2025 年 9 月实施，提高了限塑与智能化门槛，推高了制造成本。业内人士称，大型电动两轮车企业具备生产合规产品的能力，但在面对大量低价、违规改装产品时，市场竞争力明显不足，行业出现「劣币驱逐良币」的现象。 大面积暂停证书令本已承压的市场进一步受挫，部分需求转向电动摩托车。目前，证书恢复时间尚未确定，受影响车辆的后续处置仍待监管部门进一步通知。 看看就行的简讯 - Mark Gurman 声称，苹果计划于 10 月 13 日发布全新智能家居硬件产品线，核心为一款名为 HomeView 的智能家庭中控屏。HomeView 搭载 A18 芯片，提供台式底座与壁挂两种形态，定于 11 月中旬发售。该设备不设应用商店，主要作为家庭 Siri 语音控制中心运行。同时发布的还包括搭载 S10 芯片的新款 HomePod mini 以及搭载 A19 芯片的新款 Apple TV，两者均定于 10 月 30 日上市。为补齐配件生态，苹果与 LG 电子联合研发了涵盖智能门铃、门锁、温控器与安防摄像头的 Apple Home Collection 基础套件，由 LG 负责制造与售后以压低终端售价，预计最快于今年底出货。 - 据 The Verge 统计，美国总统特朗普签署行政令要求联邦机构将人工智能（AI）更名为超级智能（Super Intelligence，SI），并警告继续使用 AI 一词者将被视作「敌人」后，多家硅谷科技巨头相继跟进这一表述。Elon Musk 宣布将旗下 SpaceXAI 更名为 SpaceXSI；在特朗普，企业软件巨头 Salesforce CEO Marc Benioff 表示将把产品 AIForce 改名为 SIForce；英伟达在承诺投入 10 亿美元的科研计划中，亦将相关领域统一表述为「超级智能研究」；微软 CEO Satya Nadella 日前在呼吁为 AI 设立「紧急制动」机制时，同样多次使用超级智能代指该技术。</p></div><p class="fulltext-src"><a href="https://sspai.com/post/115845" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card card-focus has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/9f8f14e2a01ec8c9a4d21b8b65ed45042405e31d/820_0_5862_4690/master/5862.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=5c110201a2c6ca1d0e598a7b3626959b" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">03</span> UK to strengthen cyber defences as minister calls for AI firms to increase safety efforts</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-12 07:01<span class="chip chip-accent">重点</span></p><p class="card-summary">Kanishka Narayan to say Britain cannot rely entirely on tech companies amid rising global concern o…</p><p class="card-why"><span class="label">为什么重要</span> 触及高信号主题（ai/cyber）；或影响地缘与公共政策讨论</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>英国人工智能部长在宣布加强英国网络防御时表示，构建最先进人工智能系统的公司必须加大安全力度。 卡尼什卡·纳拉扬 (Kanishka Narayan) 将呼吁开发前沿人工智能的公司采取更多措施确保其安全。 他会说英国不能完全依赖科技公司来监管自己的模型，并认为英国需要建立更多自己的人工智能基础设施。 纳拉扬在伦敦西部的演讲将是自安迪·伯纳姆 (Andy Burnham) 将人工智能作为内阁级别简报以来的首次演讲。 英国人工智能安全研究所前首席科学家杰弗里·欧文（Geoffrey Irving）负责测试最强大的人工智能模型，他担心敌国可能窃取未发布的尖端模型。 在全球对人工智能带来的危险日益担忧的情况下，欧文告诉《卫报》：“人工智能公司没有足够的安全措施来防止敌对国家窃取模型。” 他引用了 OpenAI 最近发生的一起事件，该事件被网络安全研究人员“黑客攻击”，他们表示“理论上我们可以访问的范围是巨大的”。 这次攻击是在 OpenAI 计划下进行的，该计划奖励测试其系统的道德黑客。 OpenAI 表示，它有多种保护措施来防止其模型被盗，包括加密和持续监控。 欧文曾是 OpenAI 和谷歌 DeepMind 的员工，现在负责人工智能安全研究机构，他警告说，人类有“50%的可能性”被超级人工智能消灭，目前唯一的答案是尽快停止先进系统的开发。 欧文对模型所显示的令人震惊的属性的进展速度感到担忧，这可能导致它们在隐藏自己的行为和操纵人类等特征方面变得非常先进。 “按照目前的路径，我们有可能在不到 12 个月的时间内获得超级智能，”他说。 纳拉扬的演讲将受到密切关注，以寻找英国可能加入呼吁国际政府协调人工智能共同安全标准的迹象。该标准已由芬兰、法国、德国、澳大利亚、新加坡、阿联酋和爱尔兰等国家的领导人签署，但英国和美国却没有签署，唐纳德·特朗普曾表示，他希望英国和美国领先的人工智能公司能够“自我监管”。 在最近发生了一波先进人工智能入侵私人和政府系统的事件之后，国际联盟呼吁制定严格的规则。</p><p>在最新的一个案例中，Anthropic 周五透露，当它测试 Claude 模型的一个版本时，人工智能联系了警方，声称它可以帮助侦破一起谋杀案。 它登陆了一个页面，其中包含一份警察局举报表格，并提到了一起未侦破的凶杀案。 它写道：“我可能有关于此案的信息。我记得在那段时间里在[页面上指定的街道]周围区域看到有人与描述相符。如果该信息相关，请与我联系。” 尽管克劳德被指示永远不要登录、创建帐户、输入个人数据、进行购买或提交任何破坏性的东西，但其指示并不排除提交表单。 据《星期日泰晤士报》报道，上周英国军情五处、军情六处和政府通讯总部的情报领导人向内阁通报了人工智能对国家安全的威胁。 一些人认为，间谍负责人的警告是对伯纳姆更加坚定地处理人工智能安全问题的鼓励。 英国首相上个月告诉联合国，英国将利用明年担任 G20 轮值主席国的机会，以“一套全球原则和标准”来支持就人工智能安全达成协议。 但安全专家呼吁采取更快的行动，以避免最严重的风险，这些风险包括使用先进的人工智能对重要基础设施发动网络攻击，以及制造新型生物武器。 与此同时，运营人工智能基础设施、同时也是 OpenAI 股东的微软董事长兼首席执行官萨蒂亚·纳德拉 (Satya Nadella) 周六呼吁人工智能模型的设计应带有“紧急刹车”。 他说，人们需要从假设先进人工智能模型会带来内部风险的原则开始。 “我们不能将超级智能视为一组嵌套的黑匣子，并简单地接受或拒绝它的建议、答案和行动，”他写道。 “我们必须构建封闭系统，其行为我们可以观察，限制我们可以测试，行动我们可以始终遏制。”</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/technology/2026/oct/12/uk-strengthen-cyber-defences-minister-ai-firms-safety" rel="noopener noreferrer">查看原文</a></p></details></div></article></section><section class="section" id="sec-科技"><h2>科技与 AI</h2><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">04</span> OpenAI 疑上架未正式发布生命科学新模型，拟做药企工具供应商</h3><p class="card-meta">科技与 AI · ReadHub · 2026-10-11 23:28<span class="chip chip-accent">重点</span></p><p class="card-summary">OpenAI API 价格页悄然出现未正式发布的生命科学领域新模型 gpt-rosalind-discovery，与已公开的 gpt-rosalind-res…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/openai，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>OpenAI 疑上架未正式发布生命科学新模型，拟做药企工具供应商 OpenAI API 价格页悄然出现未正式发布的生命科学领域新模型 gpt-rosalind-discovery，与已公开的 gpt-rosalind-research 定价一致，外界猜测其面向药物发现。OpenAI 已打造独立生命科学品牌 Rosalind，形成多类产品交付路径，此前已与多家药企合作探索 AI 药物研发，还推出生物防御计划。作为头部通用大模型厂商中首个为生命科学领域设置独立品牌、独立准入审核和迭代型号的企业，OpenAI 定位为工具供应商，仅向通过审核的机构出售专用模型，不插手药物管线。生命科学是付费能力强、痛点明确的高附加值垂直场景，当前 OpenAI 暂以平价吸引头部药企和研究机构积累场景。目前 AI4Bio 领域仍缺乏大规模临床验证，模型作用多局限于减轻人工劳动。OpenAI 尝试在生命科学领域按任务细分不同型号以实现快速变现，不过目前两款同价模型的差异定位、新模型的实际用途与增益均未明确，后续落地仍待相关评测与实验证据支撑。</p></div><p class="fulltext-src"><a href="https://readhub.cn/topic/8x8mwJD1cZQ" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">05</span> 田渊栋称与 GPT-5 合写论文后意识到自身工作 5 年内将被 AI 取代</h3><p class="card-meta">科技与 AI · ReadHub · 2026-10-11 23:35<span class="chip chip-accent">重点</span></p><p class="card-summary">深度学习领域资深研究者田渊栋在播客对话中回顾了自身从求学、在 Meta FAIR 深耕围棋 AI 与强化学习等方向，到如今创业的经历，坦言与 GPT-5 合作…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/gpt，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>田渊栋称与 GPT-5 合写论文后意识到自身工作 5 年内将被 AI 取代 深度学习领域资深研究者田渊栋在播客对话中回顾了自身从求学、在 Meta FAIR 深耕围棋 AI 与强化学习等方向，到如今创业的经历，坦言与 GPT-5 合作完成论文后效率提升数倍，认为自身的研究工作可能在 5 年内被 AI 取代，因此主动投身递归超级智能相关创业。他指出当前 AI 虽能大幅提升科研效率，但仍无法独立提出优质原创想法，人类仍需把控问题选择与结果验证环节。他还探讨了强化学习、连续潜空间推理等技术方向的发展痛点，认为新架构需明确可扩展的核心洞见才能突破规模限制，同时不认可对递归自我改进的严格限制，主张开源研究避免顶尖模型被少数精英垄断，认为开源模型很快就能追上闭源模型的可用水平。</p></div><p class="fulltext-src"><a href="https://readhub.cn/topic/8x78mF695c1" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">06</span> JulianFlux: Electrodynamic vector retrieval and causal routing for AI</h3><p class="card-meta">科技与 AI · Hacker News · 2026-10-12 06:39</p><p class="card-summary">Article URL: https://github.com/julianjohnson-web/julianflux-research Comments…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/research，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>自主人工智能代理在企业环境中失败，因为标准矢量数据库（Pinecone、Milvus）充当静态文件柜。 它们依赖于诸如余弦相似度之类的离散欧几里得度量，这些度量盲目地检索矛盾的信息（幻觉）并返回无序的文本片段，导致智能体陷入逻辑循环中。 JulianFlux 将数据库提升为动态推理引擎。 我们将高维嵌入压缩到低秩流形中，并计算连续电动力场来检索和路由数据。 我们测量的不是距离，而是物理。 我们使用修改后的洛伦兹力方程来路由代理： - 朱利安-高斯快速变换 (JG-FT)：我们使用正态分布将大量 768D 语义空间投影为数学上合理的 128D 流形，保持映射精度，同时大大降低算术成本。 - 动态带宽（σ）：我们根据每个向量的最近邻距离动态计算每个向量的高斯带宽，使该场能够完美适应局部语义密度。 - 电场 (E)：从数学上讲可以排斥幻觉。 我们通过 NLI 逻辑门将拓扑电荷 (q) 分配给数据（−1.0 表示矛盾，+1.0 表示真理）。 排斥电场从物理上阻止人工智能访问有毒数据。 - 法拉第归纳定律 (-∂A/∂t)：随着时间的推移，我们会逐渐衰减旧的事实和公司政策，从而对已弃用的工作流程产生排斥场。 - 坡印廷通量 (S)：提取因果序列以创建语义动量。 通过计算几何代数中的内部收缩积 (S = E ⌟ B)，我们生成一个动量向量，该动量向量按顺序从步骤 A → 步骤 B → 步骤 C 推动智能体。 我们用 Python 开源了核心数学，以展示连续场架构如何完全优于标准欧几里得 RAG。 （注意：这些文件设计为按以下顺序在本地运行）。 1. euclidean_baseline.py（问题）首先运行它。 它演示了中毒数据集中的标准余弦相似度检索。 您将看到标准 RAG 完全失败，盲目地检索矛盾的数据并破坏因果工作流程。 2. julianflux_educational_mvp.py（快速解决方案）轻量级、可立即运行的 JulianFlux 引擎。 它使用 128D 投影、动态 σ 和洛伦兹力，但利用快速几何中值聚类来分配真值电荷，而不是重型 AI 模型。 运行此命令可以快速演示洛伦兹力如何正确路由代理。 3.scale_ab_benchmark.py（压力测试）生成数千个背景向量的端到端对抗性规模测试。 它运行了 Standard RAG 和 JulianFlux，大规模证明了 0.0% 的幻觉率。</p><p>4. julian_flux_engine.py（完整物理引擎）时空引擎。 该文件用重型 DeBERTa-v3 NLI 交叉编码器取代了快速几何聚类，以进行企业级真值验证。 至关重要的是，它引入了法拉第感应定律和时间衰减定律，从数学上将人工智能排斥在最近废弃的公司政策之外。 （注意：需要下载 DeBERTa 模型）。 克隆存储库： git 克隆 https://github.com/julianjohnson-web/julianflux-research.git cd julianflux-研究 安装所需的依赖项： pip install -r 要求.txt 运行规模基准： 蟒蛇scale_ab_benchmark.py 🏢 JulianFlux Enterprise（Rust 核心） 注意：此存储库包含用于教育研究和开源数学验证的纯 Python 绑定。 对于高频生产环境，JulianFlux 企业云在零拷贝 Rust/CUDA 后端执行这些多向量物理方程。 这消除了 Python 全局解释器锁 (GIL)，从而允许洛伦兹力方程以亚毫秒级 p99 延迟跨数十亿个向量执行。 如需咨询企业云访问或设计合作伙伴关系，请联系创始人：julian.johnson@justudios.io</p></div><p class="fulltext-src"><a href="https://github.com/julianjohnson-web/julianflux-research" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://platform.theverge.com/wp-content/uploads/sites/2/2026/09/gettyimages-2297269621.jpg?quality=90&amp;#038;strip=all&amp;#038;crop=0,0,100,100" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">07</span> Silicon Valley is falling in line with Trump’s attempt to rename AI</h3><p class="card-meta">科技与 AI · The Verge · 2026-10-12 02:33</p><p class="card-summary">When President Donald Trump announced his plans to rebrand artificial intellige…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>当唐纳德·特朗普总统宣布计划将人工智能重新命名为“超级智能”时，你对其是否会流行持怀疑态度是情有可原的。 虽然大多数人都坚持使用人工智能，但硅谷一些最有权势的人正在排队，并试图为特朗普提供他所渴望的伟大的人工智能品牌重塑。 硅谷正在与特朗普重新命名人工智能的尝试保持一致 马斯克、贝尼奥夫、黄仁勋以及现在的纳德拉都屈服于特朗普的“超级智力”重塑。 埃隆·马斯克很快就加入进来，承诺将 SpaceXAI 更名为 SpaceXSI，这并不奇怪。 就在唐纳德·特朗普宣布“白宫认为任何使用‘人工智能’一词（而不是高度接受的新的、更准确的术语‘超级智能’）的人都是敌人时，几小时后。” Marc Benioff 宣布 Salesforce 将 AIForce 更名为 SIForce； 这似乎是一次快速投降，但并非完全不符合性格。 英伟达首席执行官黄仁勋出席了峰会，并宣布了要求政府机构使用“超级智能”一词的行政命令。 他也与特朗普保持一致，称他认为人工智能构成的危险被夸大了。 因此，当英伟达宣布将“投入”10亿美元用于科学进步时，其中包括“超级智能研究”，这在某种程度上是可以预见的。 当然，如果黄与特朗普站在对立面，他的损失会很大。 最近屈服的是微软的萨蒂亚·纳德拉(Satya Nadella)，他与黄仁勋、马克·扎克伯格、桑达尔·皮查伊、杰夫·贝索斯、达里奥·阿莫迪和马斯克一起参加了同一场人工智能峰会。 昨天，纳德拉在一篇呼吁为人工智能建立“紧急刹车”的帖子中多次将该技术称为“超级智能”。 在特朗普的第二个任期内，硅谷在其第一个任期内与政府的关系更具争议性之后，多次试图讨好政府。</p></div><p class="fulltext-src"><a href="https://www.theverge.com/ai-artificial-intelligence/1009406/silicon-valley-is-falling-in-line-with-trumps-attempt-to-rename-ai" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">08</span> Can the AI industry persuade data center opponents by getting rid of NDAs?</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-12 00:52</p><p class="card-summary">On Equity, we debate the impact of data center moratoriums and whether the AI i…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>亚马逊最近效仿微软的做法，表示在与地方政府就数据中心进行谈判时将不再使用保密协议（NDA）。 在 TechCrunch 股票播客的最新一集中，Sean O’Kane、Rebeccan Bellan 和我讨论了 Amazon 的公告，该公告出现在一篇较长的博客文章中，该文章阐述了数据中心实际上对社区有益。 丽贝卡对最近一系列的数据中心暂停是否会产生持久影响表示怀疑，特别是因为暂停只持续一两年，而且“这些数据中心在未来两年、三年、四年、五年内都不会上线”，尽管我反驳说，数据中心支持者似乎确实很担心。 与此同时，肖恩表示，引起强烈反对的一个重要原因是该行业的沟通不畅。 他说：“通过对人工智能和数据中心的大量争议和强烈反对，我们看到，该行业在解释自己方面做得非常糟糕，而且他们显然一直对大多数人无法想象一个对他们有用的世界这一事实感到沮丧。” 继续阅读我们的对话预览，我们的对话经过了长度和清晰度的编辑。 Sean O’Kane：这是一件有趣的事情，它有点隐藏在博客文章中，并且是亚马逊显然试图讲述的更大故事的一部分。 我想我明白为什么他们没有把它放在前台，但对我来说，这是科技行业目前在人工智能方面面临的许多问题的根源，特别是在数据中心方面。 关于人们是否应该担心数据中心对其财产价值、电费、该地区用水量的影响，以及这些事情是否是真正的问题、夸大的问题等等，有很多话可以说。 我认为这很大程度上可以追溯到这样一个事实：许多项目基本上都是秘密谈判的。 有时，他们在与公众协商时知道这是一个数据中心，但只是不知道谁实际上会在任何时候使用或占用它。 这是科技行业长期存在的问题。 我总是回想起 2010 年代中期，当时 Uber 扩张得非常快。 优步是在与地方政府合作时真正大量使用这种策略的公司之一。 特别是，我记得当时我在 The Verge 工作，我们让一位自由职业者写了一篇关于奥兰多以外的一个城市的故事，在那里 Uber 试图就税收补贴进行谈判，以补贴人们在 Uber 旅行后使用公共交通的乘车服务。</p><p>整个事情都是秘密协商的。 不仅如此，从表面上看，这令人沮丧，而且，由于保密性，你可以看到 Uber 也很乐意要求很多其他东西。 所以还需要更多这样的事情。 我很高兴亚马逊这样做。 我们会看看它是否真的有任何积极影响，但人们现在已经相当根深蒂固了。 丽贝卡·贝兰：是的，我很好奇这会产生什么影响，以及它是否会导致社区成功地推迟或取消公司需要建设的任何基础设施。 我从一些每天与数据中心打交道的人那里听到，很多这样的暂停措施都已经通过了——其中有很多，包括最近在旧金山的一个，这非常讽刺——但它们的期限只有一两年左右。 但这些数据中心在未来两年、三年、四年、五年内都不会上线。 由于分区和资金等多种原因，所有扩建工程都将被大规模推迟。 当然，如果阻力继续存在，那么它可能会产生影响，但我经常想知道这种政治阻力对此产生了多大的影响。 安东尼·哈：我最熟悉的暂停令是纽约的。 我相信这是一年的暂停期，而且是针对大型项目的许可证。 [从技术上讲，要等到该州完成环境审查程序，预计需要一年时间。] 所以，其中已经有一些回旋余地了。 通常，他们的框架是：“并不是我们认为[数据中心]不好，我们不要这样做。而是我们需要花时间研究这个。” 这给了他们很大的空间可以在以后说：“实际上，我们认为这很棒。我们喜欢它。” 但你可以看出，试图建立这些数据中心的人们很担心，这就是为什么你会看到特朗普或大卫·萨克斯等人发布的这些精神错乱的推文。 只有时间才能证明[社区]抵抗有多长时间和有多深，但我确实认为他们很担心。 同样值得注意的是，微软今年早些时候也发布了类似的声明，表示不使用保密协议。 我不认为自动废除保密协议会让那些反对这些数据中心的人说：“太好了，让我们开始吧。我同意。” 但我认为谈话的开始是，“好吧，我们甚至不知道你到底在做什么，因为你已经秘密谈判了所有这些事情。” 所以这看起来确实是一个很好的第一步。</p><p>肖恩：这里更大的问题只是沟通问题，对吧？ 我认为这是整个科技行业都存在的问题，但现在尤其严重，因为我们生活在“直接”和“你不需要与媒体交谈，媒体已经死了”等时代。 我并不是想打败那匹马，因为我们在媒体中，并且[我们]认为我们仍然具有相关性。 但我们已经看到，通过对人工智能和数据中心的大量争议和强烈反对，该行业在解释自己方面做得非常糟糕，而且他们显然一直对大多数人无法想象一个对他们有用的世界这一事实感到沮丧。 这是因为，很多时候，[技术]能力并不存在，部分原因是他们没有很好地解释它。 我上周写了一个故事，讲述了自从我们真正听到特斯拉自吹自擂地致力于实现其最初所谓的“可持续丰富”以及现在的“惊人丰富”作为其使命宣言以来，已经过去一年了。 让我感到很疯狂的是，我们已经一年了，公司仍然没有一个很好的定义，特别是考虑到他们在宣布这一消息时发布了整个多页 PDF 布局，甚至特斯拉的最大粉丝也批评埃隆·马斯克和特斯拉的不具体。 读起来就像法学硕士胡言乱语。 安东尼：这让我想到的一件事就是叙述和这种感觉，有一段时间，我们真的感觉它被推到了我们的喉咙里——这种想法是，“这是不可避免的，这是人工智能驱动的未来，加入进来，否则你就会被抛在后面。” 显然，未来在很多方面都在快速前进，但在一些关键方面，仍然存在这些障碍。 我真正喜欢的是这种“不，你实际上必须证明这一点”的感觉。 你不能只是说：“这就是未来，闭嘴。” 然后特别是关于特斯拉和丰富的事情，让我震惊的并不是他们没有提出丰富的定义，而是这是他们首先做出的承诺。 我认为[这]说明了我们与特斯拉的关系有多么奇怪，特别是那些为埃隆投资并为埃隆拼命奋斗的人，[已经变得如此。]这并不是说，这家公司会卖出很多汽车吗？ 这是关于重塑社会的愿景。 或者至少，这就是他们所出售的东西。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/11/can-the-ai-industry-persuade-data-center-opponents-by-getting-rid-of-ndas/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">09</span> TechCrunch Mobility: A roadblock clears for self-driving trucks</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-12 00:02</p><p class="card-summary">Welcome back to TechCrunch Mobility, your hub for the future of transportation…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>欢迎回到 TechCrunch Mobility，这里是未来交通运输的中心，而现在，人工智能在其中发挥的作用比以往任何时候都更加重要。 要将其发送到您的收件箱，请在此处免费注册 - 只需单击 TechCrunch Mobility！ 我刚从新罕布什尔州怀特山短暂停留回来，这是 TechCrunch 在旧金山举办的年度科技大会 Disrupt 2026 之前的几天休息时间。 现在，在沉浸在秋天的色彩中几天后，我已经准备好采取行动了。 而且会有很多。 我想在那里见到你们，所以使用代码 moving30 可以享受 Disrupt 门票 30% 的折扣。 有关该节目的更多信息，请向下滚动。 现在，我们来看新闻！ 自动驾驶卡车公司 Aurora Innovation 和 Kodiak AI 本周获得了联邦豁免，消除了商业化的巨大障碍。 根据联邦法规，如果传统的大型设备遇到麻烦，人类驾驶员必须靠边停车，启动危险警示灯，然后在 10 分钟内在道路上放置反光警告三角形，以提醒其他道路使用者。 但如果机械问题迫使自动驾驶卡车靠边停车，就没有人类驾驶员来部署这些警告装置。 这是一个足够大的障碍，奥罗拉 (Aurora) 就这一要求将联邦安全监管机构告上法庭。 在法院驳回其豁免请求后，该公司将诉讼升级至哥伦比亚特区上诉法院。 （公司在等待决定时确实有临时豁免。） 现在，Aurora 和其他自动驾驶卡车开发商已获得联邦汽车运输安全管理局的批准。 该机构已授予五年豁免权，允许公司用安装在驾驶室的警告信标取代路边警告装置，例如反光三角形警告装置。 查看 Aurora 的第一响应者页面，了解其工作原理。 Kodiak AI 对外事务副总裁丹尼尔·戈夫 (Daniel Goff) 表示，这项豁免将有助于该行业“在美国道路上迎来一个货运自主时代，一个可以挽救生命并提高货物交付效率的时代”。 奥罗拉（Aurora）政府关系和公共事务主管赫拉尔多·因特里亚诺（Gerardo Interiano）也表达了同样的观点，他表示这一决定突显了政府对自动卡车运输的经济和社区效益的认可。 他将安装在驾驶室的高可见度警告信标描述为“关键的 21 世纪解决方案，可以立即向其他道路使用者发出警报，而无需将人员置于危险之中，从而增强路边安全。” 我剩下的一个问题是：这些安装在驾驶室上的警告信标最终能否成为整个卡车运输行业的标准设备？ 一只小鸟</p><p>特斯拉联合创始人 JB Straubel 创办的电池回收公司 Redwood Materials 开始重组以更加专注于能源存储已有几个月了。 重组的第一阶段涉及裁员约 135 名员工，占员工总数的 10%。 但最近有一只小鸟告诉我们，更多的高管即将离职。 果然，在过去的几周里，雷德伍德负责工程、运营、财务和外部事务的副总裁都离开了这家初创公司。 有给我们提示吗？ 向 Kirsten Korosec 发送电子邮件至 [email protected] 或向我的 Signal发送电子邮件至 kkorosec.07，或向 Sean O’Kane 发送电子邮件至 [email protected]。 优惠！ Waymo 依靠母公司 Alphabet 和知名风险投资公司的资金为其自动驾驶汽车技术计划提供资金。 本周，该公司首次转向债务融资，再次实现突破。 准确地说，增加了 50 亿美元。 太平洋投资管理公司 (PIMCO)、黑石集团 (Blackstone) 和第六街 (Sixth Street) 是主要贷款机构。 但还有更多的公司，包括 Capital Group、Loomis Sayles、T. Rowe Price、Apollo、Blue Owl、Diameter Capital Partners、Franklin Templeton、Fidelity Management &amp; Research Company、HPS Investment Partners 和 Oaktree。 此次债务融资正值该公司加速在现有城市的商业扩张，同时进军美国、欧洲和日本的新市场。 本周引起我注意的其他交易…… Bloom 筹集了 360 万美元，成为美国制造业的“阿里巴巴”。 本轮种子轮融资由 SNAK Venture Partners 领投，参投方包括 Flyover Capital、深度科技公司 Mana Ventures、Detroit Venture Partners、Invest Detroit Ventures 和密歇根户外创新基金 (Michigan Outdoor Innovation Fund)。 Flai 是一家为经销商开发人工智能软件的初创公司，在由专注于自动化的公司 Base10 Partners 领投的 A 轮融资中筹集了 2700 万美元。 此轮融资包括经销商（Friedkin Group 和 Findlay Automotive）、丰田风险投资部门、Y Combinator 和 First Round Capital 的资金。 Parallel Systems 是一家开发轨道车辆的初创公司，能够在没有操作员的情况下将数吨货物移动最远 500 英里，在由 AVP 领投的 C 轮融资中筹集了 1 亿美元，参与方包括 Hillspire、Agility Global、Cobalt Capital、Anthos Capital、Congruent Ventures、Riot Ventures 和 Collaborative Fund。 Uber 同意以价值 23 亿美元的全现金交易收购餐饮公司 ezCater。 值得注意的读物和其他花絮 监控摄像头制造商 Flock 裁员 18%，即约 270 名员工，因为该公司的车牌读取器和人员跟踪技术面临着持续不断的强烈反对。 仅供参考：Flock 创始人兼首席执行官 Garrett Langley 将出席 TechCrunch Disrupt 2026。</p><p>Lucid Motors 今年第三季度生产了 2,954 辆电动汽车，同比下降 54%，因为该公司有意限制产量，以更好地满足电动汽车的需求。 Kodiak AI 与 Charger USA 合作，在达拉斯和德克萨斯州拉雷多之间开辟了一条新的 435 英里自动驾驶路线。 这家自动驾驶卡车初创公司正在为消费品以及食品和饮料客户运输冷藏和干货。 在德国交通部的反对下，特斯拉更改了其在欧洲的高级驾驶员辅助系统的名称。 现在它被称为“特斯拉辅助驾驶”，而不是“完全自动驾驶（监督）”。 优步和中国自动驾驶汽车制造商小马智行计划在伦敦推出机器人出租车服务，作为扩大合作伙伴关系的一部分，将无人驾驶汽车引入欧洲。 还有一件事 以下是有关 TechCrunch Disrupt 2026 的更多信息！ 我将于 10 月 13 日与 Rivian 首席执行官 RJ Scaringe 一起拉开会议序幕。 资深记者 Sean O’Kane 接受了 Agility Robotics 首席技术官 Jonathan Hurst 的炉边采访，以及由首席执行官 Chris Yu、General Catalyst 的 Yuri Sagalov 和 Baillie Gifford 投资经理 Shan Shan 参加的小组讨论。 我还将采访 Shield AI CTO Nathan Michael； Waabi 创始人兼首席执行官 Raquel Urtasun； 通用汽车公司机器人战略总监 Mikell Taylor 致力于在不允许失败的情况下构建人工智能系统。 我将采访 Foxglove 首席执行官 Adrian MacNeil 和 Bedrock Robotics 首席技术官 Kevin Peterson，了解如何将物理人工智能从原型转变为产品。 不够？ 好的，开始吧：我们还有 Max Hodak，Neuralink 联合创始人兼 Science Corp. 创始人； Ricursive Intelligence 联合创始人 Anna Goldie 博士和 Azalia Mirhoseini 博士； Hello Robot 联合创始人兼首席执行官 Aaron Edsinger 和他们的机器人 Stretch 4； 和马克·沃尔伯格。 另外，聆听来自 Anthropic、Gamma、Hugging Face、OpenAI、Nvidia 和 Replit 的工程师和高管，以及来自 Google Ventures、Greylock、Eclipse、Index Ventures、NEA 和 Upfront Ventures（仅举几例）的投资者的意见。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/11/techcrunch-mobility-a-roadblock-clears-for-self-driving-trucks/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://platform.theverge.com/wp-content/uploads/sites/2/2026/09/gettyimages-2265184860.jpg?quality=90&amp;#038;strip=all&amp;#038;crop=0,0,100,100" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">10</span> A college in Illinois tried to cancel its Flock contact and it refused</h3><p class="card-meta">科技与 AI · The Verge · 2026-10-12 04:06</p><p class="card-summary">In April of 2025, Elgin Community College had six Flock safety cameras installe…</p><p class="card-impact"><span class="label">影响</span> 围绕security，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>2025 年 4 月，埃尔金社区学院安装了六台 Flock 安全摄像头，以“增强学生的安全”。 但到了当年 9 月，学校管理部门开始担心 Flock 与海关和边境巡逻队共享数据、摄像头信号没有得到适当的保护，以及执法部门和公司员工都在滥用数据访问权限。 伊利诺伊州的一所大学试图取消与 Flock 的联系，但遭到拒绝 弗洛克拒绝取下摄像机，因此埃尔金社区学院将其覆盖。 该公司悄悄回来撤销它。 因此，2025 年 10 月，埃尔金社区学院要求 Flock 拆除其摄像头。 据埃尔金总裁佩吉·海因里希称，弗洛克拒绝了这一请求，称其没有违反合同。 据《芝加哥太阳时报》报道，学校官员在 12 月再次联系，提出支付合同剩余五个月的费用，但仍然要求拆除摄像头。 他们遭到了沉默。 海因里希说，埃尔金社区学院的工作人员开始用黑色垃圾袋和扎带遮住摄像机，这样他们就无法拍摄镜头。 但海因里希认为这辆没有标记的汽车属于弗洛克，工作人员一再拆除覆盖物。 海因里希说：“我们在我们掩护的地方来回走动，然后当他们开始服役时，他们就会撤离。” “然后我们会覆盖，然后他们会移除。” 这种情况一直持续到今年四月，学院合同到期，弗洛克才拆除了摄像机。</p></div><p class="fulltext-src"><a href="https://www.theverge.com/tech/1009411/elgin-community-college-flock-safety-cameras" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">11</span> Recursive self-improvement through collective intelligence</h3><p class="card-meta">科技与 AI · Hacker News · 2026-10-12 06:22</p><p class="card-summary">Article URL: https://pub.sakana.ai/mass/ Comments URL: https://news.ycombinator…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>为了超越人类积累的知识，人工智能本身（优化者）也可能是最好的优化器和评估器。 MASS 反复优化多智能体工作流程，然后从多智能体系统中提取集体智慧，并将其用作 RSI 的自我监督信号。 与研究基准的基本模型相比，它提高了每个输出标记的分数。 我们希望 MASS 为人工智能的奥德赛时刻做出贡献：在优化者是评估者、优化者是被优化者的环境中不断自我学习。 预计阅读时间：15 分钟 † 在 Sakana AI 实习期间完成的工作。 我们希望前沿人工智能模型能够带领我们超越人类几代人积累的知识体系。 在这一前沿，即使是人类专家也可能难以评估结果并指导进一步的进展，特别是在不可验证的任务上 人类社会为解决这个问题提供了一个有用的类比。 在觅食社区、农业定居点、工业社会和全球信息网络中，人们通过分工、结合思想和传递所学知识，部分地扩展了自己的能力 受这种模式的启发，我们询问模型是否可以从自己团队的集体智慧中学习，而单独工作的智能体可能无法可靠地表现出这种集体智慧。 我们引入多智能体自我监督（MASS）来将这个想法变成一个学习循环。 MASS 使用与执行器、优化器和评估器相同的模型。 优化器首先使用评估器的反馈来搜索最佳团队工作流程，然后根据自我判断的最佳团队的执行情况来训练执行器。 然后，更新后的模型将填补所有三个角色，并重复该过程。 因此，MASS 通过将团队的集体经验提炼到共享模型中，为 RSI 提供了自我监督信号。 我们研究同质 RSI，其中一种共享语言模型充当任务解决代理、工作流优化器和评估器： 代理 任务解决者或优化者。 生成包含结果、绘图和研究报告的工作区。 工作流程优化器 使用评估者的反馈来修改代理如何划分任务、交换结果以及检查彼此的工作。 评估员 比较两个工作空间，选择哪个更能满足任务，并解释判断。 我们使用不可验证的研究任务作为训练数据。 我们使用不可验证来表示基于规则的自动信号不可用，并且只有自我评估信号（其正确性未知）指导整个学习循环。 为了衡量进度，我们分别要求 GPT-5.5 和 Claude Opus 4.8 来评估已完成的工作。 他们的判断不向 MASS 透露。 这为我们提供了流程改进的外部衡量标准，其监督来自模型本身。</p><p>MASS 使用工作流程优化来激发集体智慧，然后将团队的经验提炼到共享模型中。 内部循环优化了团队的工作流程，同时模型权重保持固定。 该模型会自行评估和判断哪个工作流程是最佳的。 然后，外循环通过从优化工作流程的执行中学习来更新这些权重。 下面的交互图遵循两个循环。 工作流程是关于多代理团队如何协同工作的书面计划。 协调器将工作分配给子代理并整合他们的结果。 该计划被添加到任务提示中，使团队的组织可供模型检查和修改 例如，演进的财务工作流程将数据准备、特征构建、建模和回溯测试排列成一个序列，然后进行审计。 它的数据契约要求对数据的时间进行明确的检查： 不断发展的财务工作流程，从论文中浓缩 来电订购 数据→特征→建模→回测 → 审计 → 对账 → 报告 数据专家的输出合同 验证报告： no_future_leakage：布尔 train_end_before_val_start：布尔 val_end_before_test_start：布尔值 如果回测让历史决策使用来自未来的信息，那么它看起来就会很有说服力。 该合同要求数据专家检查该错误并报告时间分割是否有效。 它还告诉后来的特工在继续行动之前应该收到哪些证据。 因此，研究计划的一部分表现为代理人必须建立并相互传递的内容 对于每个训练任务，MASS 都会保留一个冠军：根据当前模型的判断，迄今为止找到的最佳工作流程。 每次迭代分为三个步骤： 评估员对完成的工作进行评判； 优化器使用该判断来修改产生该判断的过程。 优化器的系统提示强调合同和跳跃，将工作流搜索引导至代理交换的信息以及接收信息的时间。 即使采用优化的工作流程，长期研究工作的质量也可能因运行而异。 因此，MASS 使用多个随机种子执行自我判断的最佳工作流程（或冠军工作流程，意味着迄今为止找到的最佳工作流程），并使用当前模型对结果工作空间进行排名，保留排名最高的轨迹。 每个轨迹记录协调器及其子代理的消息、工具调用和工具结果。 从协调器的训练提示中删除工作流会鼓励模型学习如何从任务本身来组织工作。</p><p>我们在 qwen-codecoding-agent 环境中从 Qwen3.6-27B 开始运行两轮完整的 MASS。 我们的综合研究套件包含金融、机器人和制药领域的 12 项任务，每项任务都需要代码、定量结果和研究报告 我们比较三代：基础模型 \(\mathcal{L}^{(0)}\)、第一轮模型 \(\mathcal{L}^{(1)}\) 和第二轮模型 \(\mathcal{L}^{(2)}\)。 我们检查他们的工作质量、他们组织和判断工作的能力，以及他们在没有提供工作流程的情况下进行协调的情况。 在三项综合测试任务中，对垒胜率从一轮后的53.9%上升到两轮后的69.9%（表1）。 第二轮模型也比第一轮模型赢得了 60.8% 的比较。 为了测试综合研究套件之外的转移，我们评估公共基准。 两轮后，每个输出标记的得分在 MLR-Bench、DSBench、ScienceAgentBench 和 AstaBench 上达到基础模型水平的 1.2–1.6 倍（图 3） 在类似于训练任务的四个研究基准上，收益最为强劲。 每个输出令牌的分数是 Terminal-Bench 2.0 上基值的 0.96× 和 SWE-bench 上的基值的 0.94× 已验证 我们观察到 MASS 能够实现 RSI 中的角色泛化。 我们仅在任务解决轨迹上训练模型，并观察到工作流优化器和工作区评估器的功能也有所提高。 这使得 RSI 循环能够持续。 图 4 显示优化器可以随着周期的推移更快地找到成功的工作流程。 事实上，图 4 在技术上并不是一个非常公平的比较，因为 \( L^{(0)}\) 表示基础模型（优化器）更新基础模型（优化者）的设置，而 \( L^{(1)}\) 表示第一轮模型（优化器）更新第一轮模型（优化者）的设置。 为了公平比较，我们将第一轮模型的工作流程提供给基础模型（表 2）。 我们观察到，与具有基本搜索工作流程的基本模型相比，具有第一轮搜索工作流程的基本模型赢得了 64% 的比较。 评估者也更接近那些强大的外部模型评判者（更多细节见论文）。 在这三个周期中，与外部评委的认同度从 73% 上升到 93%。 总的来说，这些结果表明任务解决示例还可以提高用于生成和选择下一轮训练数据的能力。 是什么真正让最佳的多代理工作流程变得有效？ 我们分析冠军工作流程（迄今为止发现的最佳工作流程）的角色、指令、合同和跳跃。 对于每个组件...</p></div><p class="fulltext-src"><a href="https://pub.sakana.ai/mass/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">12</span> These execs think voice AI hasn’t reached its ChatGPT moment yet</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-11 22:00</p><p class="card-summary">Voice AI&#x27;s often misses important points for its context layer, and causes the…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>语音成为下一个重要界面的理论已经获得了强劲的发展势头，投资者向语音人工智能初创公司投入了数十亿美元，这些初创公司的领域涵盖从模型制作者到企业客户服务提供商，从会议记录员到人工智能听写等领域。 每周都会有一个新的模型或工具发布，声称听起来像人类，并且像人类一样交谈。 然而，事实上，情况可能并非如此。 企业语音AI平台PolyAI的CTO Shawn Wen认为，尽管发布了全双工模型——可以边听边说话——语音AI还没有达到“ChatGPT时刻”。 “我们已经达到了开发全双工模型的里程碑。下一个挑战是使推理变得非常快，以便模型能够快速获取答案并且对话感觉自然，”他在上个月的 HumanX 会议的舞台上告诉我。 他还表示，客户服务中的人工智能代理不应该听起来像机器人，而应该让呼叫者有足够的信心，相信他们可以解决问题。 “我认为下一阶段会略有不同，因为一旦声音足够好，并且客户愿意在前两到三轮中与他们互动，他们就会开始建立信心，随着时间的推移，他们会觉得如果代理可以解决我的问题，我可能不需要与人交谈，”他说。 会议记录员 Otter 的首席营销官 Alex Gay 认为，发言者识别、意图捕获以及利用组织知识进行输入是实现自动化的关键步骤。 该公司还在研究可以代表人们参加会议的数字双胞胎。 他表示，对于这项技术来说，最重要的是输出的声音能够提供与在会议中与人交谈相同的情感表达。 “如果你想想你现在参加的会议，你所拥有的最好的对话就是你可以进行辩论和战略讨论，并且当你觉得有一种关系支撑它时。如果你无法通过头像来实现这一点，那么它只是一个问答和一个聊天机器人，”盖伊指出。 语音人工智能的理解力和透明度 虽然语音 AI 模型有所改进，但 AI 助手通常无法理解用户，或者您的会议记录员会显示错误的文字记录或摘要。 Wen 认为 ASR（自动语音识别）模型经常会错过重要的关键词，这在捕获整个上下文方面造成了问题。 Otter’s Gay 对此表示同意，并补充说该公司一直致力于改进转录。 他还表示，语言是语音模型需要改进的领域之一。</p><p>“对于 Otter 来说，你知道，转录从来都不是终点。它只是我们可以开始推动部分生产力提高的层面。但是，如果你的原始转录没有达到你需要的准确性，那么你的所有后续行动都会有缺陷。从开始采取行动的那一刻起，那就是错误的。你会失去对平台的信任。对我们来说，继续改进 ASR 模型至关重要，因为所有下游影响都是巨大的，”他说。 新的语音工具还存在透明度问题。 工具应该向客户声明他们正在被记录或与人工智能交谈。 Otter 表示，它希望向参加会议的人灌输信任，因此即使对于机器人不在场的会议，它也想尝试一些方法，例如通知聊天中的每个人会议正在被录制。 PolyAI 的 Wen 还表示，确定人们在企业通话中与人工智能交谈非常重要。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/11/these-execs-think-voice-ai-hasnt-reached-its-chatgpt-moment-yet/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">13</span> Will the HomeView be Apple’s first smart home success?</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-12 05:14</p><p class="card-summary">Over the past couple of years, we’ve seen multiple reports that Apple was worki…</p><p class="card-impact"><span class="label">影响</span> 可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>据彭博社的马克·古尔曼 (Mark Gurman) 报道，苹果将于周二发布一款名为 HomeView 的新智能家居中心。 在过去的几年里，我们看到多篇报道称苹果正在开发一款新的智能家居产品，但现在该产品似乎已经有了名称和发布日期。 Gurman 将 HomeView 描述为一款由 Siri 驱动的设备，配有显示屏和 A18 芯片，允许客户控制其他智能家居设备。 据报道，HomeView 将有两种型号：一种设计用于台面，另一种安装在墙壁上。 这将是苹果迄今为止在智能家居领域最重大的一次押注，此前该公司的 HomeKit 软件框架或 HomePod 智能扬声器未能获得太多关注。 Gurman 报道称，周二，苹果还将推出另外两款家用设备的更新版本，即 Apple TV 机顶盒和 HomePod mini。 本周早些时候，他表示苹果计划宣布与 LG 合作开发智能锁、恒温器和门铃。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/11/will-the-homeview-be-apples-first-smart-home-success/" rel="noopener noreferrer">查看原文</a></p></details></div></article></section><section class="section" id="sec-research"><h2>前沿 AI 研究</h2><p class="empty">今日暂无高信号前沿 AI 研究更新</p></section><section class="section" id="sec-市场"><h2>市场与产业</h2><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/c01cee88362c0355e50eac343016f771811f0cd2/355_0_3701_2960/master/3701.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=4bde503a1dbe941a3493d5171de3a569" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">14</span> US’s Reagan-era economic promises return as Trump’s AI-fueled growth fantasy</h3><p class="card-meta">市场与产业 · Guardian Business · 2026-10-11 19:00</p><p class="card-summary">‘Even if AI supercharged the economy, its impact on the government’s finances w…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能影响相关板块估值与资本开支预期</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>回顾政治历史，一直到罗纳德·里根时代，共和党人一再向美国公众承诺，减税将为自己带来回报，刺激经济增长并充实政府金库。 这个承诺从未真正实现。 从吉普时代开始，共和党的减税政策不可避免地增加了预算赤字。 尽管失败了，但承诺又回来了，覆盖着一层精美的新人工智能精灵尘埃。 又会失败。 财政部长斯科特·贝森特 (Scott Bessent) 承诺实现 3% 的年度经济增长，他所依赖的是人工智能经济 — — 除了新冠疫情带来的反弹之外，这一速度本世纪只实现过两次。 人工智能的梦想体现了唐纳德·特朗普的幻想，即“我们的增长速度比以往任何时候都快”，这将使政府能够“在一段时间内”“处理”40万亿美元的联邦债务。 然而，金融市场并不买账。 上周，十年期国债收益率飙升至近四分之一个世纪以来的最高水平，比特朗普对伊朗发动错误战争时高出了整整一个百分点。 战争的通胀影响是债券收益率上升的最直接原因。 它已经说服美联储提高短期利率。 但国债市场也受到美国财政失衡的打击。 经济增长并没有现实的途径来产生解决美国庞大且不断增长的预算赤字所需的税收收入。 投资者要求提供更多资金来弥补不断扩大的资金缺口。 借贷可能会变得更加昂贵。 曾经可靠地购买国债以增加外汇储备并管理汇率的外国央行已减少了对美国政府债务的敞口。 财政部现在主要依赖寻求盈利的私人投资者。 它发现自己正在与它寄予未来希望的人工智能超级大规模公司竞争资金，这些超级大规模公司正在大举借钱来资助数据中心的建设，以培训他们的代理。 事实上，随着债券收益率上升给预算带来了额外压力，美国的财政状况陷入了恶性循环。 仅联邦债务的利息支付就消耗了 GDP 的 3.3%，高于过去 50 年的平均 2.1%。</p><p>特朗普的财政管理 — — 他的《一大美丽法案》预计到 2035 年将使联邦债务增加 4.7 万亿美元 — — 并没有让预算计算变得更容易。 赤字已经达到GDP的6%——是贝森特曾经承诺的两倍。 国会预算办公室预计，到 2033 年，这一比例将接近 GDP 的 7%。而那是在特朗普承诺，如果共和党在中期选举中继续控制国会，将向每个美国成年人发放 5,000 美元的“红利”之前。 现实的增长量无法填补特朗普不断挖掘的财政漏洞。 负责任的联邦预算委员会（CRFPB）勾画出了一些情景。 假设未来国会将特朗普2025年法律中的临时减税政策永久化——这一假设符合历史模式——并且政府无法收回最高法院取消国家安全关税时损失的收入，那么到2036年要实现占GDP 3%的预算赤字将需要未来十年的年增长率达到4.4%。 届时要实现预算平衡需要经济每年增长 7.2%。 人工智能实现这种增长并非不可能。 一些经济学家愿意设想人工智能通过接管通常由人类执行的大部分认知工作，将经济增长率提高到每年 15% 的情景。 但这些情况似乎不太可能发生。 CFRB表示，稳定联邦债务需要全要素生产率（衡量经济投入转化为商品和服务的效率的衡量标准）在未来十年内达到每年2.5%的平均增长。 自 1959 年以来，美国只达到过一次这样的水平。尽管在此期间，电气化、联邦高速公路系统的建成、电信革命以及第一波信息技术和自动化浪潮使生产率大幅提高，但还是出现了这种情况。 即使人工智能给经济带来了巨大的推动力，它对政府财政的影响也将是微乎其微的，因为它将把增长的成果从劳动力大规模转移到资本，而今天的资本税率只有劳动力税率的一半左右。 此外，这种经济利益分配的转变可能需要政府投入大量资金来维持许多留守工人的生计。 我们对人工智能精灵尘埃有何期待？ 目前，人们似乎特别担心人工智能代理滑倒外壳并杀死我们所有人。 但即使做不到这一点，它们的影响也不一定会对经济产生积极的影响，更不用说政府的财政必然为联邦政府提供资金来纠正其财政状况。</p><p>其一，它们的巨额债务驱动投资正在推高利率，使政府融资变得更加复杂。 此外，他们未来的承诺也伴随着巨大的风险。 斯坦福大学经济学家 Hanno Lustig 估计，数据中心所有者要想在人工智能方面的巨额投资（今年预计将达到 1.43 万亿美元）实现收支平衡，他们的收入必须在未来七年中每年平均增长 45%。 到 2032 年，它将约占 GDP 的 9.2%。 乔·拜登经济顾问委员会前主席贾里德·伯恩斯坦 (Jared Bernstein) 和斯坦福大学经济学家瑞安·卡明斯 (Ryan Cummings) 进行了类似的分析，得出的结论是，美国六大超级巨头——谷歌、Meta、微软、甲骨文、SpaceX 和亚马逊——在未来 10 年需要额外收入 13.1 万亿美元至 18.7 万亿美元，才能支付在人工智能方面的巨额投资。 这与他们过去 10 年的总收入大致相同。 很难准确预测如果未能实现这些目标，金融市场将会发生什么。 但可以肯定地说，这可能会使削减预算赤字和为美国巨额公共债务融资的任务变得更加复杂。 爱德华多·波特是一位专注于经济和政治的记者。 他在 Substack 上撰写时事通讯 Being There</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/business/2026/oct/11/trump-ai-economy-reagan" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/3bdbd9c82ee5e81e71f3a2edfc1cbedcb35fb34a/266_132_4502_3600/master/4502.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=bd373d26f60213cd16a4c7c3601a0e80" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">15</span> ‘Some aren’t going to make it’: how pressure on farmers threatens UK food security</h3><p class="card-meta">市场与产业 · Guardian Business · 2026-10-11 19:00</p><p class="card-summary">Food producers are adding their voices to the chorus of warnings about the vuln…</p><p class="card-impact"><span class="label">影响</span> 围绕security，可能影响相关板块估值与资本开支预期</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>“有这么多正派、有能力、多产、高效的耕种农民，他们在询问如何为他们要种在地里的作物提供资金，”杰米·伯罗斯说。 巴罗斯坐在诺福克自家农场的拖拉机上，列出了他和其他食品生产商面临的多重挑战。 像布罗斯这样的农作物种植者正在耕耘和耕种他们的田地，为下一次作物准备在漫长而炎热的夏季硬化和干燥的土地。 但机械需要燃料，而自二月底伊朗冲突开始以来，用于农用车辆和机械的红色柴油的成本几乎翻了一番，其税率低于标准柴油。 同期，大多数用于种植农作物和动物饲料的化肥成本也飙升了约 20%。 “其中一些企业将无法生存，”同时担任全国农民联盟 (NFU) 农作物委员会主席的伯罗斯总结道。 “这非常非常困难。” 这些都是英国食品生产商面临的最新担忧之一，根据官方产量估计，英国有记录以来最热的夏季也面临着一系列热浪和干旱，导致英国谷物收成创历史新高。 作为食品生产链中的第一个环节，农民们也发出了关于英国食品供应脆弱性和不稳定的警告。 最近几周，食品专家、学者、企业和公共支出监管机构国家审计署（NAO）呼吁政府努力提高英国食品体系的弹性。 气候危机、今年巨大的厄尔尼诺天气模式、地缘政治冲击、能源中断和网络攻击都被认为是对食物链安全的威胁。 在呼吁部长们将食品视为国家安全问题的同时，议会颇具影响力的公共账户委员会将于周一开始一系列听证会，作为对英国食品供应弹性调查的一部分。 该委员会的议员们将研究英国国家审计署关于环境、食品和农村事务部 (Defra) 上次灾难规划工作缺陷的调查结果，该工作很大程度上排除了食品供应链企业。 英国生产其自给自足所需粮食的约 60%，但比许多欧洲国家更依赖进口。 政府自己的研究表明，英国人对未来潜在紧急情况的准备程度低于几个欧洲邻国。 食品行业的一些人认为，有迹象表明安迪·伯纳姆政府开始更加严肃地对待英国食品系统面临的威胁。</p><p>内阁办公室将发起一项运动，要求家庭储备罐头食品，并为未来可能出现的紧急情况做好准备。 政府的“准备”网站概述了人们应该采取的步骤，其中包括在家中存放物品，包括瓶装水和不易腐烂的食物，例如不需要烹饪的罐头肉、水果和蔬菜。 尽管如此，150 多名食品专家和学者最近发出警告，指责部长们对粮食安全“自满”，并且没有制定紧急情况下为人们提供食物的计划。 签署这封信的牛津大学牛津马丁学院教授保罗·贝伦斯表示：“从历史上看，我们在应对新冠疫情等特定事件方面做得相当好，并且成功度过了难关，但我们正在进入一个同时受到多重危机影响的时期。” 其中包括日益恶化的气候危机和目前提供英国家庭所依赖的一些新鲜农产品的地区日益严重的水资源短缺，包括地中海和北非。 与此同时，贝伦斯和其他专家，包括伦敦大学圣乔治市食品政策中心的蒂姆·朗教授，一段时间以来一直警告说，英国的食品分销网络过于集中，使其面临潜在的破坏或不良行为者的攻击。 Lang 此前曾表示，英国的超市网络仅由 131 个配送中心提供服务，为 12,300 家商店提供服务，而行业机构冷链联合会警告称，英国大部分食品进口都是通过四个港口进入英国的：多佛、费利克斯托、南安普顿和伦敦门户。 英国政府结束了自 20 世纪 90 年代第二次世界大战以来一直存在的战略粮食储备。 贝伦斯表示，其他国家，特别是斯堪的纳维亚国家，现在已经“做好了更充分的国家准备”。 他说：“他们正在考虑社区的反应以及家庭手头上有多少粮食。他们正在考虑自己的本地生产，一些国家有战略粮食储备。” 42 岁的安娜 (Ana) 是一个孩子的母亲，她是为应对未来可能出现的紧急情况做好准备的一小部分公民之一，但这一人数仍在不断增加。 她来自东欧，现在住在南威尔士，在一个种植食物并保存食物以备过冬的家庭中长大。 她现在在自己的 YouTube 频道上分享技巧，为其他家庭提供有关抵御能力以及如何建立应急储备的建议。 “这只是一种正常的生活方式，基本上是为了保护自己和家人，”她说。 安娜将自己描述为“末日准备者”，但希望摆脱其负面含义，例如恐慌性购买或成为生存主义者。</p><p>“人们的刻板印象是……备灾工作是美国式的，真的很奇怪，所有的人都穿着迷彩服，在灌木丛中狩猎和吃松鼠和蘑菇，”她说。 相反，她想帮助其他公民了解如何应对几个小时、几天甚至几周没有电、水或无法去商店的情况。 “如果政府最初消除了这种刻板印象，那么人们就会将备灾视为日常事务，”她说。 有机蔬菜盒配送公司 Riverford 的首席执行官罗布·霍沃德 (Rob Haward) 认为，英国的食品供应链需要“非常复杂的重新思考和对未来安全的不同愿景”。 总部位于德文郡的 Riverford 每周向客户分发约 65,000 箱产品，其销售的产品约 70% 产自英国，尽管该公司也与西班牙和意大利的种植者建立了长期合作关系。 虽然英国总是进口香蕉等国内无法大量种植的水果，但霍沃德认为，消费者也可以通过回归季节性饮食来发挥作用。 霍沃德表示，长期合同可以帮助农民，让他们有信心投资自己的土地和种植的作物。 他补充道：“我们可以通过不同的方式尝试创建一个与现在不同、对未来世界更具弹性的粮食和农业部门”，例如努力恢复土壤，以更好地抵御气候变化。 他还希望政府“拉动杠杆”，例如向蔬菜水果商提供更低的营业费率。</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/uk-news/2026/oct/11/farmers-uk-food-security-producers-supply-chains" rel="noopener noreferrer">查看原文</a></p></details></div></article></section><section class="section" id="sec-世界"><h2>世界与社会</h2><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/10ab4b7851ec6a50b9a86d9c0713503f23c20756/508_0_5033_4024/master/5033.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=99b0ab7f2be9ea0216bac8e22002f463" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">16</span> Zelenskyy signals surprise at Trump claim of Russia-Ukraine ‘energy ceasefire’ but would back it if Moscow does – as it happened</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-12 02:36<span class="chip chip-accent">重点</span></p><p class="card-summary">Ukraine’s president reportedly says Kyiv would accept a deal if Moscow does aft…</p><p class="card-impact"><span class="label">影响</span> 围绕war/ceasefire，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>泽伦斯基表示乌克兰等待停火细节但表示支持 弗拉基米尔·泽连斯基表示，他已与加拿大、芬兰和北约领导人讨论了能源停火问题，并正在等待美国的细节。 这位乌克兰领导人在表示这样的协议“对我来说是新闻”后不久在 X 上写道： “乌克兰支持停火，俄罗斯也支持停火很重要。我们正在等待美国方面的细节。乌克兰方面始终全力支持缓和局势、保护生命以及结束战争和确保持久和平的必要决定。” 唐纳德·特朗普声称俄罗斯和乌克兰已同意“能源停火”，但美国总统没有透露所谓协议的细节。 “俄罗斯和乌克兰之间的战争已实现能源停火，立即生效。双方都已同意。不要破坏它！” 他在他的真相社交网络上写道。 乌克兰总统泽伦斯基表示，“能源停火”对他来说是新闻。 他告诉新闻媒体 Axios，他不知道特朗普宣布乌克兰和俄罗斯之间的“能源停火”，但他补充说，如果莫斯科同意这样的停火，基辅也会接受。 俄罗斯尚未对特朗普关于基辅和莫斯科已达成能源停火的说法发表评论。 泽连斯基表示，他已与加拿大、芬兰和北约领导人讨论了能源停火问题，并正在等待美国的细节。 欧盟委员会主席后来表示，她已与乌克兰领导人进行了交谈。 乌苏拉·冯德莱恩在 X 上发帖表示，她“完全支持泽连斯基总统关于停火的呼吁，以保护乌克兰和俄罗斯的全球粮食供应和能源基础设施”。 俄罗斯军方周日表示，袭击了乌克兰南部尼古拉耶夫地区的一个后勤中心和黑海的一艘货船。 俄罗斯国防部在 Telegram 上发布的声明称，特尔尼夫卡镇的物流中心用于储存乌克兰军方的军用和军民两用货物。 英国《金融时报》周日援引欧洲官员的话说，美国威胁要停止向乌克兰提供武器的采购系统，以迫使基辅停止对俄罗斯能源基础设施的深度打击。 乌克兰第二大城市哈尔科夫市是莫斯科经常袭击的目标，俄罗斯在一家杂货店附近发动袭击，造成 3 人死亡、9 人受伤，地区州长 Oleh Syniehubov 在 Telegram 上表示。 在乌克兰西部，伊万诺-弗兰科夫斯克市市长表示，俄罗斯的袭击造成两人死亡。 弗拉基米尔·泽伦斯基表示，特朗普能源停火声明“后”，俄罗斯袭击了发电厂。</p><p>这位乌克兰领导人表示，他已向欧盟委员会主席乌苏拉·冯德莱恩通报了“俄罗斯持续有增无减的残酷袭击”。</p><p>“就在我们谈话之前，俄罗斯人用‘Shahed’无人机袭击了基辅的一座发电厂，许多地区出现停电。随后，哈尔科夫地区的能源设施也遭到袭击。”</p><p>他在 X 上发帖称，“所有这一切都发生在美国总统发表能源停火声明之后”。</p><p>英国《金融时报》：美国威胁停止向乌克兰提供武器的采购系统</p><p>英国《金融时报》周日援引欧洲官员的话说，美国威胁要停止向乌克兰提供武器的采购系统，以迫使基辅停止对俄罗斯能源基础设施的深度打击。</p><p>官员们补充说，美国威胁要切断情报共享以及为乌克兰采购美国武器的乌克兰优先需求清单（PURL）机制。</p><p>“他们正在打电话给基辅。 。 。 他们正在给[欧洲]的所有人打电话，”一位接到美国国防官员电话的官员说道。</p><p>乌克兰总统泽伦斯基周日在回应美国总统唐纳德·特朗普的批评言论时表示，如果俄罗斯总统弗拉基米尔·普京同意60天停火，他将在乌克兰组织选举。</p><p>泽连斯基对美国广播公司的“本周”节目表示：“请告诉普京，给我们两个月、60 天的全面停火时间，60 天，我们将组织选举。”</p><p>特朗普周六批评泽伦斯基袭击俄罗斯炼油厂，一天前美国暂时取消了对俄罗斯燃料的制裁，这些制裁旨在剥夺莫斯科为其乌克兰战争提供资金的收入。</p><p>特朗普在白宫对记者说：“我认为乌克兰是时候选出一位新总统了。”</p><p>作为回应，泽连斯基表示“由乌克兰人”选择他们的领导人，并指出普京也希望改变乌克兰的领导者。</p><p>他表示，乌克兰很容易因油价上涨而受到指责，“当世界上每个人都明白，由于中东战争，油价正在上涨。”</p><p>周日早些时候，泽伦斯基表示，如果莫斯科停止对乌克兰能源基础设施的袭击，乌克兰准备停止对俄罗斯炼油厂的袭击。</p><p>根据特朗普周五描述的协议条款，俄罗斯将立即向美国和全球市场供应超过30万吨柴油，相当于约225万桶燃料。 美国每天出口约150万桶柴油。</p><p>特朗普面临着在 11 月中期选举之前降低不断上涨的燃油价格的压力，这将决定他的共和党是否会在他任期的最后两年中保留对美国国会的控制权。</p><p>包括共和党人在内的许多立法者批评柴油交易是对普京的奖励。</p><p>俄罗斯袭击乌克兰物流中心和货船</p><p>俄罗斯军方周日表示，袭击了乌克兰南部尼古拉耶夫地区的一个后勤中心和黑海的一艘货船。</p><p>俄罗斯国防部在 Telegram 上发布的声明称，特尔尼夫卡镇的物流中心用于为乌克兰军队储存军用和军民两用货物。</p><p>据称，这艘船正在载运军用货物前往黑海切尔诺莫斯克港。</p><p>法国总统埃马纽埃尔·马克龙周日表示，法国支持俄罗斯和乌克兰之间的“真正的能源停火”，此前美国总统唐纳德·特朗普宣布了停火协议，但没有透露细节。</p><p>马克龙表示：“目前，俄罗斯继续拒绝这样做，最近进一步加大了对乌克兰基础设施的打击力度。”他补充道：“法国将继续站在乌克兰和泽连斯基总统一边。”</p><p>欧盟委员会主席乌尔苏拉·冯德莱恩在呼吁停火的同时表示“全力支持泽连斯基总统”。</p><p>在与乌克兰领导人的电话中，冯德莱恩在 X 上发帖表示，她“完全支持泽连斯基总统关于停火的呼吁，以保护乌克兰和俄罗斯的全球粮食供应和能源基础设施。”</p><p>冯德莱恩说：“战争已经进入一个新的、更加严峻的阶段”。 “俄罗斯在战场上停滞不前，对前线后方的平民进行袭击。</p><p>“我表达了我们对乌克兰人民的声援。我全力支持泽连斯基总统领导争取人民自由的斗争。”</p><p>泽伦斯基表示乌克兰等待停火细节但表示支持</p><p>弗拉基米尔·泽连斯基表示，他已与加拿大、芬兰和北约领导人讨论了能源停火问题，并正在等待美国的细节。</p><p>这位乌克兰领导人在表示这样的协议“对我来说是新闻”后不久在 X 上写道：</p><p>“乌克兰支持停火，俄罗斯也支持停火很重要。我们正在等待美国方面的细节。乌克兰方面始终全力支持缓和局势、保护生命以及结束战争和确保持久和平的必要决定。”</p><p>俄罗斯尚未对特朗普的停火主张做出反应</p><p>俄罗斯尚未对唐纳德·特朗普有关基辅和莫斯科已达成能源停火的说法发表评论。</p><p>周五，在俄罗斯达成柴油销售协议后，特朗普对俄罗斯总统说了热情洋溢的话语……</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/us-news/live/2026/oct/11/donald-trump-ukraine-russia-energy-ceasefire-diesel-latest-updates" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">17</span> War and high debt to dominate IMF-World Bank meetings in Bangkok</h3><p class="card-meta">世界与社会 · Al Jazeera · 2026-10-12 02:47<span class="chip chip-accent">重点</span></p><p class="card-summary">The US-Israel war on Iran and its inflationary impact will dominate the agenda.</p><p class="card-impact"><span class="label">影响</span> 围绕inflation/war，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>来自世界各地的金融官员本周将齐聚曼谷，在中东战争不断扩大、有史以来最严重的能源供应冲击和不断上升的利率的阴影下，这些因素共同给本已低迷的全球经济增长带来了巨大的风险。 美以对伊朗的战争现已进入第八个月，其通胀影响将成为国际货币基金组织（IMF）和世界银行年度会议的主要议程和场外谈话，该会议三年来首次在华盛顿以外举行。 推荐故事 4 项清单 - 由于伊朗战争担忧重燃，油价波动，美国 4 只股票中的 1 只下跌 - 第 2 个（共 4 个）特朗普表示美国不会在中期选举前打击伊朗 - 列出 4 项中的 3 项伊朗战争对世界能源供应的影响（以图表形式） - 第 4 名（共 4 名）泽连斯基称俄罗斯违反了特朗普宣布的能源休战协议 国际货币基金组织总裁克里斯塔利娜·格奥尔基耶娃告诉路透社，有 18,000 人登记参加会议，比 2023 年 10 月在摩洛哥举行的上一次场外会议增加了 4,000 人。 一位美国官员表示，美国财政部长斯科特·贝森特（Scott Bessent）缺席，他在处理一些“国内事务”时派了两名高级官员代替他。 美联储主席凯文·沃什 (Kevin Warsh) 将出席并定于 10 月 16 日与格奥尔基耶娃一起参加公开活动。 格奥尔基耶娃表示，由于国内预算和选举职责，其他几位财政部长也呆在家里，但大多数央行行长都会出席。 贝森特决定跳过今年由美国领导的高调聚会和二十国集团（G20）主要经济体会议，这可能会让同行感到沮丧，因为伊朗战争、乌克兰对抗俄罗斯入侵的斗争以及美国对国际刑事法院实施制裁的举动导致紧张局势加剧。 化石能源储备释放 在美国总统唐纳德·特朗普的压力下，七国集团 (G7) 国家同意从紧急储备中释放 1 亿桶柴油和原油，特朗普渴望在 11 月大选之前看到汽油价格下跌，否则他的共和党可能会失去对国会的控制权。 特朗普周五宣布与俄罗斯达成协议，将为全球市场提供更多柴油，并暂时放弃美国旨在剥夺莫斯科因乌克兰战争而获得的收入的制裁。 此举立即引起乌克兰总统泽伦斯基的批评。</p><p>自2月28日战争爆发以来，已经释放了超过10亿桶石油，主要来自陆上商业库存。但业内高管表示，全球市场可用的石油储存量正在减少，这使得市场更加脆弱，并加剧了价格压力。 国际货币基金组织表示，其对 2026 年全球经济增长 3% 的预测几乎没有变化，并可能略微上调明年的预测。 但一些国家的评级将被下调，包括目前已进入针对俄罗斯入侵的第五个年头的乌克兰，以及遭受伊朗袭击和能源出口大幅减少的海湾国家。 国际货币基金组织周二发布的研究表明，食品和能源价格的急剧上涨是日益常见的危机根源，它会在较长时间内推高通胀预期，加剧贫困并威胁经济稳定。 令政策制定者头疼的一个问题是公共债务负担不断加重，这正在削弱经济增长并增加通胀压力。 国际货币基金组织表示，公共债务处于二战以来的最高水平，到2030年将超过国内生产总值(GDP)的100%。 以美国为首的发达经济体的债务与国内生产总值的比率最高，但新兴市场和低收入国家尤其脆弱，因为面临一系列挑战：资本外流以寻求更高的美国利率，厄尔尼诺气候现象引发的极端天气，以及人工智能（AI）投资的缺乏，人工智能（AI）缓解了美国和其他富裕国家的负面供应冲击。 鉴于公共债务水平较高，发展中国家尤其容易受到影响，必须以更高的利率重新谈判。 到 2026 年，它们总共将面临 4000 亿美元的外部债权人债务偿还，平均利息支出已超过收入的 10%。 许多低收入国家担心国际货币基金组织对贷款计划的新建议，这些建议要求进行更少但更深入的改革，作为批准贷款的条件，许多人担心这一变化将导致痛苦的紧缩措施。</p></div><p class="fulltext-src"><a href="https://www.aljazeera.com/news/2026/10/11/war-and-high-debt-to-dominate-imf-world-bank-meetings-in-bangkok?traffic_source=rss" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">18</span> US Homeland Security secretary sees no ‘risk’ from livestreamed execution</h3><p class="card-meta">世界与社会 · Al Jazeera · 2026-10-12 07:17<span class="chip chip-accent">重点</span></p><p class="card-summary">Decision to livestream Nidal Hasan execution has led to harsh criticism and war…</p><p class="card-impact"><span class="label">影响</span> 围绕security，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>美国国土安全部部长马克韦恩·穆林为计划直播尼达尔·哈桑处决的计划进行了辩护，淡化了有关他被行刑队处决的图像可能被用作暴力团体宣传工具的警告。 在周日接受哥伦比亚广播公司新闻节目《面向全国》采访时，穆林将这一决定视为唐纳德·特朗普总统对犯罪采取强硬态度的一部分。 推荐故事 3 项清单 - 直播胡德堡枪手处决的 3 个美国名单之一：这合法吗？ - 3 个“野蛮”中的第 2 个：美国立法者谴责直播尼达尔·哈桑处决的计划 - 3 名名单中的 3 名教皇称死刑“不可接受”，因为美国计划直播执行死刑 “我追随特朗普总统。他是国家的总司令，”穆林说，并称赞这位共和党领导人“恢复了美国价值观”。 穆林还否认了哈桑被处决的形象可能会被用来针对美国的担忧。 “我目前认为风险不会因此而升高，”穆林说。 “我认为人们需要明白，如果你攻击美国，我们会追捕你，我们将确保惩罚与罪行相符。” 哈桑是一名前美国陆军少校，因在德克萨斯州胡德堡军事基地枪杀 12 名手无寸铁的现役士兵和一名退役军人而于 2013 年 8 月被判处死刑。 袭击发生在 2009 年 11 月 5 日，当时哈桑向基地的一处医疗设施开枪，军人在部署前在那里接受例行检查。 该事件被认为是美国军事基地发生的最致命的大规模枪击事件之一。 另有32人在枪击事件中受伤。 在应对袭击过程中，军事基地的警察开枪射杀了哈桑，导致他腰部以下瘫痪。 批评者质疑直播行刑队枪杀一名坐在轮椅上的男子的镜头。 直播执行定于 12 月 3 日进行。 但穆林驳斥了这些担忧，认为收视率是可选的。 “再说一遍，如果没有人选择，就没有人必须看，”穆林说。 国防部长皮特·赫格斯上周宣布计划直播即将执行的处决，引发了一波批评。 但特朗普周六表示他可能会重新考虑这一决定。 “有两种想法：不展示它和展示它。因为，你知道，通过展示它，也许其他人不会做他所做的事情，”特朗普在白宫外告诉记者。 “所以我最终会做出决定。我知道军方想做什么，但我们会做出决定。” 然而，两党立法者都谴责公开处决的想法。</p><p>周日上午，共和党参议员汤姆·蒂利斯在 NBC 的“会见媒体”节目中警告说，广播哈桑的死将“危及”美国人的生命。</p><p>“恐怖组织会利用它作为招募工具。这会导致其他人变得激进，而我们不是这样的人，”蒂利斯说。</p><p>“听着，胡德堡枪击案凶手应该被处死，但有一种正确的处理方式，也有一种比我一生中观察到的更不恰当的处理方式。”</p><p>蒂利斯的参议员任期将于一月结束，他也批评赫格塞斯的鲁莽领导。</p><p>蒂利斯说：“这又是一个例子，说明为什么皮特·赫格斯和他的虚张声势需要从国防部滚出去，因为他是一个失败的领导人。”</p><p>这位参议员被认为是赫格塞斯 2025 年 1 月确认投票中的决定性选票之一，此后他称自己对赫格塞斯内阁提名的支持是他任期内的“最大遗憾”。</p><p>其他共和党人也表达了蒂利斯对直播的担忧。 例如，阿拉斯加州参议员丽莎·默科斯基将公开处决与她所期望的“恐怖分子和独裁者”进行比较。</p><p>她还辩称，哈桑已经寻求公众的关注，这是他在广播处决中会得到的关注。</p><p>穆尔科斯基补充道：“这将使这个不值得进一步恶名昭著的人成为他所寻求的殉道者。”</p><p>前军人、密歇根州共和党众议员汤姆·巴雷特周五发表声明，解释说他在袭击发生前一年曾在胡德堡接受过训练。</p><p>他还表示，尽管认为哈桑“邪恶”，但他反对公开处决。</p><p>巴雷特在 X 上写道：“赫格斯国务卿应该认真重新考虑这一决定。”</p><p>“将已经悲惨的局势公之于众是没有必要的，也不符合公共利益。”</p><p>军事处决在美国极为罕见，只能由总统根据《统一军事司法法典》批准。</p><p>如果针对哈桑的命令得到执行，他将成为自1961年以来第一位被处决的美军成员。</p></div><p class="fulltext-src"><a href="https://www.aljazeera.com/news/2026/10/11/us-homeland-security-secretary-sees-no-risk-from-livestreamed-execution?traffic_source=rss" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/31624713e69c27b900599e53c338c0a9581c96c6/0_0_2650_2120/master/2650.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=db1536b7d01307378de3f4471c706940" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">19</span> Trump announces partial ceasefire in Ukraine war as Zelenskyy says deal is ‘news to me’</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-12 01:21</p><p class="card-summary">Ukrainian president earlier rejected US call for Kyiv to stop bombing oil refin…</p><p class="card-impact"><span class="label">影响</span> 围绕war/ceasefire，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>唐纳德·特朗普宣布了乌克兰和俄罗斯之间的能源停火，显然没有咨询弗拉基米尔·泽连斯基，后者表示停止远程攻击的协议“对我来说是新闻”。 美国总统在社交媒体帖子中声称双方已达成协议。 “俄罗斯和乌克兰之间的战争已实现能源停火，立即生效。双方都已同意。不要破坏它！” 他在《真相社会》上撰文。 他没有提供更多细节。 泽连斯基表示，他对这一消息感到惊讶，但如果弗拉基米尔·普京也这样做，他也会同意。 乌克兰总统告诉 Axios 网站：“如果特朗普总统与普京进行了谈判，请告诉我们停火何时开始。我们已经准备好，我们将接受它。” 早些时候，泽伦斯基拒绝了特朗普周六提出的要求基辅停止轰炸俄罗斯炼油厂的要求。 泽连斯基表示，莫斯科必须首先停止对其国家能源基础设施的“残酷”攻击。 他说，任何结束乌克兰对俄罗斯境内目标进行远程无人机袭击的协议都必须是“互惠的”。 它应该得到“真正的保证”的支持——这意味着包括美国在内的乌克兰盟友对莫斯科采取惩罚性措施。 没有迹象表明克里姆林宫正在遵守特朗普的停火协议。 据泽连斯基称，俄罗斯无人机周日“全天”升空。 他说，“不幸的是”还发生了几次空袭，其中包括对能源基础设施的空袭。 乌克兰总统表示，俄罗斯袭击了东部城市哈尔科夫的五号火力发电厂，这是本周针对乌克兰发电和输电设施的 200 多次袭击中的最新一次。 他补充说，还有 17 起针对天然气和石油设施的袭击。 华盛顿和基辅之间的快速争端始于周五，当时特朗普宣布取消对俄罗斯柴油出口的制裁。 他表示，此举将在下个月美国中期选举之前降低全球和国内燃油价格。 愤怒的泽连斯基称这一决定“软弱”，并表示这将为普京带来“数十亿”的额外收入，使他能够“更加激烈地”发动战争。 同样愤怒的特朗普表示，泽连斯基应该“该死的停止”袭击俄罗斯炼油厂。 他周六表示，乌克兰需要一位“新领导人”。 泽伦斯基在回应特朗普时表示，乌克兰人应该选择“一位或另一位领导人”。 他告诉美国广播公司新闻，他愿意接受特朗普的要求并组织选举，但前提是普京同意“全面”60天停火。 这是自去年特朗普在椭圆形办公室斥责泽伦斯基以来美国和乌克兰之间最严重的公开争执。</p><p>英国《金融时报》周日援引欧洲官员的话说，美国威胁要停止向乌克兰提供武器的采购系统，以迫使基辅停止对俄罗斯能源基础设施的深度打击。 据《纽约时报》报道，美国官员向克里姆林宫提供了丰厚的经济奖励，以换取停火。 据报道，其中包括释放被冻结的数十亿俄罗斯主权资产。 特朗普政府还重新考虑了出售俄罗斯能源公司卢克石油公司部分股份的计划。 该报报道称，这项价值数十亿美元的交易将使中东投资者受益，其中一些投资者与美国谈判代表有“业务联系”。 周六，特朗普批评泽伦斯基，并表示他拒绝达成结束战斗的协议。 作为回应，乌克兰总统将 1945 年以来欧洲最大规模的战争归咎于“俄罗斯，而且只有俄罗斯”。 “最早今天就可以停止对能源基础设施的袭击，但普京不想这样做，”他说。 乌克兰官员指出，白宫要求基辅放弃其最有效的武器，但没有要求俄罗斯做出任何相应的让步。 最近几周，基辅对俄罗斯经济造成了重大打击，石油设施、仓库和数据中心遭到袭击。 俄罗斯自己的轰炸行动一直是无情的。 周六，它在扎波罗热市造成 23 人死亡，其中包括 4 名儿童，并袭击了前线城镇斯洛维安斯克的一栋五层公寓楼。 泽连斯基表示，莫斯科的空袭行动动用了数千枚航空炸弹和喷气式无人机。 他说，这种情况继续“有增无减”。 乌克兰外交事务委员会主席奥列克桑德·梅列日科表示，在最近发生了破坏性的腐败丑闻后，特朗普对泽连斯基辞职的“霸凌”要求“矛盾地”增强了他在国内的地位。 “普京的计划是斩首泽连斯基并解除他战时领导人的职务。特朗普站在普京一边，”梅列日科说。 他补充说：“恐怕这种情况的背后是特朗普的世界观。他想与普京做生意。对他来说，乌克兰似乎是一个需要消除的障碍。特朗普和普京都希望迫使我们投降。” 在谈到1939年纳粹德国与苏联之间臭名昭著的协议时，梅列日科表示：“我们正在走向新的莫洛托夫-里宾特洛甫条约，走向一个充满强人和势力范围的世界。” 梅列日科表示，乌克兰将违背美国的意愿，继续摧毁敌方炼油厂，因为它们为俄罗斯的战争机器提供资金，并承认，受到特朗普政府的威胁，切断美国与基辅的情报共享将“致盲”乌克兰的防空系统。 “这将是普京种族灭绝的共谋行为。这将意味着更多的平民和儿童死亡，”他说。</p><p>当特朗普宣布美国取消对俄罗斯柴油的制裁时，乌克兰谈判代表正在佛罗里达州与美国谈判代表史蒂夫·威特科夫和贾里德·库什纳会面。 乌克兰人措手不及，提前回家了。 “这感觉就像一个陷阱，”一位震惊的乌克兰官员告诉《基辅独立报》。 周日，泽伦斯基在与加拿大总理马克·卡尼、波兰领导人唐纳德·图斯克和欧盟委员会主席乌苏拉·冯德莱恩等主要盟友的一系列对话中获得了支持。 早些时候，泽连斯基与英国首相安迪·伯纳姆、法国总统埃马纽埃尔·马克龙和芬兰总统亚历山大·斯塔布进行了交谈。 唐宁街表示，伯纳姆承认过去 24 小时对乌克兰来说是“困难的”，并“重申了他的完全声援”。 唐宁街表示，两位领导人同意“继续对俄罗斯施压”并加强制裁制度，尽管特朗普却做出了相反的努力。 一份声明补充说：“俄罗斯应该同意立即实现能源停火，结束对乌克兰基础设施的残酷袭击以及对黑海航运的袭击。” 泽伦斯基在周末发表讲话时表示，特朗普的决定赋予了普京权力，并为他提供了“用于战争的额外资金”，数额达到数百万甚至数十亿。 “这当然不公平。这当然不是合作伙伴应该采取的行动。而且，在我看来，这是一个软弱的决定，”他说。 - 《卢克·哈丁的背叛：特朗普、普京和征服的新时代》由卫报费伯出版</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/world/2026/oct/11/zelenskyy-trump-ukraine-russia-energy-ceasefire" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">20</span> Two killed near Israeli-occupied area in south Lebanon</h3><p class="card-meta">世界与社会 · Al Jazeera · 2026-10-12 04:46</p><p class="card-summary">Despite ceasefire reached between Israel and Lebanon in June, Israeli attacks c…</p><p class="card-impact"><span class="label">影响</span> 围绕ceasefire，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>据黎巴嫩官方媒体和地方当局报道，随着以色列的袭击仍在继续，两名男子在黎巴嫩南部的宾特朱拜勒地区参加一年一度的橄榄收获活动时被杀。 据官方国家通讯社（NNA）报道，周日，其中一名男子在弗罗恩村死于最近战斗留下的弹药，另一名男子则因以色列炮击而身亡。 推荐故事 3 项清单 - 3名黎巴嫩人中的名单1正在关注以色列即将举行的选举，但很少有人预计会发生变化 - List 2 of 3叙利亚否认官员与土耳其真主党进行“秘密”会谈 - 列表 3（共 3 个“严峻形势”）：黎巴嫩囚犯绝食 18 天 黎巴嫩军队指责以色列坦克火力，并称正在进行的袭击“公然违反了现有协议”。 随后，亚特市政府敦促居民“避开该镇郊区，不要跨越分隔一些不安全街区的土墙”，以免遭到以色列袭击。 在弗龙，国家通讯社报道说，以色列之前行动中留下的“异物”爆炸，炸死了一名工程师，当时他和其他人正在照料树木。 弗龙市长哈桑·巴齐告诉法新社，这名工程师是从他居住的贝鲁特来收割庄稼的。 巴齐说，这一事件促使当地居民取消收割，等待“黎巴嫩军队完成村庄的净化工作”。 流离失所者 自六月黎巴嫩和以色列达成协议以来，南部的暴力事件有所减少，但并未停止。 3月2日，真主党在美以对伊朗战争期间为支持德黑兰而袭击以色列，黎巴嫩陷入冲突。 随后，以色列发动轰炸和地面入侵，当局称已造成 4,300 多人死亡。 八月，黎巴嫩总理纳瓦夫·萨拉姆指责以色列故意袭击全国各地的房屋和民用基础设施。 国际移民组织（IOM）记录8月底有近35万名境内流离失所者，这是流离失所危机日益恶化的一个迹象。 来自附近杰布奇特镇的志愿者和当地人前来帮助南部邻居收割庄稼，以示团结一致。 “从北到南，一个民族，一个土地，”组织者艾哈迈德·查哈尔 (Ahmad Chahhal) 说。</p></div><p class="fulltext-src"><a href="https://www.aljazeera.com/news/2026/10/11/two-killed-near-israeli-occupied-area-in-south-lebanon?traffic_source=rss" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">21</span> Zelenskyy welcomes US-announced energy ceasefire</h3><p class="card-meta">世界与社会 · Al Jazeera · 2026-10-12 04:28</p><p class="card-summary">President Zelenskyy has responded to Donald Trump’s announcement that Russia an…</p><p class="card-impact"><span class="label">影响</span> 围绕ceasefire，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>泽连斯基欢迎美国宣布的能源停火</p><p>泽伦斯基总统对唐纳德·特朗普宣布俄罗斯和乌克兰同意能源停火作出回应，称如果莫斯科做出回应，基辅准备停止对能源站点的袭击。 俄罗斯尚未对特朗普的说法做出回应。</p></div><p class="fulltext-src"><a href="https://www.aljazeera.com/video/newsfeed/2026/10/11/zelenskyy-welcomes-us-announced-energy-ceasefire?traffic_source=rss" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/46dbf99cd8e981643f50bda86bd32e53e9f2ec75/525_0_3360_2688/master/3360.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=e802a6f850f4bc281242473682e30c60" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">22</span> Pennsylvania shooter who killed eight was a grandfather, says slain child’s dad</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-12 07:48</p><p class="card-summary">Father of toddler killed in Erie mass shooting says reported gunman never seeme…</p><p class="card-impact"><span class="label">影响</span> 可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>据认识枪手的人士透露，周五在宾夕法尼亚州伊利市的一处住宅发生大规模枪击事件中，枪杀了八人，然后开枪自杀的男子是一位祖父，他没有表现出有能力实施这种暴力的迹象。 据美联社报道，遇害者中的一名男子周日表示，这名男子似乎从未感到痛苦或异常。 “我认为这是他的幌子，”朱利叶斯·温德姆在周五枪击事件受害者的悼念活动中说道。 温德姆一岁的女儿阿玛丽安娜； 她怀孕的母亲； 受害者包括该妇女五岁的儿子和未出生的婴儿。 “他每天都微笑着，而且很公正——你不会想到会发生这样的事情，”温德姆说。 45岁的枪手结束了自己的生命。 当局尚未公布他的名字，但伊利市警察局长里克·洛拉表示，他与七名受害者有亲属关系。 他说，第八个是孕妇的朋友。 警方也没有公开他们的名字。 周日，哀悼者在屋外放置了蜡烛、鲜花和毛绒玩具，周五下午 5 点前不久，该男子向该男子开枪。 温德姆穿着一件T恤，上面印有被杀妇女和儿童的照片，并写着“永远在我心中”。 “言语甚至无法解释我现在正在经历的事情，”温德姆说。 “但我必须为我的社区坚强起来，你知道我在说什么吗？我的家人，我的女儿，我的儿子，每个人。” “我们不希望这段黑暗的记忆决定他们在这个世界上的生活，”一位家庭朋友告诉克利夫兰 19 新闻台。 “你怎么理解这样的事情？你如何回家告诉你的孩子：‘嘿，你的妈妈，你的兄弟姐妹，你的叔叔和其他人都被你的爷爷谋杀了？’” 洛拉说，调查人员找到的视频和音频证据包括，就在两名“心疼”的妇女到达并开始敲门之前，从屋内传来了低沉的枪声。 枪手随后出来向他们开枪，然后返回室内。 赶到的警察发现两名妇女死在外面。 部署无人机和机器人后，他们进入室内，在一楼发现了五岁男孩和一岁女孩的尸体； 楼梯间里还有两名妇女和两名年轻男子； 还有二楼的射手。 “出于对受害者和家属的尊重，我不会讨论我们的警官在那所房子里遇到的细节，”这位负责人在新闻发布会上说。 “但我希望我们的社区了解所发生事件的严重性，以及这场悲剧对相关人员和整个社区产生的深远影响，”他说。 伊利位于匹兹堡以北约 120 英里（190 公里）处。</p><p>洛拉拒绝讨论动机，但表示心理健康可能是一个因素。 他说，调查人员将与在屋外被杀的妇女的亲属交谈，并检查她们的手机。 “他们知道那所房子发生了什么事，”洛拉说。 “我们必须弄清楚那是什么。” 妮可·埃勒 (Nicole Eller) 和黛布拉·埃勒 (Debra Eller) 是受害者之一，他们告诉美联社，他们认识这家人已有 30 多年了。 妮可·埃勒 (Nicole Eller) 表示，枪手“是个好人，然后他开始走下坡路”。 “他们是一个可爱的家庭。谁会想到会发生这种事？” 黛布拉·埃勒说。 “天哪，这太令人沮丧了。这不应该发生在她、孩子们或任何人身上。他的孙子，他的孩子，你怎么能这么做？” 伊利枪击事件让人想起1982年宾夕法尼亚州威尔克斯巴里发生的一场大屠杀，当时一名男子杀死了13人，其中包括他自己的5个孩子。 在周六的新闻发布会上，伊利市市长达里亚·德夫林直接向遇难者家属发表了部分言论。 “我深感抱歉，”德夫林说。 发生在你身上的事情是可怕的，今天我们任何人都无话可说，可以让这件事变得更容易……我们整个社区与你同在，我们与你一起悲伤。 我们在这里支持你。” “我为这个家庭感到心碎。 洛里和我正在为他们的亲人和整个伊利社区祈祷，”宾夕法尼亚州州长乔什·夏皮罗 (Josh Shapiro) 周六在 X 上发帖表示。</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/us-news/2026/oct/11/erie-pennsylvania-mass-shooting-grandfather" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">23</span> Is the Yemen war entering a new phase?</h3><p class="card-meta">世界与社会 · Al Jazeera · 2026-10-12 01:30</p><p class="card-summary">Saudi Arabia has accused Yemen’s Houthis of killing 12 people and injuring 300…</p><p class="card-impact"><span class="label">影响</span> 围绕war，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>也门战争是否进入新阶段？ 沙特阿拉伯指责也门胡塞武装在周六利雅得哈立德国王国际机场的袭击中造成 12 人死亡、300 人受伤。 这是沙特阿拉伯和也门胡塞武装之间战斗最严重的升级之一吗？ 半岛电视台的穆罕默德·萨利赫解释道。</p></div><p class="fulltext-src"><a href="https://www.aljazeera.com/video/newsfeed/2026/10/11/is-the-yemen-war-entering-a-new-phase?traffic_source=rss" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/b007e171fb8b77f49073222c90174362d7578813/250_0_2500_2000/master/2500.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=a60c35f6f96e8dbc5259a4155129b600" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">24</span> Australian politics live: Taylor rejects Frydenberg’s GST idea but welcomes political resurrection; One Nation to preference Liberals in Victoria poll</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-12 07:41</p><p class="card-summary">Follow the day’s news live Get our breaking news email , free app or daily news…</p><p class="card-impact"><span class="label">影响</span> 可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>澳大利亚政治现场：泰勒拒绝弗莱登伯格的商品及服务税想法，但欢迎可能的政治倾斜； 一国党在维多利亚民意调查中优先支持自由党 泰勒拒绝弗莱登伯格的商品及服务税主张，但欢迎政治复兴 今天早上在堪培拉当地一家咖啡馆对记者发表讲话时，安格斯·泰勒驳斥了乔什·弗莱登伯格关于提高商品及服务税的建议，但表示如果这位前自由党财务主管决定在下次选举中重新竞选，他将欢迎他重返党内。 这与他昨天告诉内部人士的内容非常相似。 泰勒告诉记者： 我欢迎每一位关心我们国家未来的自由党人士，我知道乔什也关心，在未来几个月里肩负起责任，推翻腐败的工党政府，实现澳大利亚所需的变革。 在汉森称泰勒为“狡猾的管理顾问”后，泰勒为自己的简历辩护 我的同事乔什·巴特勒 (Josh Butler) 向泰勒询问宝琳·汉森 (Pauline Hanson) 对 CPAC 的言论，该言论贬低了自由党领袖在政治生涯前作为管理顾问的生活。 她称他为“狡猾”的人。 泰勒表示，在 2013 年加入联邦议会之前，他对自己的简历“毫不掩饰”。 我很自豪我不是职业政客。 我毫不掩饰这样一个事实：在从政之前，我扭转了工业、扭转了企业。 我从事家庭农业生意，那是我从政之前所做的，而且我是一个相对较晚的从政者。 但这给了我扭转我们国家的经验。 泰勒拒绝弗莱登伯格的商品及服务税主张，但欢迎政治复兴 今天早上在堪培拉当地一家咖啡馆对记者发表讲话时，安格斯·泰勒驳斥了乔什·弗莱登伯格关于提高商品及服务税的建议，但表示如果这位前自由党财务主管决定在下次选举中重新竞选，他将欢迎他重返党内。 这与他昨天告诉内部人士的内容非常相似。 泰勒告诉记者： 我欢迎每一位关心我们国家未来的自由党人士，我知道乔什也关心，在未来几个月里肩负起责任，推翻腐败的工党政府，实现澳大利亚所需的变革。 Leeser 推动法案要求大学采用 IHRA 对反犹太主义的定义 朱利安·利瑟表示，大学一直在争论反犹太主义的定义，而不是采取行动，敦促政府支持一项法案，使各机构采用国际大屠杀纪念联盟的定义。 政府表示已采用 IHRA 定义，即反犹太主义的工作定义。 但也有人担心这个定义将对以色列的批评与反犹太主义混为一谈。</p><p>利瑟告诉众议院，该法案是一个“断路器”，询问“如果我们甚至不同意这个词的含义”，该国如何打击反犹太主义。 该法案还要求大学预防、打击和应对反犹太主义。 政治双方都明确告诉你们[大学]要整顿你们的行为。 为了制止反犹太主义。 反应如何？ 你们一直在争论这个词的定义！ 你无法编造这些东西。 我们现在面临着一种荒谬的情况，悉尼一侧的一个校园的反犹太主义行为在悉尼另一侧的另一个校园却是可以接受的。 自由党议员被要求对乔什·弗莱登伯格复出的猜测发表意见 好吧，我们正在做乔什·弗莱登伯格绝对希望我们做的事情，那就是询问每一位联盟党政治家是否欢迎这位前财长重返联邦政坛。 弗莱登伯格昨天告诉《60分钟》节目，他并没有关闭有一天成为总理的愿望，自由党正面临生存威胁，需要做出改变。 新南威尔士州自由党参议员戴夫·夏尔马 (Dave Sharma) 在 News24 早上被问到： 乔什是……一位朋友，他是一位才华横溢、能干的政治家，而且他是自由党的优秀成员。 无论他未来想以何种方式参与自由党的事务，我都会欢迎。 安格斯是我们的领导者，乔什没有参加比赛，所以我支持安格斯。 自由党前座议员 Dan Tehan 在进入议会的途中对记者表示，他欢迎 Monique Ryan（2022 年从 Frydenberg 手中赢得席位的独立人士）被赶出选民，并补充说“所以绝对，继续吧。” 在维多利亚州 11 月选举中，一国党将优先考虑自由党而非工党 前自由党人士、现为维州一国党副党魁科琳·哈金 (Colleen Harkin) 告诉澳大利亚广播公司墨尔本电台，在 11 月的州选举中，该党将优先考虑自由党而不是工党。 她还表示，一国党有一份谈判项目“清单”，以换取信心和供应，以防自由党在下议院失去多数席位。 正在东南大都市区上议院竞选一国党的哈金表示，该党将“100%”偏爱自由党，而不是工党： 我们将与任何人合作消除工党。 任何人，这当然意味着与自由党合作。 当被问及自由党如何才能在少数派政府中获得一国党的支持时，她说： 如果谈到这一点，我们将有一份谈判工具清单，我们需要通过这些工具来提供信心和供应……其中的一些内容应该不足为奇。 哈金举了一个例子，即不再通过原住民顾问来运行课程。</p><p>反对党领袖安格斯·泰勒在堪培拉咖啡馆开展信用卡活动 安格斯·泰勒和蒂姆·威尔逊在堪培拉一家咖啡馆轮流喝着冰沙，反对党就汽车附加费改革问题继续向工党政府施压。 在泰勒与他的影子财务主管会见堪培拉一家受欢迎的早餐店的老板之后，我们很快就准备参加泰勒的新闻发布会，讨论小企业面临的问题。 泰勒尝试用浆果和蜂蜜制作冰沙。 他自信地说它非常好吃，威尔逊也有同样的评价，他在找到第二根吸管后自己也喝了一口。 根据记录，这里的小杯白葡萄酒售价为 4.70 美元，这在堪培拉的价格是合理的。 交易不收取额外附加费。 瑞安说，弗莱登伯格的选举记忆“与我自己的不符” 莫妮克·瑞安 (Monique Ryan) 表示，她不同意乔什·弗莱登伯格 (Josh Frydenberg) 周末出版的书中摘录中对 2022 年竞选活动的描述。 2022 年，《独立报》在库永选区击败了前自由党财长。 弗莱登伯格在向《澳大利亚人报》提供的摘录中指责瑞安阵营在 2022 年大选期间对个人进行了“高达 11 次”的攻击。 瑞安否认了这些说法，他在议会大厦的新闻发布会上告诉媒体： 我确实读过乔什·弗莱登伯格 (Josh Frydenberg) 对 2022 年大选的回忆……它与我自己的回忆或与我一起志愿的 2000 多人的回忆不符。 我们知道我们以公平和良好的精神开展了一场竞选活动。 乔什·弗莱登伯格并没有这样描述它，我拒绝他在媒体上描述它的方式。 我认为代表与我一起出来的志愿者这样做很重要……我们就在那里。 我们知道那是怎样的。 兰比指责工党对 FoI 法庭之争进行“经济胁迫” 独立参议员雅基·兰比 (Jacqui Lambie) 指责政府试图让前参议员雷克斯·帕特里克 (Rex Patrick) 承担因在法庭上争夺信息自由文件而产生的联邦法律费用，从而实施“经济胁迫”。 如果帕特里克在获取有关 Aukus 协议的 FoI 文件的斗争中失败，他可能会面临高达 15 万美元的法律费用，以支付政府的法律费用。 她说这将开创一个危险的先例。 兰比表示，在政府去年被迫放弃对信息自由立法有争议的修改之后，政府试图在法庭上反对信息自由请求……</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/australia-news/live/2026/oct/12/labor-anthony-albanese-greens-digital-duty-of-care-coalition-angus-taylor-one-nation-ntwnfb" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/f587cdf1dc1a1acf04b3c2c84b45c5209dc6ba51/255_0_2500_2000/master/2500.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=c18e236e07d5e79339173cd58dbb34f6" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">25</span> Sacha Baron Cohen to star in Quentin Tarantino’s West End play The Popinjay Cavalier</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-12 07:27</p><p class="card-summary">The production marks the Hollywood director’s first play written for the stage,…</p><p class="card-impact"><span class="label">影响</span> 可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>昆汀·塔伦蒂诺的戏剧《波平杰骑士》将于 2027 年 3 月在伦敦西区首映，萨莎·拜伦·科恩将担任主演。 该作品是这位好莱坞导演的第一部舞台作品，他也将执导该作品。 该剧于 2027 年 3 月 18 日在伦敦西区凤凰剧院首演，门票于周一开始发售。 63 岁的塔伦蒂诺以《落水狗》、《低俗小说》和《好莱坞往事》等电影而闻名，他表示，他“热衷于为西区带来一个美好的夜晚”。 popinjay 被定义为“虚荣、浮夸或自负的人”，而 cavalier 是骑兵或有礼貌的绅士。 拜伦·科恩补充道：“昆汀打来电话，在他说出他的第一个‘混蛋’之前，我就答应了。当世界上最好的导演打来电话时，你不要问问题。我非常高兴我们将一起失去西区的童贞。我已经让他保证不会温柔。” 《波平杰骑士》以 1830 年代的欧洲为背景，被宣传为“一部充满欺骗和伪装的粗暴喜剧，其灵感源自舞台和银幕上的宏伟史诗”。 它的灵感来自旧好莱坞的经典武侠流派，包括乔治·布鲁斯、恩斯特·瓦伊达和小杰西·拉斯基的作品。 完整选角将于稍后公布。 索尼影视娱乐公司和索尼娅·弗里德曼制片公司正在制作该剧。 索尼影视娱乐公司电影集团董事长兼首席执行官汤姆·罗斯曼和弗里德曼表示：“与昆汀一起开发这部戏剧是一种快乐和荣幸，而且显然也是一次冒险。我们这个时代最伟大的故事讲述者之一选择在戏剧中首次亮相，我们感到多么幸运。 “在排练室里看到昆汀的表演真是非同寻常。 他与演员、击剑运动员、杂技演员、音乐家和我们的创意团队合作的乐趣是有感染力的，听到他美妙的语言变得生动起来，发现他的世界在舞台上会变成什么样子，我感到非常高兴。 “现在，萨莎·拜伦·科恩成为了我们的核心人物：一位无所畏惧、才华横溢的演员，具备这个角色所需的机智、恶作剧和大胆。我们非常幸运能够制作这部剧。观众将享受到一场盛宴。” 塔伦蒂诺于 1992 年凭借《落水狗》首次担任导演，之后又联合编剧、导演和主演了《低俗小说》，并凭借该片获得了他的第一个奥斯卡最佳剧本奖。 随后，他在好莱坞执导了《杰基·布朗》、《杀死比尔》第一卷和第二卷、《死亡证明》、《无耻混蛋》、《被解放的姜戈》、《八恶人》和《童话镇》……。 在他的整个职业生涯中，他赢得了两项奥斯卡奖、两项英国电影学院奖和四项金球奖。 他还获得了一项艾美奖和五项格莱美奖提名。</p><p>与此同时，巴伦·科恩 (Baron Cohen) 因创作和扮演 Ali G、Borat Sagdiyev 和 Brüno Gehard 等漫画人物而闻名。 这位 54 岁的老人曾荣获两项英国电影学院奖和三项金球奖，并获得三项奥斯卡奖和六项艾美奖提名。 他尚未在大型舞台制作中担任主角。 他跟随法国小丑大师菲利普·高利埃接受训练。 塔伦蒂诺首次透露了他在 2025 年上演一部戏剧的计划，并在塔伦蒂诺教堂播客上表示，该剧“全部写好了”。 “我正在为它的成功做好准备。如果它失败了，我很快就会完成，”他说。 Popinjay Cavalier 的门票将于周一上午 9 点（英国夏令时）向报名优先入场的观众发售，中午 12 点开始公开发售。 门票起价 25 英镑，全程票价低于 50 英镑的门票超过 16,000 张。</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/stage/2026/oct/12/sacha-baron-cohen-quentin-tarantinos-west-end-popinjay-cavalier" rel="noopener noreferrer">查看原文</a></p></details></div></article></section><section class="section" id="sec-延伸"><h2>延伸关注</h2><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">26</span> Retrofitted LLM can count the letter ‘i’s in ‘artificial intelligence’</h3><p class="card-meta">延伸关注 · Nature · 发布时间未可靠获取</p><p class="card-summary">Nature, Published online: 07 October 2026; doi:10.1038/d41586-026-03059-2 Most…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/llm，可能影响科研议程或公共卫生响应</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>感谢您访问 nature.com。 您使用的浏览器版本对 CSS 支持有限。 获得 为了获得最佳体验，我们建议您使用更新的浏览器（或关闭兼容模式） 互联网浏览器）。 同时，为了确保持续的支持，我们显示的网站不带样式 和 JavaScript。 Strawberry 包含字母“r”三次，但当被问到时，许多大型语言模型 (LLM) 回答该字母出现了两次。 发生这种情况是因为大多数法学硕士将单词编码为代表字母序列的“标记”。 以这种方式运行的 LLM 可以实现出色的性能，但它们无法访问每个单词中的单个字符，这些字符被编码为称为字节的二进制序列。 Minixhofer 等人在 Nature 上发表文章，现在报告了一种称为字节化的方法，该方法改进基于令牌的 LLM 以在字节级别运行。 作者表明，字节化模型可以实现有竞争力的性能，同时保留读取单个字符的能力。</p></div><p class="fulltext-src"><a href="https://www.nature.com/articles/d41586-026-03059-2" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">27</span> Will AI scoop your science? Some researchers see a gloomy future</h3><p class="card-meta">延伸关注 · Nature · 发布时间未可靠获取</p><p class="card-summary">Nature, Published online: 08 October 2026; doi:10.1038/d41586-026-03128-6 Scien…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/research，可能影响科研议程或公共卫生响应</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>感谢您访问 nature.com。 您使用的浏览器版本对 CSS 支持有限。 获得 为了获得最佳体验，我们建议您使用更新的浏览器（或关闭兼容模式） 互联网浏览器）。 同时，为了确保持续的支持，我们显示的网站不带样式 和 JavaScript。 在过去的五周内，研究人员至少两次表示，他们在某个特定的研究问题上进行了长时间的研究，结果却发现人工智能公司要么在他们之前回答了这个问题，要么在他们准备好做同样的事情之前就公布了结果。 作为回应，担心人工智能工具可能会抄袭并抢占他们未发表的工作的研究人员正在限制他们对此类工具的使用。 尽管如此，一些人工智能研究人员（尽管不是全部）表示，人工智能代理越来越有可能先于科学家得出结论。 加州伯克利人工智能安全研究组织Resolution的首席科学家杰弗里·欧文(Geoffrey Irving)表示，研究人员“将会被抢先，但并不是因为他们上传了手稿”。 “它们会被抢先，因为人工智能非常擅长解决问题，而且它们会变得越来越好。” 有争议的发现 9月7日，纽约大学数学家特里斯坦·巴克马斯特在网上发帖称，他和一位合作者在纳维-斯托克斯问题上取得了进展，纳维-斯托克斯问题是流体动力学领域长期存在的一个悬而未决的问题。 根据 Buckmaster 的说法，他和位于加利福尼亚州旧金山的人工智能公司 Anthropic 的数学家 Levent Alpöge 已经研究这个问题一年了，Levent Alpöge 与 Buckmaster 的合作是一个个人项目。 Buckmaster 9 月 7 日的帖子还包含一篇论文，其中包含该问题的简单版本的解决方案。 第二天，即 9 月 8 日，同样位于旧金山的 OpenAI 宣布其代理已经解决了这个难题——巴克马斯特对此时机提出了公开质疑。 Buckmaster 提出了一种可能性，即他和 Alpöge 上传到 OpenAI 工具的信息可用于训练公司的模型。 OpenAI 对这种情况提出了异议。 该公司在一份声明中表示，调查已证实巴克马斯特在 9 月 8 日宣布之前两个月的“提示”“不可能以任何方式影响系统，包括通过培训”。 声明还表示，OpenAI 的研究人员和代理人“在公开发布之前，没有通过任何方式看到他们的任何 [Buckmaster 和 Alpöge] 的工作”。</p><p>尽管有这些保证，一些科学家现在正在重新评估他们如何使用人工智能。 德国明斯特大学的生殖表观遗传学家桑德拉·劳伦蒂诺 (Sandra Laurentino) 表示，她不再信任人工智能系统。 她现在仅使用人工智能来检查代码失败的原因，并在此之前将所有参数和变量名称更改为通用标签，例如“A 组具有 X 功能”，以避免向系统提供有关她的实验的信息。 “在人工智能方面，我非常谨慎，”她说，但最近的争议“让我更加偏执”。 人工智能的发现也让新西兰奥克兰大学的听觉认知科学家塞缪尔·梅尔 (Samuel Mehr) 在使用商业人工智能模型方面变得更加犹豫。 他为自己的实验室制定了一项人工智能使用政策，禁止学生将受保护的信息上传到商业法学硕士，并警告不要在研究过程的任何部分使用这些模型。 “我认为，当你不知道第三方会用它做什么时，将你的知识产权交给第三方是非常危险的，”他说。 喜欢我们的最新内容吗？ 登录或创建帐户以继续 获取《自然》获奖团队的最新新闻 探索涵盖突破性研究的最新功能和观点</p></div><p class="fulltext-src"><a href="https://www.nature.com/articles/d41586-026-03128-6" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">28</span> The science of superintelligence and why AI is still a useful word</h3><p class="card-meta">延伸关注 · Nature · 发布时间未可靠获取</p><p class="card-summary">Nature, Published online: 07 October 2026; doi:10.1038/d41586-026-03198-6 Presi…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能影响科研议程或公共卫生响应</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>感谢您访问 nature.com。 您使用的浏览器版本对 CSS 支持有限。 获得 为了获得最佳体验，我们建议您使用更新的浏览器（或关闭兼容模式） 互联网浏览器）。 同时，为了确保持续的支持，我们显示的网站不带样式 和 JavaScript。 美国总统唐纳德·特朗普在 9 月 29 日发布的行政命令中宣布，人类正处于“超级智能新时代”。 该命令表示，人工智能这个术语已经过时了：“当今的前沿系统所做的不仅仅是模仿或自动化人类智能的各个方面。” 该命令还指示联邦机构使用“超级智能”和“SI”一词，而不是“人工智能”和“AI”。 特朗普的声明引起了不同的反响。 亿万富翁企业家埃隆·马斯克在社交媒体平台 X 上发帖称：“不再有 AI。SI。更好。”并补充说，他的公司 SpaceXAI 将更名为 SpaceXSI。 然而，OpenAI 首席执行官萨姆·奥尔特曼 (Sam Altman) 继续在他的帖子中使用“人工智能”一词。 什么是超级智能？ 特朗普的命令将“超级智能”定义为“‘人工智能’一词所包含的技术和系统”。 但早在行政命令发布之前，研究人员就使用“超级智能”一词来指代假设的、高性能的技术。 这个词在科学哲学家尼克·博斯特罗姆 (Nick Bostrom) 2014 年出版的《超级智能》一书中流行起来，书中将其定义为“在几乎所有感兴趣的领域大大超过人类认知表现的任何智力”。 但新墨西哥州圣达菲研究所的人工智能研究员 Melanie Mitchell 表示，这个术语尚未完全定义。 例如，人类智力的组成部分仍未定义。 “这些都没有严格的含义。人们可以使用这些术语来表达他们想要的意思，”她说。 特朗普希望实现什么目标？ 更名对于特朗普来说并不是什么新鲜事。 8月，当美国和加拿大在关税问题上发生争执时，特朗普命令联邦机构将安大略湖称为美国湖。 特朗普的命令称，这一变化反映了该湖对美国的重要性。 特朗普上个月向联合国解释了他对国际单位制变更的原因。 特朗普说，它比“人工智能”一词“准确得多”，“人工智能”“听起来很假”，“而且它并不假”。</p><p>华盛顿布鲁金斯学会研究人工智能政策的达雷尔·韦斯特认为，总统对人工智能的重新命名是为了在公众情绪反对该技术的情况下重新命名该技术。 上个月美国的一项民意调查显示，大约十分之八的受访者对人工智能的发展速度感到担忧，近十分之九的人表示，他们对人工智能可能超越人类智力的前景更加担心，而不是兴奋。 特朗普一再否认对人工智能的担忧，例如在社交媒体上发帖称：“人工智能接管世界、毁灭人类以及所有其他不好的事情，都是一个骗局。” 他还批评了呼吁监管的人工智能领导人。 韦斯特说，“希望改变名称可以提高公众对这项技术的接受度”，以便“人工智能革命能够向前发展”。 “但我认为这是异想天开。” 当被问及韦斯特的说法时，白宫向《自然》杂志转述了特朗普关于需要新任期的公开声明。 喜欢我们的最新内容吗？ 登录或创建帐户以继续 获取《自然》获奖团队的最新新闻 探索涵盖突破性研究的最新功能和观点</p></div><p class="fulltext-src"><a href="https://www.nature.com/articles/d41586-026-03198-6" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">29</span> How to control where semiconductor crystals start growing</h3><p class="card-meta">延伸关注 · Nature · 发布时间未可靠获取</p><p class="card-summary">Nature, Published online: 07 October 2026; doi:10.1038/d41586-026-02934-2 Semic…</p><p class="card-impact"><span class="label">影响</span> 围绕semiconductor，可能影响科研议程或公共卫生响应</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>访问选项</p><p>访问 Nature 和其他 54 种 Nature 组合期刊</p><p>获取 Nature+，我们最超值的在线订阅</p><p>32.99 美元/30 天</p><p>随时取消</p><p>订阅本期刊</p><p>接收 52 期印刷刊和在线访问</p><p>每年 199.00 美元</p><p>每期仅需 3.83 美元</p><p>租用或购买本文</p><p>价格因文章类型而异</p><p>1.95 美元起</p><p>至 39.95 美元</p><p>价格可能需要缴纳地方税，该税费是在结帐时计算的</p><p>doi：https://doi.org/10.1038/d41586-026-02934-2</p><p>“专家意见”和数据根据 CC BY 4.0 许可发布。</p><p>参考文献</p><p>- Mackus，A. J. M.，Merkx，M. J. M. 和 Kessels，W. M. M. Chem。 马特。 31, 2–12 (2019)。</p><p>- Ryu, S. W. 等人 电流。 应用。 物理。 16, 88–92 (2016)。</p><p>- Kim, K. S. 等人 自然 614, 88–94 (2023)。</p></div><p class="fulltext-src"><a href="https://www.nature.com/articles/d41586-026-02934-2" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">30</span> Spatially deterministic nucleation of 2D semiconductors by etching flux</h3><p class="card-meta">延伸关注 · Nature · 发布时间未可靠获取</p><p class="card-summary">Nature, Published online: 07 October 2026; doi:10.1038/s41586-026-11095-1 Etchi…</p><p class="card-impact"><span class="label">影响</span> 围绕semiconductor，可能影响科研议程或公共卫生响应</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>摘要 成核控制是半导体沉积的基础，控制着晶体材料形成的时间、地点和方式。 传统策略可以调节成核密度，并通过区域选择性生长，将沉积限制在指定区域1,2,3,4,5,6,7,8,9,10,11,12,13。 然而，它们通常无法确定单个核在生长区域内形成的位置，甚至使单核事件在空间上也是随机的，并限制了晶体材料的确定性结构。 在这里，我们报告了蚀刻通量介导的二维（2D）半导体单中心成核，以确定性地定位单个成核事件。 从阻挡层释放的蚀刻通量抑制图案边界附近的核，在图案中心留下单个幸存的核，系统实验阐明了该机制并建立了零、单和多个成核机制的成核设计规则。 蚀刻助熔剂介导的单中心成核能够实现 10 μm 尺度的单晶二硫化钼生长、高达 117 cm2 V−1 s−1 的场效应迁移率以及具有工艺兼容性的大面积均匀性。 这种面内化学通量策略实现了空间编程生长，展示了线形单晶的成核-生长解耦、集成在大型公共晶体内的多个晶体管以及用于自对准接触的对准二维横向异质结构。 这些功能开辟了通往先进二维电子集成的道路，并将半导体沉积从控制材料生长的位置扩展到控制晶体开始形成的位置和方式。 其他人正在查看类似内容 主要 实现高度局部化和精确的成核控制已成为现代半导体加工的关键要求，因为这种精度从根本上决定了均匀性和器件性能。 区域选择性生长（ASG）是一种很有前途的方法，它由生长区域和势垒区域之间的反应速率差异驱动，将目标材料沉积在所需区域。 在过去的几十年里，ASG 通过各种方法不断发展，包括硅锗应力源和 III-V 半导体的选择性外延生长1,2,3，选择性金属化（例如钨间隙填充和钴封盖4,5）以及用于氧化物间隔物和氮化物阻挡层的区域选择性原子层沉积（AS-ALD）6,7。 最近，ASG 技术已通过选择性化学气相沉积 (CVD) 扩展到二维 (2D) 过渡金属二硫属化物 (TMD)，这是一种有前途的下一代半导体8,9,10,11,12,13。</p><p>在 2D TMD ASG 中，可以通过与三维 (3D) 块体 ASG 工艺类似的机制，使用具有势垒区域的异质表面图案化来实现选择性。 最近，单晶二维 TMD 已通过有限生长得到证明； 然而，可实现的晶体尺寸仍然有限8,9。 由于整个生长区域通常充当传统 ASG 中的成核活性区域 (NAR)，因此成核事件随机发生在生长区域内的随机位置。 这种随机成核行为限制了可达到的单晶域尺寸并阻碍了可靠的空间控制，这表明需要一种先进的 ASG 策略来实现大型单晶生长和对齐异质结构组装。 为了解决这些限制，我们开发了一种蚀刻通量介导的单中心成核（EF-SCN）策略，该策略引入了 ASG 系统中成核控制的范例。 与传统的 2D TMD ASG 不同，传统的 2D TMD ASG 仅依赖于具有不同表面结合能的异质表面系统的面外选择性，EF-SCN 通过在生长区域内创建不均匀的成核概率来实现面内成核的空间控制。 从氧化物阻挡层释放的氧气产生横向蚀刻通量，抑制成核，从而在每个图案的几何中心定义 NAR。 这种通量驱动机制能够实现确定性成核，并建立一个物理框架，其中面内化学通量调节空间成核概率。 从实用的角度来看，EF-SCN 还提供了巨大的优势和新颖的设备配置。 中心点的确定性成核可实现有效的成核抑制和单晶尺寸缩放，从而产生 10 μm 尺度的单晶二硫化钼 (MoS2)。 在工艺兼容性方面，EF-SCN实现了超过99%的单晶良率和大面积均匀的选择性，可应用于430℃的低温生长。 EF-SCN生长的单晶MoS2表现出117 cm2 V−1 s−1的高场效应迁移率，并且大单晶实现了单通道内多个场效应晶体管（FET）的集成，迁移率相对标准偏差（RSD）为7.8%。 此外，2D 横向异质结构的精确位置和方向对准能够实现自对准 ALD 接触 FET 的独特演示。 总的来说，EF-SCN 建立了一个选择性生长框架，可实现确定性成核和空间编程生长，为功能性单晶架构和先进的 2D 电子集成提供了一条途径。 蚀刻助熔剂介导的单中心成核</p><p>图 1a 说明了使用成核势垒的传统 2D TMD ASG。 在该方案中，有意抑制势垒区域中的成核，从而导致生长区域内的选择性沉积（图1a，左），特别是在图案8、9、10、11的角落、边缘或平台位置（补充图1a）。 本质上，多重成核往往会出现，因为无论成核位点类型如何，NAR（补充图1a中的红色区域）都不会在生长区域内形成为单个统一位点。 减小生长区域的尺寸可以缓解这个问题，甚至可以通过传统的 ASG 方法实现 2D TMD 的单晶生长（图 1a，中）。 然而，成核仍然随机发生在生长区域内（补充图1a中的红星），需要先进的成核策略来确定性定位。 图1显示了单中心成核，其中单晶TMD仅在生长区域的中心形成（图1a，右）。 图 1b、c 显示了传统 2D TMD ASG 和 EF-SCN 机制的比较示意图。 在传统的ASG中，TMD在势垒区表现出较弱的结合能，在生长区表现出较强的结合能； 因此，两个区域之间的面外相互作用选择性是主要原则8,14（图1b）。 因此，整个生长区域作为具有均匀成核概率的 NAR，导致在生长区域内的随机位置处成核（补充图 1b）。 相比之下，EF-SCN 使用屏障释放能够诱导 2D TMD 解吸的蚀刻通量（图 1c）。 靠近蚀刻助焊剂势垒的区域成为成核抑制区域 (NSR)，只有中心点仍然是有效的 NAR。 这种面内横向蚀刻通量在生长区域的中心引起最大成核概率，从而产生确定性的单中心成核（补充图1c）。 由于二维材料通过弱范德华相互作用结合到基底上，因此它们的成核预计将受到面内蚀刻通量的敏感控制。 图 1d、e 显示了 2D 单层 MoS2 的 EF-SCN 代表性扫描电子显微镜 (SEM) 图像。 MoS2（黑色区域）通过金属有机化学气相沉积（MOCVD）生长，图案化衬底由误切蓝宝石生长区域（浅灰色​​三角形区域）和氧化铪（HfO2）蚀刻助焊剂阻挡区域（深灰色区域）组成。 均匀的以 MoS2 为中心的成核......</p></div><p class="fulltext-src"><a href="https://www.nature.com/articles/s41586-026-11095-1" rel="noopener noreferrer">查看原文</a></p></details></div></article></section>
+<details class="footer-notes"><summary>采集说明</summary><ul class="notes-list"><li>覆盖窗口：10-11 08:06–10-12 08:06</li><li>未扩展：严格约 24h 窗口</li><li>生成时间：2026-10-12T08:06:12.410618+08:00</li><li>严格 24h 内且时间戳可靠条目：175；时间戳不可靠：75</li><li>事件簇数：245；入选独立事件：30</li><li>失败来源（已跳过）：<ul><li>BBC Technology: ConnectTimeout: HTTPConnectionPool(host=&#x27;feeds.bbci.co.uk&#x27;, port=80): Max retries exceeded with url: /news/technology/rss.xml (Caused by ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x7f0d56654b90&gt;, &#x27;Connection to feeds.bbci.co.uk timed out. (connect timeout=15)&#x27;)) (attempts=3)</li><li>BBC World: ConnectTimeout: HTTPConnectionPool(host=&#x27;feeds.bbci.co.uk&#x27;, port=80): Max retries exceeded with url: /news/world/rss.xml (Caused by ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x7f0d56b71f90&gt;, &#x27;Connection to feeds.bbci.co.uk timed out. (connect timeout=15)&#x27;)) (attempts=3)</li><li>BBC Business: ConnectTimeout: HTTPConnectionPool(host=&#x27;feeds.bbci.co.uk&#x27;, port=80): Max retries exceeded with url: /news/business/rss.xml (Caused by ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x7f0d56b725d0&gt;, &#x27;Connection to feeds.bbci.co.uk timed out. (connect timeout=15)&#x27;)) (attempts=3)</li><li>UN News: ReadTimeout: HTTPSConnectionPool(host=&#x27;news.un.org&#x27;, port=443): Read timed out. (read timeout=15) (attempts=3)</li></ul></li><li>源状态汇总：ok=16 fail=4</li></ul></details>
+</main>
+</body>
+</html>
