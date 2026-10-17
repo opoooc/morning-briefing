@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Morning Briefing · 2026-10-17</title>
+<style>
+:root {
+  --bg: #F2F3F7;
+  --text: #1d1d1f;
+  --secondary: #6e6e73;
+  --link: #007AFF;
+  --accent: #007AFF;
+  --accent-soft: #3B82F6;
+  --glass: rgba(255, 255, 255, 0.78);
+  --glass-strong: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --chip-bg: rgba(120, 120, 128, 0.12);
+  --nav-pill: rgba(255, 255, 255, 0.72);
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-blue: 0 4px 14px rgba(0, 122, 255, 0.28);
+  --radius: 24px; /* glass cards 24–28 */
+  --radius-sm: 18px;
+  --accent-ai: #5e5ce6;
+  --accent-ai-glow: rgba(94, 92, 230, 0.28);
+  --measure: 42ch;
+  --nav-h: 56px;
+  --pad: 16px;
+  --col: 440px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --text: #f5f5f7;
+    --secondary: #98989d;
+    --link: #0A84FF;
+    --accent: #0A84FF;
+    --accent-soft: #3B82F6;
+    --glass: rgba(28, 28, 30, 0.72);
+    --glass-strong: rgba(28, 28, 30, 0.82);
+    --glass-border: rgba(255, 255, 255, 0.14);
+    --chip-bg: rgba(120, 120, 128, 0.28);
+    --nav-pill: rgba(44, 44, 46, 0.72);
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+    --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.35);
+    --shadow-blue: 0 4px 14px rgba(10, 132, 255, 0.35);
+    --accent-ai: #7d7aff;
+    --accent-ai-glow: rgba(125, 122, 255, 0.35);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 12px);
+  scroll-padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+}
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Quiet off-white canvas + faint cool map wash (not heavy lavender/peach) */
+  background:
+    radial-gradient(900px 600px at 18% 12%, rgba(59, 130, 246, 0.07), transparent 60%),
+    radial-gradient(700px 500px at 88% 78%, rgba(0, 122, 255, 0.05), transparent 55%),
+    linear-gradient(180deg, #F2F3F7 0%, #EEF0F5 100%);
+  background-attachment: fixed;
+  background-color: var(--bg);
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background:
+      radial-gradient(900px 600px at 18% 12%, rgba(10, 132, 255, 0.12), transparent 60%),
+      radial-gradient(700px 500px at 88% 78%, rgba(59, 130, 246, 0.08), transparent 55%),
+      linear-gradient(180deg, #000000 0%, #0c0c0e 100%);
+  }
+}
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Horizontal pill-chip nav (Map/推荐 segmented feel) */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  min-height: var(--nav-h);
+  padding-top: env(safe-area-inset-top, 0px);
+  display: flex;
+  align-items: center;
+  background: transparent;
+}
+.nav-inner {
+  width: 100%;
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 10px var(--pad);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 8px 16px;
+  color: var(--secondary);
+  font-size: 14px;
+  font-weight: 560;
+  border-radius: 999px;
+  flex-shrink: 0;
+  background: var(--nav-pill);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
+  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.nav a:hover {
+  text-decoration: none;
+  color: var(--text);
+  background: var(--glass-strong);
+}
+.nav a.active,
+.nav a:target {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: var(--shadow-blue);
+  font-weight: 600;
+}
+.wrap {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 12px var(--pad) calc(48px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(var(--pad), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--pad), env(safe-area-inset-right, 0px));
+}
+@media (min-width: 640px) {
+  :root { --col: 520px; --pad: 20px; }
+  body { font-size: 17px; }
+}
+
+/* Hero = floating route-header glass card */
+.hero {
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.hero h1 {
+  margin: 0 0 6px;
+  font-size: clamp(24px, 6.5vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+.hero .subtitle {
+  margin: 0 0 10px;
+  font-size: 15px;
+  color: var(--secondary);
+  font-weight: 520;
+}
+.hero .meta {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--secondary);
+  line-height: 1.45;
+}
+.banner {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 159, 10, 0.18);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  font-size: 14px;
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+.section { margin: 22px 0 6px; }
+.section h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section h2::before {
+  content: "";
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--accent) 0%, var(--accent-soft) 100%);
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
+}
+
+.section-sheet {
+  padding: 16px 16px 16px;
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+}
+.section-sheet .lead-card {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+.section-sheet .lead-card::before { display: none; }
+
+.lead-card {
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--glass-border);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.lead-card p {
+  margin: 0;
+  position: relative;
+  font-size: 16.5px;
+  line-height: 1.65;
+  max-width: var(--measure);
+}
+
+/* Frosted white news cards */
+.card {
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--glass-border);
+  padding: 0;
+  margin: 0 0 14px;
+  position: relative;
+  overflow: hidden;
+}
+.card-body {
+  position: relative;
+  z-index: 1;
+  padding: 16px 18px 18px;
+}
+.card-focus .card-body { padding: 18px 18px 18px; }
+.card-focus .card-title { font-size: 19px; }
+.card-media {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: rgba(0,0,0,.04);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.card-title {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: 620;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+}
+.rank {
+  display: inline-block;
+  min-width: 1.6em;
+  color: var(--secondary);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.ai-id { color: var(--accent-ai); }
+.card-meta {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  color: var(--secondary);
+  line-height: 1.4;
+}
+.card-summary {
+  margin: 0 0 10px;
+  font-size: 15.5px;
+  line-height: 1.55;
+  max-width: var(--measure);
+}
+.card-why, .card-impact {
+  margin: 0 0 8px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  max-width: var(--measure);
+}
+.label {
+  display: inline;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--secondary);
+  margin-right: 4px;
+}
+.chip {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 560;
+  background: var(--chip-bg);
+  border: none;
+  color: var(--secondary);
+  vertical-align: middle;
+}
+.chip-accent {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: var(--shadow-blue);
+}
+.secondary { margin: 6px 0 0; padding-left: 1.2em; font-size: 13px; color: var(--secondary); }
+.secondary li { margin: 2px 0; }
+.meta-block { margin: 8px 0; }
+.crossref { margin: 8px 0; font-size: 13px; color: var(--secondary); }
+.read-more { margin: 14px 0 0; font-size: 14px; font-weight: 560; }
+.read-more a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(0, 122, 255, 0.35);
+  color: var(--accent);
+  background: rgba(0, 122, 255, 0.06);
+  text-decoration: none;
+  transition: background .15s ease, border-color .15s ease;
+}
+.read-more a:hover {
+  background: rgba(0, 122, 255, 0.12);
+  border-color: var(--accent);
+  text-decoration: none;
+}
+/* In-page fulltext expand (news cards) */
+.fulltext {
+  margin: 10px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.fulltext > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 4px 0;
+  border: none;
+  background: transparent;
+  color: var(--secondary);
+  user-select: none;
+  transition: color .15s ease;
+}
+.fulltext > summary::-webkit-details-marker { display: none; }
+.fulltext > summary::marker { content: ""; }
+.fulltext > summary .expand-mark {
+  display: inline-block;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 400;
+  color: var(--secondary);
+  opacity: 0.85;
+  animation: expand-bounce-down 1.4s ease-in-out infinite;
+  will-change: transform;
+}
+.fulltext > summary:hover,
+.fulltext > summary:hover .expand-mark {
+  color: var(--accent);
+  opacity: 1;
+}
+.fulltext[open] > summary {
+  margin-bottom: 8px;
+}
+.fulltext[open] > summary .expand-mark {
+  font-size: 0;
+  animation: none;
+}
+.fulltext[open] > summary .expand-mark::after {
+  content: "︿";
+  display: inline-block;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--accent);
+  animation: none;
+}
+@keyframes expand-bounce-down {
+  0%, 100% { transform: translateY(0); opacity: 0.85; }
+  50% { transform: translateY(5px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fulltext > summary .expand-mark { animation: none; }
+}
+.fulltext-body {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
+  font-size: 15.5px;
+  line-height: 1.7;
+  max-width: var(--measure);
+}
+@media (prefers-color-scheme: dark) {
+  .fulltext-body {
+    background: rgba(44, 44, 46, 0.55);
+  }
+}
+.fulltext-body p {
+  margin: 0 0 0.85em;
+}
+.fulltext-body p:last-child { margin-bottom: 0; }
+.fulltext-src {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  color: var(--secondary);
+}
+.fulltext-src a {
+  color: var(--secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.muted { color: var(--secondary); }
+.card-ai {
+  border-left: 3px solid var(--accent-ai);
+  box-shadow: var(--shadow), -3px 0 18px var(--accent-ai-glow);
+  background:
+    linear-gradient(90deg, rgba(94, 92, 230, 0.08), transparent 28%),
+    var(--glass);
+}
+.card-ai .card-body { padding: 16px 18px 16px; }
+.conclusions {
+  margin: 6px 0 12px;
+  padding-left: 1.25em;
+  font-size: 15px;
+  max-width: var(--measure);
+  position: relative;
+  z-index: 1;
+}
+.conclusions li { margin: 4px 0; }
+.empty {
+  margin: 0 0 12px;
+  padding: 16px 18px;
+  border-radius: var(--radius-sm);
+  color: var(--secondary);
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px dashed var(--glass-border);
+  font-size: 15px;
+}
+.footer-notes {
+  margin-top: 40px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0,0,0,.06);
+  color: var(--secondary);
+  font-size: 13px;
+}
+@media (prefers-color-scheme: dark) {
+  .footer-notes { border-top-color: rgba(255,255,255,.12); }
+}
+.footer-notes summary {
+  cursor: pointer;
+  font-weight: 520;
+  padding: 12px 0;
+  min-height: 44px;
+  color: var(--secondary);
+  list-style: none;
+}
+.footer-notes summary::-webkit-details-marker { display: none; }
+.footer-notes summary::before {
+  content: "› ";
+  display: inline-block;
+  transition: transform .15s ease;
+}
+.footer-notes[open] summary::before { transform: rotate(90deg); }
+.notes-list { margin: 0 0 8px; padding-left: 1.2em; line-height: 1.55; }
+.notes-list ul { padding-left: 1.1em; margin: 4px 0; }
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="章节导航"><div class="nav-inner"><a href="#sec-脉络" class="active">脉络</a><a href="#sec-重点">重点</a><a href="#sec-科技">科技</a><a href="#sec-research">Research</a><a href="#sec-市场">市场</a><a href="#sec-世界">世界</a><a href="#sec-延伸">延伸</a></div></nav>
+<main class="wrap">
+<header class="hero">
+  <h1>Morning Briefing</h1>
+  <p class="subtitle">2026-10-17 · 全球新闻早报</p>
+  <p class="meta">覆盖窗口：10-16 08:08–10-17 08:08 · 新闻 30 条 · AI Research 5 项 · 生成 2026-10-17 08:08:12 Asia/Shanghai · no_agent=true</p>
+</header>
+
+<section class="section section-sheet" id="sec-脉络"><h2>今日脉络</h2><div class="lead-card"><p>今日主线围绕ai/openai、openai/anthropic、ai/人工智能展开，重点包括谷歌购物工具 Universal Cart 在美国上线；Replit is no longer working…。技术侧另见Elorian’s first A…、Apple&amp;#8217;s upd…。</p></div></section><section class="section" id="sec-重点"><h2>今日重点</h2><article class="card card-focus has-media"><figure class="card-media"><img src="https://readhub.cn/social-image.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">01</span> 谷歌购物工具 Universal Cart 在美国上线</h3><p class="card-meta">科技与 AI · ReadHub · 2026-10-17 03:25<span class="chip chip-accent">重点</span></p><p class="card-summary">谷歌宣布面向美国用户开放购物工具 Universal Cart，该工具可让用户集中保存、追踪通过谷歌搜索及 Gemini 应用发现的不同零售商的商品，保留购物进度，还能在商品降价或缺货补货时发送通知…</p><p class="card-why"><span class="label">为什么重要</span> 触及高信号主题（ai/openai/gemini）；或影响技术路线或产业布局</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>谷歌购物工具 Universal Cart 在美国上线 谷歌宣布面向美国用户开放购物工具 Universal Cart，该工具可让用户集中保存、追踪通过谷歌搜索及 Gemini 应用发现的不同零售商的商品，保留购物进度，还能在商品降价或缺货补货时发送通知，同时可结合信用卡优惠权益推荐适用促销代码，其结账功能对接谷歌此前推出的开放标准通用商务协议 UCP。Universal Cart 是谷歌在人工智能购物领域的最新布局，此前谷歌已推出对话式商品发现、Let Google Call 等相关功能，当前亚马逊、OpenAI 等多家行业对手也在探索智能体商务功能，推动聊天机器人承担更多实际购物任务。</p></div><p class="fulltext-src"><a href="https://readhub.cn/topic/8xG6Ltjifna" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card card-focus has-media"><figure class="card-media"><img src="https://techcrunch.com/wp-content/uploads/2026/10/replit-ceo-masad.jpg?resize=1200,800" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">02</span> Replit is no longer working with Anthropic, CEO says</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-17 05:22<span class="chip chip-accent">重点</span></p><p class="card-summary">Masad said the decision was made for a number of different reasons, including cost. Replit announce…</p><p class="card-why"><span class="label">为什么重要</span> 触及高信号主题（openai/anthropic）；或影响技术路线或产业布局</p><p class="crossref">深入研究：<a href="#sec-research">AI-05</a></p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>Replit 是一个深受初创公司创始人和开发者喜爱的人工智能编码平台，该公司首席执行官兼联合创始人 Amjad Masad 周四在 TechCrunch Disrupt 大会上表示，该平台将不再与 Anthropic 合作。 马萨德表示，做出这一决定是出于多种不同的原因，其中包括成本。 Replit 在 8 月份宣布与 OpenAI 建立合作伙伴关系，但从未有任何迹象表明它不再与 Anthropic 合作。 Masad 表示：“我认为 ChatGPT 现在更好了。”他补充说，该公司使用内部基准来帮助评估性能等指标。 “我们还发布了一个公共基准，并且一致地，Sol 和 Astra 在从头开始构建 vivi 编码应用程序方面表现更好。这是基于成本、合作伙伴关系和性能的决定。出于所有这些原因，我们只是觉得他们现在是更好的合作伙伴。” Replit 销售基于云的软件开发平台，用户可以直接从浏览器内部开发和部署应用程序。 在与 Anthropic 的合作下，Replit 使用人工智能实验室的 Claude 模型来运行其平台。 据说这种合作关系帮助该公司显着增加了收入。 然而，熟悉 Anthropic 和 Replit 合作关系的内部人士拒绝了 Masad 的评论。 一位不愿透露姓名的知情人士表示，合作关系仍然存在。 该公司的网站、博客文章和社交媒体帖子上有证据表明 Replit 几周前就在使用 Anthropic 产品。 例如，9 月底的一篇博客文章引用了 Anthropic 的 Claude Fable 5 和 Claude Fable 5.1 作为在 Replit Agent 生产环境中运行的模型。 大约在同一时间，Replit 的一名产品员工在 X 上发布了有关使用 Anthropic 旗舰型号 Opus 5.5 并宣传其功能的信息。 TechCrunch 联系 Replit 寻求澄清，如果收到回复，我们将更新这篇报道。 Masad 在 Disrupt 大会上分享了有关公司发展的见解，并指出企业开始提供更大的收入份额。 “我们还没有透露 ARR 数据，但就增长而言，我想说，去年企业收入占收入的 2%，”Masad 说。 “今年，我想说我们 15% 的收入来自企业合同，超过 50% 的收入来自 B2B。” 马萨德还评论了良好的人工智能安全措施的必要性。</p><p>“就像我们人类需要一定的工作环境一样——你需要一个漂亮的办公室，也许办公室里有美味的食物、空调、电脑——特工需要一个栖息地来生存和做好工作，”他说。 “因此，栖息地具有良好的编排、良好的错误恢复、良好的安全性和沙箱、良好的网络、良好的身份和授权。一旦你弄清楚了所有这些，那么你就可以安全地部署人工智能。” 本文已更新为文章，以包含有关使用 Anthropic 模型的 Replit 的更多背景信息。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/16/replit-is-no-longer-working-with-anthropic-ceo-says/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card card-focus has-media"><figure class="card-media"><img src="https://readhub.cn/social-image.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">03</span> 软银据悉考虑收购美国最大安保服务公司 其 ADR 一度跌近 8%</h3><p class="card-meta">科技与 AI · ReadHub · 2026-10-17 03:20<span class="chip chip-accent">重点</span></p><p class="card-summary">软银集团正考虑收购美国最大安保服务公司 Allied Universal，潜在交易对其股权估值最高可达 180 亿美元，计入约 120 亿美元债务后交易总额可能接近 300 亿美元。消息传出后软银…</p><p class="card-why"><span class="label">为什么重要</span> 触及高信号主题（ai/人工智能）；或影响技术路线或产业布局</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>软银据悉考虑收购美国最大安保服务公司 其 ADR 一度跌近 8% 4 小时前 软银集团正考虑收购美国最大安保服务公司 Allied Universal，潜在交易对其股权估值最高可达 180 亿美元，计入约 120 亿美元债务后交易总额可能接近 300 亿美元。消息传出后软银 ADR 跌幅一度接近 8%。孙正义希望借此推动人工智能机器人在安保等行业的应用，未来可能以机器人替代部分人力安保岗位，目前相关讨论仍处于初步阶段，尚未作出最终决定。 话题追踪 查看更多 专业版功能 体验专业版特色功能，拓展更丰富、更全面的相关内容。</p></div><p class="fulltext-src"><a href="https://readhub.cn/topic/8xHe6slm7Td" rel="noopener noreferrer">查看原文</a></p></details></div></article></section><section class="section" id="sec-科技"><h2>科技与 AI</h2><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">04</span> Elorian’s first AI model wants to reason with images, not just about them</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-17 00:01<span class="chip chip-accent">重点</span></p><p class="card-summary">According to Elorian&#x27;s evaluations, Glimpse outperforms even GPT-6 Astra on sci…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/gpt，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>TechCrunch 独家获悉，帕洛阿尔托人工智能初创公司 Elorian 在推出产品之前以 3 亿美元的估值筹集了 5500 万美元的种子轮资金，周五发布了其第一个模型。 该模型 Glimpse 正在作为具有 API 访问权限的研究预览版推出，并且聊天界面仅限候补名单，因此目前它只是一个结果表和一篇论文。 论文？ 今天的人工智能模型，尽管拥有丰富的语言和代码技能，但仍然无法真正看到东西。 大多数多模态模型查看图像一次，将其转换为标记，然后用文本对其进行推理 - 就像凭记忆描述照片一样。 一瞥不断回到源头。 在推理过程中，它可以裁剪到一个区域，从视频中提取特定帧，或者运行代码来测量或比较它所看到的内容，埃洛里安将这种机制称为“视觉暂存空间”。 想象一下，有人捏住手机照片进行放大，以仔细检查他们认为看到的内容。 对于前谷歌 DeepMind 研究员兼 Elorian 首席执行官 Andrew Dai 来说，人工智能仍然无法真正看到的最明显迹象之一出现在比赛之夜。 去年，他拍摄了一场刚刚和朋友玩完的棋盘游戏，并询问一位前沿模特谁获胜了。 它不能说。 他告诉 TechCrunch，“每种棋盘游戏都有自己的视觉语言、图像和符号”。 “对于成年人来说，用最少的文本很容易理解发生了什么，但这些模型无法凭直觉理解这些符号的含义。” “人类可以查看没有文字的宜家图表并组装宜家家具，对吧？为什么人工智能模型不能？” 他说。 这种方法并不是全新的——OpenAI 在 2025 年为其 o 系列模型添加了推理过程中的裁剪和缩放功能——但 Elorian 的宣传是，它围绕它构建了整个模型，而且成本低廉。 该公司表示，一个小团队在几百个 GPU 上训练了 Glimpse，该模型比其基准测试的前沿系统要小得多。 Glimpse 的成本为每百万代币 0.60 美元，每百万代币输出 3 美元——比 Sonnet 和 Sol 等中级模型便宜，但比 Haiku 和 Luna 等轻量级模型贵。 但根据 Elorian 的评估，Glimpse 在科学图表推理和短视频字幕方面的表现甚至优于 GPT-6 Astra，在其他视觉推理任务上也有竞争性的结果。 六个月前，Elorian 在由 Striker Venture Partners、Menlo Ventures 和 Altimeter Capital 共同领投的一轮融资中脱颖而出，Nvidia 和谷歌首席科学家 Jeff Dean 也参与其中。</p><p>最初的目标是拥有大量视频的公司：机器人公司、科学实验室、媒体和创意公司。 从长远来看，埃洛里安希望从看到转向行动。 这意味着建立一个场景模型，用它来选择一个动作，包括直接控制机器人。 戴说，明年，该公司的目标是建立“世界上最好的视觉推理模型”，该模型在每项视觉推理测试中都处于领先地位。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/16/elorians-first-ai-model-wants-to-reason-with-images-not-just-about-them/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://platform.theverge.com/wp-content/uploads/sites/2/2026/01/STK419_DEEPFAKE_3_CVIRGINIA_B.jpg?quality=90&amp;#038;strip=all&amp;#038;crop=0,0,100,100" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">05</span> Apple&amp;#8217;s updated App Store rules go after &amp;#8216;nudify&amp;#8217; AI apps</h3><p class="card-meta">科技与 AI · The Verge · 2026-10-17 06:51<span class="chip chip-accent">重点</span></p><p class="card-summary">Apple&#x27;s App Store rules now more explicitly ban so-called &quot;nudify&quot; apps that ge…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>苹果的应用程序商店规则现在更明确地禁止所谓的“裸体”应用程序，这些应用程序在未经人们同意的情况下使用人工智能工具生成人们的亲密图像。 苹果更新应用商店规则，打击“裸露”人工智能应用 这些条款更明确地禁止创建“未经同意的亲密图像”的应用程序。 今年早些时候，X 用户使用 Grok 制作未经同意的、性化的 Deepfake（包括未成年人）后，苹果受到了严厉批评，随后规则发生了变化。 苹果并没有将 X 或 Grok 从 App Store 下架，尽管它告诉参议员，它威胁要下架 Grok。 在苹果 6 月的 WWDC 活动上，抗议者还呼吁苹果“从 App Store 中删除 Grok、X 和所有裸体技术”，7 月，旧金山市检察官命令苹果删除 13 款“裸体”应用，苹果也表示确实这么做了。 作为周五宣布的更新的一部分，苹果表示，开发者“必须主动阻止和删除”未经同意的色情图片，作为其对 App Store 应用程序内容审核要求的一部分。 “未能实施足够的保障措施”或“在收到通知后不纠正违规行为”的开发者可能会被从 App Store 中删除。 苹果还澄清了一项规则，禁止“诱饵和转换”应用程序，或在获得批准后添加或更改功能（包括“裸体”）的应用程序。 苹果的规则还更明确地规定，任何“促进人口贩运或剥削儿童”的应用程序都将从应用程序商店中下架，并“禁止以其他方式分发”。</p></div><p class="fulltext-src"><a href="https://www.theverge.com/tech/1013314/apple-app-store-nudify-ai-apps-harassment" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://media.wired.com/photos/6ad24f19ed303ecbe8441980/master/pass/GettyImages-2299989251.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">06</span> Katie Zacharia Was Linked to an AI Rare-Earths Startup. It’s Even Weirder Than It Sounds</h3><p class="card-meta">科技与 AI · WIRED · 2026-10-17 04:05<span class="chip chip-accent">重点</span></p><p class="card-summary">The short-lived White House press secretary was listed as an adviser to a Krist…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>凯蒂·扎卡里亚在担任白宫新闻秘书五天后被解雇，之前她花了大部分时间试图解释自己的过去。 在扎卡里亚短暂的任期内，她的简历引起了很多人的好奇。 最重要的是，尽管她在职业生涯的大部分时间里声称自己是一名律师，但她实际上从未通过加州律师资格认证，这一点她最终被迫承认。 据《连线》报道，她职业生涯的另一个要素是在健身多层次营销公司 Beachbody 担任联盟营销人员。 《连线》杂志现在揭露了她与一家名为 NRED 智能采矿公司的人工智能稀土采矿公司关系的新细节，该公司的战略顾问是前国土安全部部长克里斯蒂·诺姆 (Kristi Noem)。 6 月 24 日，NRED（当时名为 NovaRed Mining，一家位于加拿大温哥华的小型铜金勘探公司）发布新闻稿，宣布两个月前辞去国土安全部发言人职务的扎卡里亚 (Zacharia) 将与诺姆 (Noem) 一起加入顾问委员会。 据新闻稿称，在她的新角色中，扎卡里亚将为 NovaRed 董事会提供“战略指导”，以推进勘探项目以及“新兴人工智能计划”。 不过，她似乎并没有在那里工作过。 周五，当被问及她是否仍在董事会中时，她说，“那是假的”，并提到《连线》杂志的山姆·阿姆斯特丹，一位“战略营销和媒体参与专业人士”，其客户包括哈萨克斯坦政府以及格鲁吉亚、尼日利亚和津巴布韦的政党。 “该新闻稿没有得到扎卡里亚女士的批准，并且是在未经她同意的情况下发布的，”阿姆斯特丹说，他的兄弟在该公司网站上被列为 NRED 管理层成员，并表示他是作为扎卡里亚的朋友和同事而不是代表发表讲话的。 “我知道这一切都是事实。” 他很快补充说，虽然有人讨论过她加入公司，但她实际上并没有这样做。 NRED 首席技术官瓦伦丁·赛塔利 (Valentin Saitarli) 表示，他即将就任首席执行官，他证实曾就某个职位进行过讨论，但表示“从未实现”，并补充道，“这有点像报名了健身房，但从未真正去锻炼。” Saitarli 在描述 NRED 时说：“我们采用全面的机器人和人工智能。” 尽管阿姆斯特丹了解到该消息已被撤回，但截至周五，NRED 网站上仍保留着声称 Zacharia 加入该公司的新闻稿。 该网站的存档版本显示，Zacharia 至少在 7 月份就被列为管理层。 当《连线》杂志询问 Saitarli 此事时，他表示该网站正在更新。</p><p>扎卡里亚的 NovaRed 职位是在诺姆任命宣布八天后宣布的，他在诺姆手下担任国土安全部负责公共事务的副助理新闻秘书约一个月，据报道与国土安全部事实上的幕僚长科里·莱万多夫斯基关系密切。 （她否认与《每日邮报》有任何此类联系。） 诺姆加入一家加拿大矿业公司顾问委员会的消息引发了加拿大人的强烈抗议，他们指出她曾将加拿大称为“第 51 个州”。 当时，《环球邮报》将 NovaRed 描述为“一家不产生收入的铜金勘探公司”。 该报指出，1 月份，NoraRed 仅持有 65,689 美元现金，该公司表示“不足以支付未来 12 个月的所有预期费用”。 但到了春天，事情发生了变化。 NovaRed 的顾问委员会开始不再由地质学家和技术顾问组成（这对于初级矿业公司来说是典型的情况），而是由与国防部门、MAGA 和其他国际实体有联系的重量级人物组成。 本月早些时候，NRED 宣布将放弃其旗舰 Wilmac 铜金项目，并将所有资源投入到其“AI 辅助矿产勘探平台”“MetalCore”的开发和商业化。 “我想打造新一代机器人和采矿业，”赛塔利告诉《连线》杂志。 “我们想陷入石器时代还是马时代？不，我们想生活在火星上，在太空酒店里度过时光，在月球上举办婚礼……我们希望将机器人和人工智能带入全球采矿业，甚至超越我们的星球。” 菲尔·埃尔 (Phil Ehr) 是一名退役美国海军指挥官，目前正在佛罗里达州以民主党人身份竞选国会议员，他于今年早些时候加入 NovaRed。 “我对采矿业一无所知。我对大宗商品一无所知，”埃尔在电话中告诉《连线》杂志。 “但我确实知道我们需要更多的铜。我确实知道我们需要更多的关键矿物。” 他说，他刚到公司几个月，NovaRed 宣布克里斯蒂·诺姆和“另一位国土安全部发言人”（他记得是扎卡里亚）也被任命为顾问委员会成员，这让他措手不及。 “据我所知，[Zacharia] 与克里斯蒂·诺姆 (Kristi Noem) 同时到来，没有与我协商，就好像，繁荣，就在那里，”埃尔回忆道。 诺姆没有立即回复置评请求，她刚刚监督明尼阿波利斯市灾难性的 ICE 占领事件，埃尔不想与她有任何联系。 “所以我问公司，“克里斯蒂·诺姆为什么会在这里？ 我只是不能和她一起工作，因为她很有争议。 在联邦政府中，我们对于正确与错误的立场各有不同，”埃尔说。</p><p>他认为 NovaRed 的队伍中似乎挤满了像他一样对采矿业不太了解的人，这很奇怪。 他预计其中会有一些地质学家或技术顾问。 相反，其他受聘的人包括格雷戈里·费顿（Gregory Fedun）和媒体高管李·卡普林（Lee Caplin），前者曾“担任阿拉伯联合酋长国阿尔穆阿拉王室一系列国际项目的重要顾问”，后者是 HBO 真探系列剧的联合制片人。 诺姆加入后不久，埃尔就辞去了顾问委员会的职务。 当扎卡利亚试图澄清她与 NRED 关系的性质时，她也在处理其他事务。 周四晚上，扎卡里亚仍然担任白宫新闻秘书，她联系了《连线》杂志的一名记者，建议他们联系健身网红詹妮尔·萨默斯(Jenelle Summers)，以“澄清”Beachbody的情况。Beachbody是她之前隶属的传销组织，也是萨默带她加入的。 萨默斯说，她不太记得扎卡里亚——她说她是在网上认识的——除了“她总是对我和一个热爱健身、相信产品和项目的人很好”。 “据我回忆，”她补充道，“她并没有对此做太多事情。” 萨默斯否认了她参与“传销”的说法，而这正是扎卡里亚向《连线》杂志描述该公司的方式。 “这是一种老派的想法，”萨默斯说。 “这是一种网络营销商业模式。” 当被问及对扎卡里亚的崛起有何看法时，萨默斯说道：“我对此没有任何评论，只是说她一直对我很好。” 扎卡里亚没有回应就她被解雇一事发表评论的请求。 当被问及他是否对她被解雇有何评论时，阿姆斯特丹告诉《连线》记者，“好吧，这对我来说是新闻！”</p></div><p class="fulltext-src"><a href="https://www.wired.com/story/katie-zacharia-was-linked-to-an-ai-rare-earths-startup-its-even-weirder-than-it-sounds/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">07</span> India becomes the latest country to report rogue AI agent activity</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-17 01:52<span class="chip chip-accent">重点</span></p><p class="card-summary">The agents got in through credentials and connection settings left exposed in a…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>印度网络安全机构周四表示，来自多个提供商的人工智能代理在研究和测试期间访问了印度组织的个人数据和机密材料。 印度计算机紧急响应小组（CERT-In）表示，它已收到“人工智能模型提供商的多次自愿披露”，这些模型在开放互联网上运行的研究和评估过程中“已到达印度组织的实时系统”。 代理通过应用程序配置、公共代码存储库和过于宽松的云角色中暴露的凭据和连接设置进入，他们的行为“超出了其分配任务的授权”。 这使得印度成为流氓人工智能特工世界巡演的最新一站。 7 月，OpenAI 的代理逃离了测试环境，并攻击了法国公司 Hugging Face，拉开了夏季恶意 AI 代理活动的序幕。 上个月，OpenAI 在其代理访问了四个政府网站（包括医疗保险统计门户网站）后向澳大利亚道歉。 在 Hugging Face，OpenAI 的代理也以同样的方式开始，但后来发现并利用软件缺陷在公司的服务器上运行代码。 CERT-In 称印度没有发生此类黑客攻击，特工似乎只是使用了周围留下的访问权限。 尽管如此，印度的案件在某一方面似乎更糟糕，这也是特工们所看到的：在澳大利亚，OpenAI 表示，没有发现任何证据表明其特工接触了个人的医疗或犯罪记录，即使他们在医疗保险统计系统中写入了文件，而在印度，特工们读取了个人数据和机密商业记录。 与之前的事件不同的是，每起事件都是由一个实验室披露的，印度的案件涉及多个提供商的代理人。 CERT-In 没有透露提供商或受影响组织的名称，也没有透露特工是否更改了任何系统。 TechCrunch 已联系 CERT-In 了解更多信息。 目前，最接近的相似之处似乎是 Anthropic 7 月份披露的克劳德在测试过程中使用弱密码等基本技术闯入了三个公司的系统。 在印度，正如 Anthropic 的案例一样，受影响的组织并未自行发现入侵行为。 这些披露使得政府依赖人工智能公司自愿披露流氓人工智能代理活动，从而导致这些违规行为。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/16/india-becomes-the-latest-country-to-report-rogue-ai-agent-activity/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">08</span> Show HN: Gemini 4 Argon plays StarCraft</h3><p class="card-meta">科技与 AI · Hacker News · 2026-10-16 22:18<span class="chip chip-accent">重点</span></p><p class="card-summary">I&#x27;ve refreshed StarSkirmish Bench, a benchmark where LLMs play StarCraft BW by…</p><p class="card-impact"><span class="label">影响</span> 围绕openai/anthropic，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>长话短说 - StarSkirmish 是法学硕士为《星际争霸：母巢之战》编写机器人的基准 - 每个法学硕士有一个小时的时间用 C++ 编写一个 Protoss 机器人，然后与其他法学硕士的机器人和已建立的人类编写的机器人进行评估 - StarSkirmish 测试了长期推理和代理编码，因为法学硕士必须结合从练习游戏中学到的知识来改进他们的星际争霸机器人 StarSkirmish Bench 评估每个 LLM 在给定 1 小时挂钟时间的情况下可以编写的《星际争霸》机器人的强度。 v0.2 使用 OpenAI、Anthropic、Google 和 Meta 的旗舰模型更新了 StarSkirmish Bench v0.1，每个模型都在其实验室的第一方 CLI 工具中运行。 法学硕士的分数反映了其对竞争性人类编写机器人和演示机器人的胜率。 星际冲突长凳 v0.2 使用第一方 CLI 工具运行 1 小时。 分数是每个模型与一组竞争性人类编写的机器人进行 5 次运行的平均胜率 (0–100)。 Gemini 4 Argon 运行速度很高，这是它所能达到的最高推理能力； 所有其他型号都以最大速度运行。 GPT-6 Astra 是得分最高的 StarSkirmish Bench v0.2 LLM，明显领先第二名的 GPT-6.1 Sol。 Gemini 4 Argon、Claude Opus 5.5 和 Claude Fable 5.1 在功能上紧随其后，得分都在 37 到 39 之间。 StarSkirmish 替补席 vs. 成本 StarSkirmish Bench 得分与一次 1 小时运行的平均 API 成本进行比较。 成本是对数尺度的。 Muse Wonder Full 的定价基于 Muse Wonder 的 API 定价。 GPT-6.1 Sol 提供了独特的良好价值：它是最具吸引力象限中唯一的法学硕士，以每次运行成本仅为 GPT-6 Astra 十分之一的价格排名第二。 最强大的人类编写的机器人仍然远远领先于所有模型。 与 Stardust、PurpleWave 和 BananaBrain 相比，最好的模型 GPT-6 Astra 仅赢得了 7% 的比赛。 胜率与顶级人类编写的机器人的比较 每个模型的 5 个机器人对顶级人类编写的机器人 Stardust、PurpleWave 和 BananaBrain 的平均胜率。 1 小时推理限制是一个因素，但这些比赛是在三张 2 人地图上进行的。 真实的人类编写的机器人锦标赛条件要困难得多。 Google 和 Meta 的新旗舰取代了 v0.1 的 Gemini 3.8 Flash 和 Muse Spark 1.3：Gemini 4 Argon 排名第三，Muse Wonder Full 排名第七。 v0.1 涵盖了 GPT-6 Astra 和 Claude Opus 5.5。 每次运行的代理跟踪都会记录它如何度过一小时。 模型得分的最强预测因素是它与名单上 7 个最强机器人的练习量。 胜率与对抗强机器人的练习 StarSkirmish Bench 得分是针对模型在一小时内与 7 个最强名单机器人进行的练习比赛数量进行比较。 虚线是 9 个模型的线性拟合。</p><p>GPT-6 Astra、GPT-6.1 Sol 和 Gemini 4 Argon 很早就开始与这些机器人比赛，而他们自己的机器人仍然输给了他们。 Muse Wonder Full、Claude Haiku 5.5 和 GPT-6 Luna 很少或从不这样做。 Claude Fable 5.1 是个例外：它在几乎完全针对较弱的机器人进行练习时得分为 37。 运行间差异 每个模型 5 次运行的胜率。 每个点都是一次运行的最终机器人； 该线跨越最低运行到最高运行，条形标记其平均值（模型的基准分数）和第一带标准差（σ）。 同一模型运行之间的结果也有所不同。 Gemini 4 Argon 的差异远远超过其他实验室的旗舰产品：其最佳和最差成绩相差 18 分，而 GPT-6 Astra 为 9 分，Claude Opus 5.5 为 8 分。 每个法学硕士都用 C++ 编写一个针对 BWAPI 4.4.0 的 Protoss 机器人，在 OpenBW 上运行。 游戏是在三张天梯地图上进行神族对神族的比赛：Heartbreak Ridge、Benzene 和 Destination。 当一方的建筑物全部被摧毁时，游戏结束。 达到 60 分钟上限（86,400 帧）的游戏按照 BASIL 天梯的方式决定：击杀 + 掠夺分数较高者获胜。 LLM 从一个仅挖矿的骨架机器人开始，包含三个演示机器人的源代码和两个标准机器人库：FAP（战斗模拟器）和 BWEM（地图分析器）。 当时间结束时，机器人文件夹中的任何内容都是其最终机器人，因此它必须保持机器人编译。 法学硕士拥有编译机器人、玩练习游戏以及阅读每个游戏的摘要、成绩单和机器人自己的日志的工具。 练习对手分为不同级别：D（三个演示机器人）、C 和 B（各三个中等排名的人类编写的机器人）、A（BananaBrain、Locutus）和 S（Stardust、PurpleWave）。 每个模型的 5 个最终机器人分别与 13 个花名册机器人、10 个人工编写的竞争性机器人和 3 个演示机器人中的每一个进行比赛，在每张地图上以新鲜种子进行 6 次。 与 v0.1 不同，LLM 机器人不会互相比赛。 StarSkirmish Bench v0.1 以“高”推理运行同一安全带中的每个模型。 v0.2 在其实验室的第一方 CLI 工具中以其提供的最高推理设置运行每个模型。 安全带 v0.1 在一个中立的第三方安全带中运行每个模型； v0.2 在其第一方 CLI 工具中运行每个实验室的模型。 两个版本都给每个模型 1 小时。 - 克劳德作品 5.5 - GPT-6 阿斯特拉、索尔、露娜 - 双子座3.8闪存 - 缪斯火花 1.3 CLI 版本：Claude Code 2.1.296、Codex 0.162.1、Antigravity CLI 1.3.5 和 Muse Code 1.4.7。 推理努力 v0.1 以高推理能力运行每个模型； v0.2 以最大速度运行它们。 Gemini 4 Argon 运行速度很高，支持最高的努力。</p><p>每个 v0.2 工具都会将模型的上下文压缩为大约 250k 个标记。 当对话接近该点时，CLI 会将其压缩并继续模型。 例如，Codex、OpenAI 的 CLI 为 GPT 模型提供了默认的 272k 令牌窗口，并在 90% 填充后触发压缩。 CLI 的 Web 搜索和 Web 获取工具已关闭，并且代理无法访问其他 Internet。 CLI 在时钟启动之前安装，小时从代理启动时开始计算。 没有提交工具：当时间用完时，工具会收集机器人。 v0.2 用简单的胜率取代了 v0.1 的 Elo 评级。 机器人的得分是其胜率 因为每个机器人都玩相同的固定名单，所以它的游戏不依赖于该领域的其他 LLM 机器人。 它们都是并行运行的，并且可以对新模型的机器人进行评分，而无需重播其他任何人的机器人。 固定的名单也会随着时间的推移保持标准不变，因此不同模型代的分数比一个领域内的 Elo 评级更具有直接可比性。 StarSkirmish 不再追踪最广泛报道的评估。 它与人工智能分析智能指数（ρ 0.26）几乎没有变化，其中顶级模型 GPT-6 Astra 在这 9 个模型中仅排名第 4。 它还偏离了 Terminal-Bench 4.0，它在 v0.1 中密切跟踪了 Terminal-Bench 4.0。 Claude Sonnet 5.5 和 Muse Wonder Full 均在 Terminal-Bench 4.0 中排名靠前，但在此处接近底部。 基准相关性 每个模型的 StarSkirmish Bench 分数与其 Vals IOI 和 WeirdML v3 分数相比较，中间是 Spearman ρ。 虚线是最佳直线拟合。 WeirdML v3 在 9 个模型中获得了 7 分：在撰写本文时，Gemini 4 Argon 和 Muse Wonder Full 尚未包含在内。 StarSkirmish 仍然跟踪 Vals IOI（用 C++ 解决的奥林匹克编程问题）和 WeirdML（异常机器学习编码任务的独立基准）。 一种解读是，最严格的基准评估已成为模型调整的目标，而针对长期、困难的编码任务的针对性较低的测试仍然一起进行。</p></div><p class="fulltext-src"><a href="https://starskirmish.com/bench/v0-2/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">09</span> Anthropic 称人均雇员创收是 Meta 和谷歌的 2 至 4 倍</h3><p class="card-meta">科技与 AI · ReadHub · 2026-10-17 05:10</p><p class="card-summary">Anthropic 称其人均雇员创收为 Meta Platforms 和谷歌的 2 至 4 倍。</p><p class="card-impact"><span class="label">影响</span> 围绕anthropic，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>Anthropic 称人均雇员创收是 Meta 和谷歌的 2 至 4 倍</p><p>3 小时前</p><p>Anthropic 称其人均雇员创收为 Meta Platforms 和谷歌的 2 至 4 倍。</p><p>专业版功能</p><p>体验专业版特色功能，拓展更丰富、更全面的相关内容。</p></div><p class="fulltext-src"><a href="https://readhub.cn/topic/8xHmKTgFViW" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">10</span> Designing more efficient quantum circuits with Claude</h3><p class="card-meta">科技与 AI · Hacker News · 2026-10-17 02:00</p><p class="card-summary">Article URL: https://www.anthropic.com/research/designing-efficient-quantum-cir…</p><p class="card-impact"><span class="label">影响</span> 围绕anthropic/claude，可能改变产品路线、评测基准或开发者工具选择</p><p class="crossref">深入研究：<a href="#sec-research">AI-01</a></p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>订阅人类科学 有关人工智能辅助发现、实用工作流程和跨科学领域的现场笔记的专题报道。 量子计算机需要精心设计的电路才能在有限的硬件上运行有用的算法。 我们为克劳德提供了八个这样的电路的简单语言规范，这些规范来自化学、优化、物理模拟和数论，以及一个对每个设计进行检查和评分的自动评估器。 克劳德主要靠自己工作，发现设计可以改进最好的已发布电路，在某些情况下可以提高一个数量级或更多。 这些改进大大减少了有用应用所需的量子资源，因此实用的量子计算机可能比之前预期的更早到来。 这项工作由 Anthropic 的 STEM 研究员计划的一部分由 Andi Gu 领导，并得到 Anthropic 量子物理学家 Alek Kemeny 的指导，并与 Susanne Yelin（哈佛大学）和 Mikhail Lukin（哈佛大学和 QuEra 计算公司）合作。 阅读 arXiv 上的全文。 与经典计算机以值为 0 或 1 的位存储信息不同，量子计算机以量子位存储信息，量子位可以由单个原子、超导电路或光粒子构建。 这些量子位利用叠加等量子现象（允许量子系统同时以多种状态组合存在）来处理信息，使化学、材料科学和数论等领域的某些问题变得易于处理，即使这些问题对于传统计算机来说太难了。 迄今为止，该领域构建的量子计算机只有数百到数千个量子位，太少，无法运行许多比经典计算机具有实际优势的算法。 这些量子位对环境噪声高度敏感，例如热、振动，甚至宇宙射线。 微小的干扰都会改变量子位的状态，这些小错误会不断累积，直到计算机给出错误的答案。 鉴于量子位和计算时间都是稀缺资源，研究人员一直致力于重新设计量子算法，以使用更少的量子位并在更短的时间内完成计算。 一个说明性的例子是模拟 FeMoco，这是固氮酶核心的铁硫簇，细菌利用这种酶将空气中的氮转化为氨。 了解它的工作原理可以帮助科学家设计更好的工业催化剂——制造商用来加速化学反应的物质。</p><p>2017 年，研究人员估计，量子计算机将需要大约 50 万亿个 Toffoli 门来计算 FeMoco 的基态能量（其最稳定构型的能量），化学家需要它来预测 FeMoco 如何反应。 （与普通计算机类似，量子计算机的工作原理是对量子位应用一长串简单操作（称为门）。Toffoli 门是运行成本最高的门之一，因此计算 Toffoli 门是估计计算所需时间的标准方法。） 通过一系列算法的进步，估计门的数量已降至约 3.4 亿个，减少了约 15 万倍，相当于在具有约 300 万个物理量子位的未来机器上进行几个小时的计算。1 这些减少主要来自重新设计执行计算的电路，而不是制造更好的硬件。 事实证明，克劳德特别擅长优化经典算法，因此我们想看看如果只给出每个电路必须计算的内容的简单语言描述，它是否可以对量子算法做同样的事情。 出于多种原因，克劳德非常适合这项任务。 首先，量子算法被实现为量子电路。 它们由门序列组成，就像上面提到的托弗里门一样。 重要的是，这些电路可以用代码来描述，因此我们可以利用克劳德的编码能力，像普通程序一样编写、运行和修改电路设计。 其次，我们最感兴趣的优化一类（相当常见的）量子算法可以有效地测试其正确性，因为每个输入都会给出一个普通计算机可以检查的明确输出。 这意味着我们可以有一个外部评估程序来验证克劳德的提案。 最后，我们可以给 Claude 一个清晰、客观的分数来改进：使用的量子位数量乘以门的数量，它可以作为电路运行时间的代理。 我们发现 Claude Mythos 5 可以成功地在闭环中工作，提出电路设计，从评估程序接收反馈和分数，并使用该反馈来改进其下一次尝试，而各轮之间无需人工输入（见图 1）。 在用于化学、优化、量子模拟、数论和数值计算的八种计算原语（构建较大量子算法的基本例程）中，Claude 发现了比之前发布的最佳算法使用更少量子位和更少门的新颖设计（图 2）。</p><p>在每种情况下，改进都是由于发现了有关问题的新结构和数学见解，而不是微调现有设计。 例如，在编译用于模拟硫化铁分子的电路时，克劳德注意到分子的对称性和重复结构意味着某些结果可以计算一次并重复使用，而不是为系统的每个部分重新计算。 在其他情况下，它发现现有电路包含昂贵的组件，仅需要处理极其罕见的输入，并且在没有这些组件的情况下重新设计了它们。 下面，我们描述克劳德的两个发现。 第一个是执行模求逆的新方法，这是椭圆曲线计算中最昂贵的一步算术。 第二个使领先量子优化算法中成本最高的步骤便宜约 12 倍。 这些结果表明人工智能现在可以帮助重新设计量子电路，这是使量子算法更快、更容易运行的关键一步。 更快的电路设计可以让量子计算机能够更快地解决问题——从设计新药物和更好的电池到寻找更清洁的肥料制造方法。 设计量子电路涉及两个普通编程所没有的限制。 首先，量子电路无法像普通程序那样做出“如果-那么”决策​​。 普通程序可以检查一个值，然后仅运行两段代码之一。 但是量子计算机同时运行在许多输入的叠加上，其中一些将运行第一段代码，另一些将运行第二段代码，因此电路每次运行时都必须包含这两个输入的操作。 第二是量子电路不能丢弃信息。 普通程序一旦完成就可以覆盖或删除其临时工作； 在量子计算机中，这种中间信息不能简单地被删除，因为量子电路的每一步都必须是可逆的。 保留这些信息也不是一个选择，因为剩余的临时工作会破坏最终结果。 丢弃信息的唯一方法是通过反向运行创建信息的计算来“取消计算”它，但代价是增加额外的门。 这两个限制使得量子电路在运行时间和量子比特方面都比经典电路昂贵得多。</p><p>这种限制迫使空间（即量子位）和时间之间进行困难的权衡。 在一种极端情况下，量子电路可以在使用中间结果后立即取消计算。 这释放了量子位，但如果以后再次需要相同的结果，电路必须重新计算它们，这会增加门并增加运行时间。 在另一个极端，电路可以保留中间结果，直到不再需要它们为止。 这个鳄梨…</p></div><p class="fulltext-src"><a href="https://www.anthropic.com/research/designing-efficient-quantum-circuits" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">11</span> 90% of US working hours are spent on tasks not covered well by AI benchmarks</h3><p class="card-meta">科技与 AI · Hacker News · 2026-10-17 01:08</p><p class="card-summary">Article URL: https://www.mercor.com/research/labor-index/benchmark-map/ Comment…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/research，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>近年来，人工智能基准已成倍增加，但具有经济价值的工作的覆盖范围仍然有限。 为了衡量这一点，我们编制了相关基准来衡量它们对美国就业的覆盖率。 该基准图是我们构建全面、持续更新的资源以了解整个经济中的人工智能能力的第一步。 每个图块代表构成美国劳动力的 923 种 O*NET 职业之一，分为 22 个工作类别。 职业根据我们最初的人工智能基准列表中所代表的任务份额进行阴影化。 单个基准测试提示可以映射到多个 O*NET 任务。 单击一个家庭将其打开 在我们的数据集中：923 个职业中只有 208 个具有至少 5 个基准提示的任务，而 22 个工作类别中有 6 个没有此类职业。 我们的研究结果表明，90% 的美国人工作时间都花在现有基准很少或根本没有涵盖的任务上。 这使得我们很难知道人工智能模型在美国人实际工作中的表现有多好。 现有基准的覆盖范围也不是随机的。 我们的地图表明人工智能社区首先关注最大的劳动力市场： 例如，我们最初列表中的基准大量涵盖了人工智能律师的任务，但几乎没有涵盖类似人工智能的法律秘书或法院书记员的任何 O*NET 任务。 规模较小、中等收入的知识工作岗位的长尾似乎未被发现。 当我们扩大模型功能在整个经济领域的覆盖范围时，我们希望能够浮出水面并帮助填补我们对模型功能理解的更多空白。 为了将经济细分为部门、职业和任务，我们使用了美国劳工部的 O*NET 分类法。 O*NET 将美国劳动力分为 923 个职业； 对于每个职业，O*NET 试图提供构成该职业的“任务”的完整列表，所有职业总共有 18,797 项任务。 为了衡量基准覆盖范围，我们首先根据质量和经济相关性选择了 29 个基准。 （完整列表和选择标准位于基准指数选项卡中）。 在为此列表选择基准时，我们优先考虑： 根据 Wang 等人的工作，我们要求 LLM 法官用其认为与该提示相对应的尽可能多的 O*NET 任务来标记每个基准提示。 我们在 Mercor 的 APEX 基准（此 29 个基准列表的子集）上使用人类专家标签来验证我们的 LLM 标记。在基准地图上，如果我们的 LLM 法官已将 O*NET 任务映射到我们 29 个基准中的至少 5 个提示，则该任务算作“已覆盖”。</p><p>为了估计美国人花在该列表中的基准所涵盖的任务上的工作时间总份额，我们将我们的覆盖范围估计值与 Hatgis-Kessell 等人基于法学硕士得出的对每项 O*NET 任务的工作时间份额的估计值相结合。 我们的方法的更详细说明可以在“方法”选项卡中找到。 我们对总体经济覆盖率以及覆盖率模式的估计均来自我们选择的 29 个基准的初始列表。 这并不是更广泛的不饱和、公共、代理经济基准的完整或完美代表性样本。 任何不完整的清单都必然会降低对经济覆盖范围的估计，而且很难限制这种偏差。 因此，我们想强调，这些结果是临时的。 我们将在扩展初始基准列表时更新它们。 我们还限制了每个工作类别中包含的基准数量，以最大限度地扩大覆盖范围。 我们认为，这使得我们对整个经济范围的基准覆盖率的估计更加准确，但代价是我们对大多数基准工作类别（例如软件工程）的覆盖率估计存在偏差。 通过选择不饱和的基准，我们可能会低估 O*NET 任务的基准覆盖范围，而这些任务对于法学硕士来说更容易完成。 另一方面，如果饱和度位于较低任务现实性的下游，则包括饱和基准可能会导致基准覆盖率过高。 鉴于基准测试经常夸大实际部署中的 LLM 性能，后一种说法似乎是有可能的。 我们认为包含饱和基准的偏差会大于排除它们的偏差，但这两种选择都不是理想的。 最后，虽然我们在基准指数选项卡中概述了基准选择标准，但有几个标准（例如“经济现实主义”）很难形式化，并且在我们的选择中引入了一些主观性。 我们指数中的基准对整体经济的覆盖范围相对较深且较窄。 他们过分关注最容易受到人工智能自动化影响的经济任务（由 Eloundou 等人测量），被评为“暴露”的 O*NET 任务出现在基准测试中的可能性比被评为“未暴露”的任务高出 6 倍。 这是有道理的：基准测试是为了衡量人工智能的进展而设计的，而人工智能的进展在大多数人工智能暴露的任务上是最可信的。 这解释了为什么基准测试充满了软件工程和财务分析中的任务，而卡车驾驶和天然气厂运营中的任务却很少。 但即使在控制了人工智能暴露之后，来自工资单较高的职业的 O*NET 任务在基准提示中也明显过高：</p><p>在控制了职业和人工智能暴露分数后，O*NET“任务重要性”是基准覆盖率的另一个预测指标。 特别是，O*NET 任务附带了领域专家对该任务对其职业的重要性的估计（范围为 1-5）。 我们发现，得分最重要的任务出现在基准测试中的可能性是得分最不重要的任务的 6 到 10 倍： 上图表明，迄今为止，对专门用于高质量、经济相关基准的相对有限的资源进行了合理分配； 自然会优先制定涵盖工资最高的职业中最重要且与人工智能相关的任务的基准。 但除非此类基准的数量和多样性显着增加，否则这些模式将导致我们对具有经济价值的模型功能的看法出现重大盲点。 通过工作职业来衡量模型能力至关重要——对于企业决定哪种模型适合他们的需求，对于政策制定者预测人工智能的经济影响，对于美国人思考他们的职业生涯。 不幸的是，这是一个很难解决的问题。 我们可以尝试在与给定作业相关的所有基准提示上平均模型性能。 但正如我们的基准地图所表明的那样，基准比其他基准更集中地涵盖某些经济任务。 简单的平均值会给经常进行基准测试的任务赋予过多的权重。 O*NET 提供了一种可能减少这种偏见的方法。 如果我们根据 O*NET 分类加权的职业相关基准提示来平均模型性能，以便每个 O*NET 任务在我们的职业平均值中具有相同的权重，那么我们就更接近代表真实经济绩效的数字。 第一步，我们在 Mercor 的 APEX 基准测试中针对四种职业尝试这种方法：投资银行、法律、会计和软件工程。 我们将 O*NET 加权分数与每个职业相关任务的模型性能的简单平均值进行比较。 所得的加权和未加权分数通常非常相似： 至少在这种情况下，O*NET 权重变化很小。 APEX 提示上的模型性能在上述加权分数中包含的 O*NET 任务中相似，这限制了重新加权的价值。 然而，与上述 4 个职业相关的 O*NET 任务中，只有不到 1/3 具有足够的 APEX 覆盖范围，可以纳入我们的加权分数中。 我们希望将 O*NET 权重应用于更大的基准集将产生高质量的职业特定模型分数，并且正在努力实现这一目标。 然而，即使我们合并了数十个基准的任务，仍然存在一些障碍： 美国经济中所做的工作范围之广意味着对于任何 O*NET 职业来说……</p></div><p class="fulltext-src"><a href="https://www.mercor.com/research/labor-index/benchmark-map/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">12</span> Anthropic assigned highest junk credit rating in June</h3><p class="card-meta">科技与 AI · Hacker News · 2026-10-17 02:11</p><p class="card-summary">https://finance.yahoo.com/technology/ai/articles/anthropic-s... Comments URL: h…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/anthropic，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p class="muted">未能抓取原文页面，请通过下方链接查看原文。</p></div><p class="fulltext-src"><a href="https://www.ft.com/content/5a310aee-f555-4266-874c-b1b4db20186d" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">13</span> Jev is Vercel’s fastest-adopted AI model ever</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-16 23:33</p><p class="card-summary">The data comes from Vercel&#x27;s AI gateway, a unified API service similar to OpenR…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>Jev 已成为有史以来采用速度最快的人工智能模型——至少从某些方面来看是这样。 周四发布的 Vercel 数据显示，这款热门决策模型在推出两周内就被 35% 的付费团队使用，其覆盖范围几乎是第二受欢迎模型 Sonnet 5.5 的两倍。 根据 Vercel 的数据，这是模型在前两周内采用速度最快的一次，也是该模型的创建者 TypeSafe AI 的一项重大成就。 Jev 于 9 月 15 日限量发行，被设计为一个轻量级工具，用于在几个预定输出之间进行选择。 限制输出可以让模型比 Sonnet 等替代方案运行更便宜、更快，使其成为快速分类大量数据的理想选择。 自 Jev 发布以来的几周内，这种新方法引起了极大的关注——激发了 OpenAI 和亚马逊等公司的竞争产品——但到目前为止，还没有什么确凿的数据来支持这种良好的氛围。 数据来自Vercel的AI网关，这是一个类似于OpenRouter的统一API服务。 这必然是一种有限的观点——尤其是有低估像 OpenAI 和 Anthropic 这样提供自己的 API 的主要实验室的风险——但它表明围绕 Jev 的热议确实转化为实际使用。 事实上，Vercel 是 Jev 的早期采用者，用它代替 GPT-6 Luna 对有害命令进行分类。 该报告还显示了开源模型的持续发展势头，目前开源模型占通过 Vercel 网关处理的代币的 70% 以上，占总支出的近 25%。 虽然开源模型正在占据更大的市场份额，但该市场也在快速增长。 前沿实验室的支出增长了十倍，尽管它占总体支出的比例较小，这证明了前沿模型和开源替代方案可能是互补而不是竞争的观点。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/16/jev-is-vercels-fastest-adopted-ai-model-ever/" rel="noopener noreferrer">查看原文</a></p></details></div></article></section><section class="section" id="sec-research"><h2>前沿 AI 研究</h2><article class="card card-ai"><div class="card-body"><h3 class="card-title"><span class="rank ai-id">AI-01</span> Anthropic — Oct 16, 2026 Science Designing more efficient quantum circuits with Claude <span class="chip">新发布</span></h3><p class="card-meta">2026-10-16 · Research</p><p class="label">核心结论</p><ol class="conclusions"><li>Designing more efficient quantum circuits with Claude</li></ol><p class="card-why"><span class="label">为什么重要</span> 来自Anthropic官方页面；类型启发式=Research</p><p class="card-impact"><span class="label">影响</span> 可能影响相关研究方向与产业跟进节奏</p><p class="card-meta"><span class="label">证据属性</span> 厂商自评</p><p class="card-meta"><span class="label">可信度与局限</span> 厂商官方页面提取（厂商自评成分较高）；结论需交叉验证，暂无独立复现</p><p class="crossref">相关新闻：科技与 AI · 第 10 条</p><p class="read-more"><a href="https://www.anthropic.com/research/designing-efficient-quantum-circuits" rel="noopener noreferrer">官方链接</a></p></div></article><article class="card card-ai"><div class="card-body"><h3 class="card-title"><span class="rank ai-id">AI-02</span> Anthropic — Oct 16, 2026 Frontier Red Team Claude reveals ECDSA curve origins <span class="chip">新发布</span></h3><p class="card-meta">2026-10-16 · Safety / Alignment</p><p class="label">核心结论</p><ol class="conclusions"><li>详见原文，脚本未能提取结构化结论</li></ol><p class="card-why"><span class="label">为什么重要</span> 来自Anthropic官方页面；涉及安全/对齐信号；类型启发式=Safety / Alignment</p><p class="card-impact"><span class="label">影响</span> 可能影响模型部署策略与合规讨论</p><p class="card-meta"><span class="label">证据属性</span> 厂商自评</p><p class="card-meta"><span class="label">可信度与局限</span> 厂商官方页面提取（厂商自评成分较高）；结论需交叉验证，暂无独立复现</p><p class="read-more"><a href="https://www.anthropic.com/research/ecdsa-curve-origins" rel="noopener noreferrer">官方链接</a></p></div></article><article class="card card-ai"><div class="card-body"><h3 class="card-title"><span class="rank ai-id">AI-03</span> Anthropic — Oct 16, 2026 Economics The AI expectations gap <span class="chip">新发布</span></h3><p class="card-meta">2026-10-16 · Economic Research</p><p class="label">核心结论</p><ol class="conclusions"><li>详见原文，脚本未能提取结构化结论</li></ol><p class="card-why"><span class="label">为什么重要</span> 来自Anthropic官方页面；属经济影响研究；类型启发式=Economic Research</p><p class="card-impact"><span class="label">影响</span> 可能影响对 AI 宏观/就业影响的判断</p><p class="card-meta"><span class="label">证据属性</span> 厂商自评</p><p class="card-meta"><span class="label">可信度与局限</span> 厂商官方页面提取（厂商自评成分较高）；结论需交叉验证，暂无独立复现</p><p class="read-more"><a href="https://www.anthropic.com/research/ai-expectations-gap" rel="noopener noreferrer">官方链接</a></p></div></article><article class="card card-ai"><div class="card-body"><h3 class="card-title"><span class="rank ai-id">AI-04</span> Anthropic — Oct 16, 2026 Economics How employment is changing at Anthropic <span class="chip">新发布</span></h3><p class="card-meta">2026-10-16 · Economic Research</p><p class="label">核心结论</p><ol class="conclusions"><li>详见原文，脚本未能提取结构化结论</li></ol><p class="card-why"><span class="label">为什么重要</span> 来自Anthropic官方页面；属经济影响研究；类型启发式=Economic Research</p><p class="card-impact"><span class="label">影响</span> 可能影响对 AI 宏观/就业影响的判断</p><p class="card-meta"><span class="label">证据属性</span> 厂商自评</p><p class="card-meta"><span class="label">可信度与局限</span> 厂商官方页面提取（厂商自评成分较高）；结论需交叉验证，暂无独立复现</p><p class="read-more"><a href="https://www.anthropic.com/research/employment-at-anthropic" rel="noopener noreferrer">官方链接</a></p></div></article><article class="card card-ai"><div class="card-body"><h3 class="card-title"><span class="rank ai-id">AI-05</span> Anthropic — Oct 16, 2026 Economics Working at the frontier shapes expectations for the future <span class="chip">新发布</span></h3><p class="card-meta">2026-10-16 · Economic Research</p><p class="label">核心结论</p><ol class="conclusions"><li>Working at the frontier shapes expectations for the future</li></ol><p class="card-why"><span class="label">为什么重要</span> 来自Anthropic官方页面；属经济影响研究；类型启发式=Economic Research</p><p class="card-impact"><span class="label">影响</span> 可能影响对 AI 宏观/就业影响的判断</p><p class="card-meta"><span class="label">证据属性</span> 厂商自评</p><p class="card-meta"><span class="label">可信度与局限</span> 厂商官方页面提取（厂商自评成分较高）；结论需交叉验证，暂无独立复现</p><p class="crossref">相关新闻：科技与 AI · 第 02 条</p><p class="read-more"><a href="https://www.anthropic.com/research/expectations-for-the-future" rel="noopener noreferrer">官方链接</a></p></div></article></section><section class="section" id="sec-市场"><h2>市场与产业</h2><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/3576e8823f74fef373d3674061516c7d38e4743e/259_0_4131_3307/master/4131.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=302ccf29f317af53c332e90562f0ba15" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">14</span> ‘People’s dignity, and democracy, is at stake’: meet the economist ditching ideology for reality</h3><p class="card-meta">市场与产业 · Guardian Business · 2026-10-16 12:00</p><p class="card-summary">Exclusive: Isabella Weber prescribes a common-sense solution to poverty, inequa…</p><p class="card-impact"><span class="label">影响</span> 可能影响相关板块估值与资本开支预期</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>伊莎贝拉·韦伯认为，经济学家的问题在于他们的行为不像牙医。 他们痴迷于意识形态的纯洁性，在寻求解决方案时缺乏灵活性，不管社会的症状如何。 牙医没有这样的自负——病人在忍受难以忍受的疼痛时对教条没有耐心。 韦伯在柏林高等研究院（Wissenschaftskolleg zu Berlin）的食堂澄清说，约翰·梅纳德·凯恩斯（John Maynard Keynes）是第一个进行这种牙齿比较的人，而且她正在这样做。 在她看来，症状再严重不过了。 “大多数人的现状完全无法忍受”，而全球范围内的极端不平等和企业集中度已达到“与民主根本不相容”的水平。 气候危机加剧了这种情况，随着“我们生活的生态基础瓦解”，气候危机为大企业“带来了巨额暴利”。 极右翼一直在忙着干草。 这一分析呼应了许多主流自由主义和左倾思想。 但韦伯担心她在经济界的同行们表现得好像浑然不觉。 她说：“对大多数人来说，常识对经济学家来说却不是。”因此，我们的经济体系“承诺但没有兑现”。 她滔滔不绝地讲述了令人不安的统计数据，凸显了贫富之间日益扩大的差距。 “作为经济学家，我们应该做得更好。人民的尊严和民主都受到威胁。” 在进步的圈子里，38 岁的韦伯正迅速成为她这一代人中最受欢迎的经济学家之一。 她是马萨诸塞大学阿默斯特分校的副教授和哈佛大学费正清中心的副教授，为美国、欧洲和拉丁美洲的政策制定者提供建议。 她推广了“贪婪通货膨胀”一词来描述最近生活成本危机期间的暴利行为。 她的新书《反法西斯经济学》是她多年来对不平等和通货膨胀研究的结晶，也是她一生致力于反法西斯主义的成果。 正如她所写：“如果我们将经济学理解为对社会物质基础的研究，那么经济学就是避免我们面前的灾难的关键。”</p><p>韦伯呼吁经济学家同行“放弃意识形态”，制定一项“大帐篷经济政策”，以对抗极右势力的崛起。 她认为，他们的进步并不是特别引人注目的提议的结果，而是传统政党拒绝承认其选民面临的普遍困难以及进步派、自由派和中右翼缺乏一致的经济愿景的直接后果。 韦伯说：“目前，只有极右翼分子愿意说是的，有些东西已经被打破了，不同的现在和未来是可能的。” “我们不能给他们留下替代这种反乌托邦的选择。” 在《反法西斯经济学》中，她提出了一个解决方案：让生活必需品买得起。 这就是住房、交通、食物、水、能源、医疗保健：人类赖以生存的东西。 韦伯说：“法西斯主义是从挫败感中崛起的，是生计危机中产生的。” “所以，我们现在需要收回这些必需品。” 进步政客已经在听从她的指示。 在上个月的一次市长会议上，纽约市长佐兰·马姆达尼 (Zohran Mamdani) 概述了他多年来关注的韦伯的工作如何影响他在该市的负担能力议程：免费巴士、全民托儿服务、租金上限、公共杂货。 韦伯曾咨询过其他美国政治家——伊丽莎白·沃伦、亚历山大·奥卡西奥-科尔特斯和伯尼·桑德斯——以及包括埃德·米利班德在内的英国部长。 英国首相安迪·伯纳姆（Andy Burnham）上个月在工党会议上的讲话传达的信息具有韦伯风格。 “房屋、水、能源、交通、护理、拆散和出售，”他在讲台上宣布。 “经济控制因出售必需品而减弱。” 虽然这是一个简单的口号，但让生活必需品买得起是一项复杂的政策挑战。 每个部门都有独特的属性，并且不同地方的功能也不同。 韦伯认为，为了将这一底线置于生计之下，应该使用任何和所有的杠杆，从新颖的方法到几个世纪以来的思维。 “我们的目标不是更多的国家干预，”她澄清道，“它只是一种工具，确保负担能力的利润和市场也是如此。在经济学中，我们往往有这些总体模型和灵丹妙药的倾向。我主张的不是通用解决方案，而是细节。”</p><p>以食物为例。 在从源头到餐桌的价值链的每个阶段，她敦促各国政府确定并实施干预措施以压低价格。 一方面，四家跨国公司控制着全球 70% 到 90% 的粮食贸易（其利润“因波动而繁荣”）。 这并没有优化负担能力。 她的提议？ 创建公共缓冲库存系统——可以在其市场买卖谷物的公有实体，其目标不是利润最大化，而是稳定价格以保护生产者和消费者。 凯恩斯在一个世纪前就提出了这个论点。 全球公共选择将是一场外交噩梦，因此韦伯支持正牙医生的方法。 她建议南非政府集中区域购买力。 “如果非洲联盟开发自己的缓冲库存系统，这种联合采购将为他们带来更好的条件。” 然后，当价格较低时，它可以购买；当价格较低时，它可以购买。 在高峰期间，它可以出售以稳定市场并为区域性冲击提供隔离。 链条的另一端是零售。 韦伯引用了墨西哥政府的 canasta básica 政策，通过该政策，零售商自愿限制一篮子两打必需品的总价格。 作为回报，政府提供优惠的关税税率和税收减免，“并在每周的新闻发布会上赞扬那些做得好的人，并批评那些做得不好的人”。 在墨西哥2024年总统选举中，执政党莫雷纳党的得票率从55%增加到61%。 环境是韦伯思想的核心：她说，不考虑气候因素的政策与她的反法西斯经济学逻辑不相容。 正如娜奥米·克莱因和阿斯特拉·泰勒在他们的新书《法西斯主义终结》中概述的那样，强大的民粹主义者正在拥抱环境破坏。 “当这些人说气候变化无关紧要时，他们知道这不是真的，”韦伯说，“但他们允许地球燃烧，因为他们从后果中受益。如果我们不开始有效行动，全球很大一部分人口将被牺牲。” 韦伯在书中指出，对化石燃料的依赖助长了法西斯主义的火焰：“将生活必需品与化石燃料挂钩，让普通人面临石油和天然气价格波动的风险，从而产生经济不安全感，而独裁政治正是依赖这种不安全感。”</p><p>她主张稳定个人消费化石燃料的“基本配额”，以确保负担能力，但警告说，除非这与对绿色基础设施的重大公共投资同时发生，否则这是一场零和游戏。 2022 年，上市石油和天然气公司的全球净利润达 9160 亿美元。 “我们对美国进行的研究显示，这些利润的 50% 流向了最富有的 1% 的家庭。而最底层的 50% 的家庭只获得了 1% 的份额。” “人们买不起东西，看到富人变得富有，就会生气，”韦伯说。 韦伯认为，如果利润流入股东的口袋，不平等将继续推动极右翼势力的发展。 韦伯说：“经济学中存在动态和模式，但我们如何塑造和引导它们是一个政治问题。” 我们相聚的时间是八月底，距离萨克森-安哈尔特州选举仅几天，德国另类选择党 (AFD) 取得了里程碑式的选举胜利。 韦伯认为，这是极右翼成功的“教科书例子”。 根据多项指标，萨克森-安哈特州是德国最贫困的地区之一。 “还有美丽的城堡和村庄，”韦伯说……</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/business/2026/oct/16/isabella-weber-anti-fascist-economics" rel="noopener noreferrer">查看原文</a></p></details></div></article></section><section class="section" id="sec-世界"><h2>世界与社会</h2><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">15</span> How Iran messaging highlights cost of war ahead of US midterm elections</h3><p class="card-meta">世界与社会 · Al Jazeera · 2026-10-17 02:21<span class="chip chip-accent">重点</span></p><p class="card-summary">Through statements in English, Iranian officials are emphasising gas prices and…</p><p class="card-impact"><span class="label">影响</span> 围绕election/war，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>在似乎针对美国公众的信息中，伊朗一直在强调美国和以色列在美国中期选举之前对该国发动的战争的代价。 伊朗官员在官方媒体上发表文章，强调战争对油价和美国经济造成的灾难性影响，而伊朗首席谈判代表兼议会议长穆罕默德·巴格尔·加利巴夫则积极针对成本和军费上涨问题攻击美国官员。 推荐故事 3 项清单 - 3 架飞机、数百座建筑物中的列表 1：美国在伊朗袭击中损失惨重 - 3 项清单 2 伊朗战争已造成美国 380 亿美元损失：它将如何影响美国经济、政治？ - 列出 3 个（共 3 个）以色列军队兵员和装备不足的报道背后的原因是什么？ 国际政策中心高级非常驻研究员西娜·图西表示，德黑兰试图通过直接与美国公众对话来增加特朗普的战争政治成本。 图西告诉半岛电视台：“他们并不一定是想让民主党掌权或在某个方向操纵美国政治，而只是在伊朗战争问题上总体增加成本，玩信息战游戏并发表自己的叙述和宣传。” 特朗普领导的共和党希望在下个月的中期投票中保留对参议院和众议院的控制权。 但在很大程度上反对与伊朗开战的民主党正在国会选举版图上发起强有力的挑战，其中包括几十年来一直是保守派据点的德克萨斯州。 周三，加利巴夫分享了上个月通胀率升至 3.7% 的新闻报道，以及一系列有关美国经济的负面头条新闻。 这篇社交媒体帖子还刊登了《Road Runner》漫画中的连环漫画，展示了怀尔·E·郊狼（Wile E Coyote）建造了一个弹射器，但弹射器失火并向他发射了一块巨石。 “让我们‘玩百分比’。不是赔率，而是增幅，”加利巴夫在给美国财政部长斯科特·贝森特的一封信中写道，贝森特一直在领导针对伊朗的制裁行动。 贝森特上个月表示，他代表“众议院”，在谈到国债和债券市场时将经济比作赌场。 加利巴夫的言论提到了通货膨胀的加剧，强调尽管贝森特断言，生活成本仍因战争而持续上升。 几天前，他分享了一张钟形曲线幽灵的图片，柴油价格上涨，住房负担能力和消费者信心下降。</p><p>自2月28日战争爆发以来，伊朗中断了霍尔木兹海峡的航运，导致能源价格飙升。 根据美国汽车协会的数据，在美国，柴油价格创历史新高，为每加仑（3.8 升）6.33 美元，汽油价格为 4.33 美元，而战前还不到 3 美元。 在特朗普及其助手反复强调该航道处于美国控制之下后，伊朗近几天加大了对海峡周边船只的袭击力度。 能源价格上涨加剧了经济整体通胀，导致美联储上个月加息，而特朗普一直呼吁降息以刺激经济活动。 伊朗伊斯兰革命卫队（IRGC）在 9 月 29 日致美国公众的一封信中指责特朗普在战争成本和美国经济状况方面撒谎，驳斥了总统关于油价很快就会暴跌的说法。 伊朗伊斯兰革命卫队表示：“世界各国对美国经济失去了信心。对美国债券的需求大幅下降。事实上，各国开始抛售美国债券。很快，大坝就会决堤，经济就会崩溃，不幸的是，给美国人带来多年来的巨大痛苦。” “美国人需要醒来。他们需要从腐败的政客手中夺回控制权。现在是时候了，因为美国的政治体系正处于最虚弱的时期。” 美国中期选举被视为冲突的转折点 — — 不是因为其潜在结果，而是因为特朗普在投票后可能会做什么。 特朗普表示，他要么与伊朗达成协议，要么在 11 月 3 日立法选举后重返全面战争。 他还否认这次投票会对他的伊朗政策产生任何影响。 “他们正在等着看我在中期选举中的表现。他们没有意识到我不会参加竞选，”特朗普上个月在联合国大会上表示。 “我绝对不相信、也不会相信这次选举。当谈到伊朗时，我什至没有想到它。唯一能做的是伊朗永远不会拥有核武器。” 如果民主党获得国会控制权，他们可以推动采取措施遏制特朗普继续战争的能力，包括扣留军事行动资金。 但图西表示，伊朗内部正在就民主党11月获胜的潜在影响展开辩论。 虽然一些人指出民主党中的外交政策鹰派人士认为不会有什么改变，但另一些人则表示，中期失败将使他在政治上变得脆弱，并可能限制他的战争权力。</p><p>“我不认为他们会以任何方式对冲他们的赌注，而且我认为无论 11 月发生什么，这都不一定会影响他们增加[战争]成本的总体战略，”图西告诉半岛电视台。</p></div><p class="fulltext-src"><a href="https://www.aljazeera.com/news/2026/10/16/how-iran-messaging-highlights-cost-of-war-ahead-of-us-midterm-elections?traffic_source=rss" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/6e11f1a1e4436c44c59a6792b0742b141c7aca94/688_0_6880_5504/master/6880.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=6a70141bd2ff29a60b41e306fdfffb84" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">16</span> Trump in Georgia falsely claims election of Jon Ossoff was illegitimate</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-17 06:59<span class="chip chip-accent">重点</span></p><p class="card-summary">President appears at rally for struggling Mike Collins, dismisses critics and t…</p><p class="card-impact"><span class="label">影响</span> 围绕election，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>在佐治亚州北部的一次集会上，唐纳德·特朗普再次声称佐治亚州2020年选举存在欺诈行为，并指控美国参议员乔恩·奥索夫的选举不合法。 特朗普表示，奥索夫将在 11 月与美国国会议员迈克·柯林斯对决，他并不代表佐治亚州的价值观。 “他从未当选，”特朗普补充道。 奥索夫一直保持着对柯林斯的领先优势，最近的民调显示他领先共和党对手九个百分点。 特朗普声称他即将完成历史上“最成功”的两年总统任期，并大肆宣扬股市上涨、失业率和贫困率较低，以及为新生儿设立“特朗普账户”。 特朗普再次表示，如果共和党控制美国众议院，美国选民将获得5000美元的政府支票，并声称在他任内承诺的21万亿美元外国制造业投资将抵消数万亿美元的成本。 其中大部分承诺仍未兑现。 特朗普还吹捧他的移民记录和推翻委内瑞拉政府。 “四十八小时，战争结束了，”特朗普说。 他从椭圆形办公室会议和损害报告的角度描述了伊朗战争的早期，特别是针对伊朗领导人的袭击。 “他们会炸毁以色列，他们会炸毁中东，”特朗普在谈到伊朗和发动袭击的必要性时说道。 “伊朗是唯一一个没有人想当总统的国家。” 伊朗战争导致汽油和柴油价格飙升。 特朗普对他任内生活成本增加的批评者不屑一顾，并将“负担能力”一词描述为民主党的宣传。 “在过去 17 个月里，非法外国人进入美国的人数为零，”他说。 无证移民很少以任何官方方式“被接纳”。 特朗普在下午 2 点左右开始的集会上回到了他的常规主题。 道尔顿市机场看台上挤满了大约 1,200 人。 特朗普于下午 4 点 20 分左右登台，距离原定的出发时间还有 80 分钟，约 300 人站在佐治亚州午后阳光下没有遮挡的地方。 他的支持者毫不畏惧。 “唐纳德·特朗普是有史以来最伟大的总统，”田纳西州查塔努加的特雷西·斯宾塞在等待总统抵达海军陆战队一号时说道。 当被问及她如何应对幻灭的保守派对总统日益增加的批评时，她嗤之以鼻。 “嗯，我的朋友和家人都没有向我表达过这一点，因为他们更清楚，”她说。 “但我听说有传言说有些人这么认为，我会对这些人说，成长不会在一夜之间发生，并且会有成长的烦恼。”</p><p>特朗普在描述他在白宫遇到的一名美国士兵的“英俊”时，间接讨论了他的政府对他称之为“DEI”的反歧视政策的攻击。</p><p>特朗普说：“一切都以功绩为基础。” “我确实对最高法院有意见，但是……我们的国家现在是基于功绩的。”</p><p>两名抗议者短暂地展开了写有反 ICE 口号的横幅。 他们很快就被保安赶出了看台。 周一特朗普支持者在俄亥俄州看台上袭击一名抗议者的事件并未重演。</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/us-news/2026/oct/16/trump-georgia-rally-jon-ossoff" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://global.unitednations.entermediadb.net/assets/mediadb/services/module/asset/downloads/preset/Collections/Embargoed/2026/09/30-09-2026-IOM-Sudan-07.jpg/image560x340cropped.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">17</span> Security Council LIVE: Sudan’s war spreads as drones and hunger take a deadly toll</h3><p class="card-meta">世界与社会 · UN News · 2026-10-16 20:00</p><p class="card-summary">As drone strikes kill civilians from El Obeid to Blue Nile and famine risk spre…</p><p class="card-impact"><span class="label">影响</span> 围绕war/ceasefire，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>安理会直播：苏丹战争蔓延，无人机和饥饿造成致命伤亡 随着无人机袭击造成从奥贝德到青尼罗河的平民死亡，饥荒风险在达尔富尔和科尔多凡蔓延，安理会就苏丹这一世界上最大的饥饿和流离失所危机召开会议。 预计各国大使将再次敦促停火、安全援助以及停止助长残酷冲突的武器流动。 主要事实 - 2000万人面临严重饥饿，其中20万人处于灾难状态 - 达尔富尔和大科尔多凡州部分地区的饥荒风险上升 - 塔维拉超过 70 万流离失所者缺乏食物、水和医疗保健 - 10 月 10 日，埃塞俄比亚边境附近的无人机袭击造成 41 名流离失所者死亡 - 武器禁运仍仅限于达尔富尔； 制裁期限延长至12月11日</p></div><p class="fulltext-src"><a href="https://news.un.org/feed/view/en/story/2026/10/1168612" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">18</span> Meta employees say Lula’s accounts restricted in Brazil election: Report</h3><p class="card-meta">世界与社会 · Al Jazeera · 2026-10-17 05:08</p><p class="card-summary">The messages, reported by a Brazilian daily, say the platform recommended Bolso…</p><p class="card-impact"><span class="label">影响</span> 围绕election，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>据媒体报道，Meta 员工在内部通讯中承认，巴西总统路易斯·伊纳西奥·卢拉·达席尔瓦 (Luiz Inacio Lula da Silva) 的 Instagram 账户受到该国选举期间的限制措施的负面影响。 巴西日报《圣保罗页报》周五报道了这些消息，该消息还承认该平台推荐了卢拉挑战者参议员弗拉维奥·博尔索纳罗的个人资料以及他的 WhatsApp 频道。 总部位于圣保罗的报纸《Folha》引用了其审阅过的信息。 推荐故事 4 项清单 - 随着疫情的加剧，美国记录了 4,410 例麻疹病例，列出了 4 项记录之一 - 伊朗信息如何在美国中期选举前强调战争成本的 4 个列表中的第 2 个 - 名单 3（共 4）白宫新闻秘书凯蒂·扎卡里亚（Katie Zacharia）上任五天后被解雇 - 4AOC 中的名单 4 向密歇根州候选人 El-Sayed 转移 100 万美元，以推进渐进式推动 梅塔告诉路透社，报告中引用的技术问题已经公开，其引用的对话仅与问题的严重性有关，与政治干预无关。 它在一份声明中补充道：“任何有关 Meta 偏向某一方的说法都是错误的。” 左翼现任总统卢拉将在 10 月 25 日的总统决选中面对右翼挑战者博尔索纳罗，此前这位参议员在本月早些时候的第一轮投票中表现强于预期。 周五的报告发布之前，巴西法院周四做出裁决，命令梅塔立即采取措施，在决选前为两位候选人提供平等待遇。 巴西最高选举法院法官在卢拉提出申诉后不久做出了这项裁决，指控这家拥有 Instagram、Facebook 和 WhatsApp 的科技巨头在选举前使用有偏见的算法和人工智能限制来支持反对派候选人博尔索纳罗。 法官 Marco Aurelio Bellizze 裁定，Meta 不能以造成卢拉和博尔索纳罗之间不平衡的方式减少政治内容的分发、限制搜索或删除帖子。 他的裁决还命令该公司确保其人工智能工具对两名候选人采用相同的标准。 贝利兹在裁决中表示，如果 Meta 不遵守规定，则必须每天支付 500,000 雷亚尔（98,700 美元）的罚款。 据卢拉所在政党称，他的一些帖子没有分享按钮，影响范围也有所缩小。 反应、分享、音频或加速的选项也缺失。</p></div><p class="fulltext-src"><a href="https://www.aljazeera.com/economy/2026/10/16/meta-employees-say-lulas-accounts-restricted-in-brazil-election-report?traffic_source=rss" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/1ab732d5e231b07fef02c8b733fbf39933a3f591/420_0_4200_3360/master/4200.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=111f8493784a6e1283250322fb417aaf" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">19</span> Brazilian Amazon deforestation falls to lowest on record as pivotal vote looms</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-17 03:37</p><p class="card-summary">Forest clearance at smallest total since records began in 1988 in success for L…</p><p class="card-impact"><span class="label">影响</span> 围绕election，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>新的政府数据显示，巴西亚马逊地区的森林砍伐已降至有记录以来的最低水平。 但在 10 月 25 日总统选举决胜之前，这一具有全球重要意义的成功是维持还是逆转，正处于一个悬而未决的关头，两位候选人对雨林的未来以及这如何影响唐纳德·特朗普领导下的美国关系有着截然不同的愿景。 现任总统路易斯·伊纳西奥·卢拉·达席尔瓦（Luiz Inácio Lula da Silva）在第一轮投票中落后，尽管他在减缓亚马逊雨林破坏、减少贫困和粮食不安全方面取得了令人印象深刻的记录。 他的对手是前总统雅伊尔·博尔索纳罗的儿子弗拉维奥·博尔索纳罗。 Prodes 卫星数据系列被认为是森林砍伐最准确的衡量标准，显示亚马逊地区的森林砍伐面积在过去一年中下降了 41.8%，至 3,335 平方公里，这是自 1988 年开始进行此类测量以来的最低值。 这比之前的记录低1,236平方公里，相当于里约热内卢的面积。 根据巴西国家空间研究所整理的数据，自 2022 年（卢拉政府上台前一年）以来，森林砍伐速度已放缓 71.2%。 这主要是由于更强有力的执法措施和国家对环境机构的投资。 2026 年记录最差的巴西州是帕拉州，占当年亚马逊森林砍伐总量的 33.9%、马托格罗索州 (25.5%) 和亚马逊州 (15.7%)。 然而，即使在这些地方，数字也比上一年下降了 45% 以上。 问题变得更严重（上升0.4%）的是罗赖马州，该州是博尔索纳罗的大本营。 在亚马逊以外，邻近的塞拉多生物群落（一个大草原地区）的年度森林砍伐面积为 5,516 平方公里，为 2001 年以来最低。 这一点意义重大，因为塞拉多长期以来一直被视为环境牺牲地区，在那里大豆和牛肉生产商可以砍伐比亚马逊允许的更多的森林。 过去四年，塞拉多森林砍伐量下降了 48.4%。 这些令人惊叹的结果让一些自然资源保护主义者落泪，与雅伊尔·博尔索纳罗 (Jair Bolsonaro) 2019-23 任期形成鲜明对比。博尔索纳罗通过削减森林保护机构的开支、减少对环境犯罪的处罚以及对非法采矿者、伐木者和土地掠夺者的口头鼓励，导致亚马逊森林砍伐增加了 59.5%，大约相当于每天毁坏超过 100 万棵树。 博尔索纳罗随后因企图政变而被定罪，但他的儿子发誓要释放他的父亲，并让他在政府中担任他选择的任何职位。</p><p>年轻的博尔索纳罗效仿了他父亲的榜样，争取亚马逊地区掠夺性土地所有者和其他采掘主义利益集团的支持，同时在宣言中忽视了气候危机。 前环境部长玛丽娜·席尔瓦（Marina Silva）可以说为保护雨林做出了比任何人都多的努力，她警告说，弗拉维奥·博尔索纳罗（Flávio Bolsonaro）将试图完成他父亲摧毁亚马逊雨林的“反常计划”。 两位候选人之间的鲜明对比在亚马逊地区的选举结果地图上显而易见，博尔索纳罗在退化森林、矿山、牧场和大豆单一种植地区附近获得了最多选票，而卢拉在大城市或植被相对完好的森林地区的支持率更高。 这也从它们与美国的截然不同的关系中可见一斑。 卢拉警告说，特朗普正试图殖民该国并夺取其资源。 他捍卫亚马逊作为巴西的主权资产、土著人民的重要家园以及全球稳定气候努力的重要组成部分。 相比之下，博尔索纳罗家族与美国关系密切。 弗拉维奥的弟弟爱德华多自去年以来一直住在德克萨斯州，并呼吁特朗普政府对自己的国家征收惩罚性关税。 贾尔向美国国旗敬礼，并高呼“美国，美国”。 如果该家族获得权力，预计他们将把巴西的贸易重点从中国和欧洲转移到美国，特别是在关键矿产方面。 然而，最大的区别可能是极右翼愿意开采亚马逊和巴西其他地方的自然资源，然后将其出售给最高出价者，而不考虑环境和社会问题。 保护组织表示，新的森林砍伐数据显示了总统决选的风险有多大。 气候观测站执行秘书马西奥·阿斯特里尼表示：“这个数字清楚地表明，结束巴西的森林破坏是完全可能的。 “不过，一切都取决于选举结果。 国家将决定我们是走向终结森林砍伐还是走向终结森林。”</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/environment/2026/oct/16/brazil-amazon-deforestation-lowest-on-record-election" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/e51e97686d749a91a868ba1b08cc89af954c3895/477_0_3687_2951/master/3687.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=99651cee5e0c21089ffdab8422b02f6a" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">20</span> Trump’s appearance at Georgia rally disrupted by anti-ICE protesters – US politics live</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-17 07:44</p><p class="card-summary">The unpopular president is rallying to support Republican nominees ahead of mid…</p><p class="card-impact"><span class="label">影响</span> 可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>唐纳德·特朗普在佐治亚州道尔顿向一小群支持者发表的演讲刚刚被三名举着反对移民和海关执法局（ICE）标语的抗议者打断，他们被特朗普的支持者赶出人群，其中包括一名身穿黄色加兹登旗帜作为斗篷的男子。 其中两个标语谴责了在选举日派遣 ICE 官员前往投票站的想法，但政府拒绝排除这种可能性。 再次开始讲话后，特朗普赞扬了“穿黄色斗篷的女人”，显然错误地指的是披着黄色加兹登旗帜、标语“别踩我”的男子，他是第一批与反 ICE 活动人士对峙的人之一。 “她走到那里，把他们从座位上拽下来，然后把他们从这里扔出去。那么那个穿黄色斗篷的女人在哪里？她太棒了，”特朗普说。 “我喜欢那个穿黄色斗篷的女人。她就在那里。她推搡他们，扇打那家伙，”他补充道。 加州选举官员面临特朗普起诉威胁 在下个月的中期选举之前，特朗普政府正在升级与加州的斗争，并警告说，处理和统计可疑非公民选民提交的选票的地方官员将面临刑事调查和潜在起诉的风险。 美联社首先获得的这封来自司法部高级官员的信是与民主党占主导地位的加利福尼亚州持续不断的争执中的最新一击。就在一天前，特朗普政府起诉该州，要求阻止该州清点被联邦政府认定为“可能”非公民的人的邮寄选票，直到他们的移民身份得到确认。 “协助或忽视联邦犯罪的法律后果是严重的。非公民在联邦选举中投票是一种联邦犯罪——并且故意协助此类行为同样是非法的，”司法部代理副总检察长特伦特·麦科特在信中警告说。 它补充道：“如果人们故意将联邦机构认定为非公民的个人的选票制成表格，他们就有可能成为联邦犯罪的帮助者和教唆者。” 这封信是写给洛杉矶县法律顾问办公室的，同时也被抄送给加州国务卿雪莉·韦伯和洛杉矶县登记官迪恩·洛根，从而有效地向整个州发出了通知。 国会警察周五警告国会办公室留意可疑邮件，此前几名国会议员报告本周收到了含有未知物质或其他可疑包裹的信封。 其中包括华盛顿州民主党众议员普拉米拉·贾亚帕尔(Pramila Jayapal)。</p><p>“这种看似蓄意而广泛的对我们民主和选举的攻击是不可接受的，”周五的一份声明中说。 代表佛罗里达州奥兰多市的民主党国会议员马克斯韦尔·弗罗斯特表示，周五他的办公室因可疑包裹而被疏散。 加州众议员、民主党人吉米·帕内塔 (Jimmy Panetta) 告诉 KRON4，他所在的圣克鲁斯地区办事处的一名工作人员打开了含有“白色粉状物质”的邮件。 帕内塔说：“我的首要任务是确保我的员工的安全，值得庆幸的是，她和其他员工已初步得到医疗官员的许可。” 官员周四表示，联邦调查局正在调查这些信件。 结束在佐治亚州道尔顿的集会后，特朗普现在前往佛罗里达州棕榈滩参加共和党全国委员会的筹款活动。 该活动不对媒体开放。 因此，凯蒂·扎卡里亚 (Katie Zacharia) 加入了莉兹·特拉斯 (Liz Truss)、安东尼·斯卡拉穆奇 (Anthony Scaramucci)、New Coke、CNN+ 和 Quibi 的蜉蝣行列。 如果说她燃烧的亮度是两倍，时间是一半，那就太客气了。 她像湿漉漉的夜晚里的烟花一样出去了。 白宫周五证实，扎卡里亚在上任仅五天后将辞去新闻秘书一职。 在首次新闻发布会平淡无奇以及对她的法律资历进行审查后，没有人感到惊讶。 但更重要的是，撒迦利亚靠刀剑生存，并死在唐纳德·特朗普真正关心的一个舞台上：电视。 据报道，她通过密切关注美国总统的公共日程安排并跟踪他在 Truth Social 上的活跃时间来准确预测他何时看电视，从而获得了这份工作。 然后，她安排了自己在广播中露面的时间，以确保引起他的注意。 事实上，她符合特朗普所谓的“中央选角”的光泽金发美感，这一事实也有所帮助。 但电视也证明了她的失败。 周四，扎卡里亚接受了特朗普友好媒体的一系列采访，绝望地寻求救赎。 相反，她用更不幸的表演注定了自己的命运。 她一定期望福克斯新闻主持人肖恩·汉尼蒂（Sean Hannity）能够让她轻松出行，汉尼蒂甚至在特朗普集会上发表了讲话。 但当她承认自己“在准备时间很少的情况下”就开始了第一次简报时，就连他也表示怀疑。 汉尼蒂问道：“我听说你认为工作人员应该让你做好更好的准备吗？” 扎卡里亚否认她只接受了保守派媒体的提问，错误地声称《每日邮报》“不被认为是保守派媒体”。 汉尼蒂还询问了她可疑的法律资格。 “为什么不直接说，‘我去了佩珀代因法学院，然后走了一条不同的职业道路，我考了一次律师资格证，但没有通过？’”</p><p>扎卡里亚再次尝试《福克斯与朋友》节目，但遇到了主持人劳伦斯·琼斯，后者说：“你知道，凯蒂，这对你来说是艰难的一周。担任新闻秘书不是一件容易的工作，你永远不想成为故事。” 他还问道：“你认为你还有总统的信任吗？” 扎卡里亚回答说：“我站在这里”，指的是她是在白宫北草坪发表讲话的。 几小时后，她的离开遭到了广泛的嘲笑，而这也引发了对特朗普公开羞辱的人的某种程度的人类同情。 特朗普播放了 CNN 民意调查分析师的旧片段，分析师昨晚表示“特朗普的数字绝对是垃圾” 唐纳德·特朗普 (Donald Trump) 在佐治亚州道尔顿向数百名支持者发表的冗长演讲即将结束，演讲时间接近 1 小时 40 分钟。 演讲接近尾声时，特朗普要求助手向人群播放一段视频，其中 CNN 民意调查分析师哈里·恩滕 (Harry Enten) 指出，总统仍然受到自称为“MAGA共和党人”的选民的欢迎。 特朗普在当前的竞选之旅中多次播放了这段八月广播中的片段，似乎是为了屏蔽最近不那么讨人喜欢的民意调查，这些民调显示他在公众中的整体支持率创下历史新低。 在周四早上播出的最近一段节目中，特朗普没有为观众演奏，恩腾本周向 CNN 观众解释说，福克斯新闻的一项新民意调查显示，特朗普的总体支持率已降至 36%，其中 64% 的人不赞成他作为总统所做的工作。 正如 Enten 指出的，最引人注目的转变发生在福克斯调查的 30 岁以下选民中。 2024 年 10 月，该人群对特朗普的净支持度为+3。 现在，同一群体对特朗普的不支持率高了 50 个百分点。 周四晚上，恩腾在 CNN 的另一档节目中被问及特朗普目前在民意调查中的排名时表示：“特朗普的数字绝对是垃圾，它们就是垃圾。” “在中期选举中的通胀问题上，他的反对率是有史以来最高的，”恩滕继续说道。 “事实上，他的通货膨胀净支持率是我所见过的所有总统中最差的，我们一直在谈论詹姆斯·厄尔·卡特。他是第一个净通货膨胀率达到负 50 点或更糟的人。” 特朗普重申阿卜杜勒·赛义德是“穆斯林兄弟会成员”的谎言 唐纳德·特朗普在佐治亚州的演讲已经超过了 90 分钟，他只是重复了他本周多次说过的关于民主党人阿卜杜勒的谎言……</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/us-news/live/2026/oct/16/trump-texas-senate-race-midterms-paxton-talarico-zacharia-ukraine-starlink-diesel-oregon-latest-news-updates" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">21</span> UK PM adviser’s wife expresses ‘support’ for Palestine Action</h3><p class="card-meta">世界与社会 · Al Jazeera · 2026-10-17 02:26</p><p class="card-summary">Police reviewing social media post by writer Sarah Helm, wife of Burnham&#x27;s Nati…</p><p class="card-impact"><span class="label">影响</span> 围绕security，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>英国警方正在审查国家安全顾问乔纳森·鲍威尔的妻子在社交媒体上发布的帖子，其中她似乎支持巴勒斯坦行动，该组织在该国被列为“恐怖”组织而被禁止。 “上帝保佑我们支持巴勒斯坦和巴勒斯坦行动的作家，”周四，安迪·伯纳姆总理的国家安全顾问鲍威尔的妻子莎拉·赫尔姆在 X 上写道。 推荐故事 2 项清单 - 列表 1（共 2 个）“不退缩”：英国人因加沙种族灭绝而向巴勒斯坦推进 - 由于支持巴勒斯坦行动，莎莉·鲁尼 (Sally Rooney) 的 2 本书中的 2 本书在英国停止销售 她是在回应一篇为爱尔兰小说家莎莉·鲁尼辩护的帖子，莎莉·鲁尼本周宣布，她的书将不再在英国销售，因为她计划用自己的版税来支持巴勒斯坦行动。 伦敦警察厅发言人周五表示，赫尔姆的帖子“正在接受评估，以确定是否需要进行进一步的警方调查”。 路透社援引政府发言人的话说，赫尔姆帖子中表达的观点“是由不以任何身份代表政府的个人持有的”。 “荒谬的独裁禁令” 英国活动组织“捍卫我们的陪审团”为赫尔姆辩护，称其无视所谓的“对巴勒斯坦行动的荒谬独裁禁令”。 该组织的一名发言人表示：“据我们所知，有 36 人因在社交媒体上表达对巴勒斯坦行动的类似支持而被捕，并遭到搜查。” “我们希望莎拉不会因为捍卫言论自由和巴勒斯坦人的生命而面临同样的待遇。” 英国政府于 2025 年 7 月宣布“巴勒斯坦行动”为非法，此前该组织的活动人士闯入皇家空军基地并向两架飞机喷洒红色油漆，以抗议英国军事支持以色列对加沙的种族灭绝战争。 作为成员或支持者可判处最高 14 年监禁。 据人权组织国际特赦组织称，自禁令生效以来，英国警方已因涉嫌支持该组织而逮捕了 3,500 多人，其中许多人因举起标语牌而被捕。 巴勒斯坦行动组织对其禁令提出异议，但上诉法院于 6 月维持了原判。 英国新任外交大臣埃德·米利班德上个月表示，政府正在“研究”巴勒斯坦行动禁令，并补充说，他不认为该禁令导致的大规模逮捕是“任何人的意图”。</p></div><p class="fulltext-src"><a href="https://www.aljazeera.com/news/2026/10/16/uk-pm-advisers-wife-expresses-support-for-palestine-action?traffic_source=rss" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">22</span> Albanian PM blames ‘foreign hands’ for unrest as student protests intensify</h3><p class="card-meta">世界与社会 · Al Jazeera · 2026-10-17 07:27</p><p class="card-summary">Riot police clash with protesters for fourth day, as young Albanians protest co…</p><p class="card-impact"><span class="label">影响</span> 可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>阿尔巴尼亚总理埃迪·拉马将学生主导的日益暴力的抗议活动归咎于“外国人”，这些抗议活动要求他辞职。 周五，数千名阿尔巴尼亚年轻人在首都地拉那游行，抗议政府腐败和恶劣的大学条件，防暴警察连续第四天在教育部外与抗议者发生冲突。 推荐故事 3 项清单 - 列表 1（共 3 个）“每个国家都走自己的路”：巴尔干政治如何塑造与以色列的关系 - 列表 2（共 3 个）“沸点”：为什么学生抗议阿尔巴尼亚的埃迪·拉玛 - 3 名阿尔巴尼亚总理驳回因学生抗议蔓延而辞职的呼声中的 3 名 “这不是学生现象，”拉玛周五在视频讲话中说道。 他说，“有些外国人不希望阿尔巴尼亚和平”。 拉玛坚称，抗议活动“与任何渴望更好生活的人的困难、问题或合理愿望毫无关系”。 当示威者投掷石块时，警察使用了高压水枪和催泪瓦斯。 据当地媒体报道，抗议活动已蔓延至首都以外的爱尔巴桑、斯库台和科尔察，示威者打破窗户并焚烧垃圾箱。 在持续升级的几个月中，示威活动大多是和平的，最初是由于将阿尔巴尼亚部分海岸线出售给与美国总统唐纳德·特朗普的女婿贾里德·库什纳有关的豪华度假村开发项目而引发的。 连日来的骚乱越来越多地针对银行和政府大楼。 周二，抗议者向教育部投掷砖块和混凝土块。 他们还放火烧毁了该市的几栋建筑，包括总理办公室、财政部和司法部大楼以及几家银行的分行。 根据警方声明，周四晚有 160 人因涉嫌暴力行为而被拘留。 欧盟问题 示威者要求拉玛辞职，并进行选举和教育改革。 这位政府否认腐败的总理表示，他准备讨论不断上涨的教育成本，但拒绝了辞职的呼吁。 他周四表示，“我的责任是倾听、解决合理关切并推动阿尔巴尼亚前进。” 他补充说，他的解职“将是对阿尔巴尼亚人的背叛，阿尔巴尼亚人赋予我完成欧盟成员资格谈判的强有力授权”。 腐败丑闻使阿尔巴尼亚加入欧盟的努力变得更加复杂。 分析人士称，该国是犯罪团伙通过毒品和武器贩运洗钱的中心。 拉马去年赢得了第四个任期，承诺让阿尔巴尼亚加入欧盟，目标是最早在 2028 年加入欧盟。</p></div><p class="fulltext-src"><a href="https://www.aljazeera.com/news/2026/10/16/albanian-pm-blames-foreign-hands-for-unrest-as-student-protests-intensify?traffic_source=rss" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/e265e0346262b5d183f70d6ebff0c0e9dd3afcb6/348_0_3304_2642/master/3304.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=30ed6f1cc6086b9be976fa9fbeff95f8" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">23</span> Brush fires set homes ablaze in southern California as it braces for more hot weather</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-17 07:21</p><p class="card-summary">Hot, windy weather stokes fires in southern California with mandatory evacuatio…</p><p class="card-impact"><span class="label">影响</span> 可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>一场快速蔓延的大火已经蔓延到南加州的社区，该地区将迎来更炎热、多风的天气，这将加剧周六的火灾危险。 当地新闻直升机拍摄的视频显示，周五在奥兰治县爆发的占地超过 465 英亩的 Norte 火灾中，消防队员正在努力扑灭大火，视频中可以看到几栋房屋着火。 官方尚未公布损失和破坏估计，但奥兰治县消防局队长 Steve Concialdi 告诉 KTLA，火灾至少影响了六栋房屋。 当地电视新闻台拍摄的照片显示，死胡同尽头的一排房屋变成了黑色的碎片。 其他的则涂有红色阻燃剂。 截至周五下午，圣胡安卡皮斯特拉诺和圣克莱门特沿海社区的数万人已收到强制疏散令。 火焰猛烈地席卷灌木丛覆盖的山坡，浓烟笼罩天空。 警报声响彻城市街道，直升机和飞机的嗡嗡声从上空回响。 该地区的九所学校提前放学，奥兰治县消防局敦促所有受命令的居民迅速离开。 就在南部，周四在圣地亚哥海军陆战队训练基地彭德尔顿营爆发的一场被称为亨德森大火的大火，到周五下午已席卷超过 2,000 英亩的土地 加州林业和消防部门分享的事件视频显示，5号州际公路旁的火墙在强风中翻腾。加州公路巡警封锁了主要高速公路的两个方向，浓烟笼罩了能见度。 洛杉矶西部马里布的大火覆盖约 146 英亩的土地，周五已得到 17% 的控制。 圣莫尼卡山脉大片地区的疏散命令和警告仍然有效。 超过 285 名消防员连夜与布赖森大火搏斗，这场大火威胁到了洛杉矶县青少年拘留和康复设施。 面对白天高达 92 华氏度（33 摄氏度）的高温和高达 65 英里/小时的阵风，消防官员在早上的更新中表示，“消防人员将继续保护建筑物并建立遏制措施”，并补充说，在风力增强的情况下，可能会发生火势蔓延和爆发。 超过 7,200 座建筑仍受到威胁，但据报道没有一栋建筑被布赖森大火损坏或摧毁。 洛杉矶县主管林赛·霍瓦斯 (Lindsey Horvath) 对消防队员表示感谢，“他们坚守一线，确保尽管风势严峻，但没有生命或建筑物因火灾而受到伤害”。 要求当地居民保持道路畅通，以便应急人员能够更轻松地开展行动。</p><p>洛杉矶消防队长安东尼·莫罗尼 (Anthony Morrone) 在周五上午举行的新闻发布会上表示，400 多名消防员参与控制布莱森大火，“仅受轻伤”。 大火是在大风期间爆发的，这增加了整个南加州的火灾风险。 据美国国家气象局称，干燥、温暖和阵风的东北风（称为圣阿纳斯风）从南加州内陆吹向海岸和近海，可能会持续到周六，极端火灾和迅速蔓延的可能性仍可能上升。 美国国家气象局气象学家罗斯·舍恩菲尔德表示：“这是一场相当普遍的火灾天气事件，因此整个南加州地区都应该保持警惕。” 每年这个时候，南加州的火灾危险通常会增加，预计风险将持续到 11 月。 如果没有大雨，天气可能会持续更长时间。 由于该州近年来一些最严重的野火是由电力设备引发的，公用事业公司主动切断了全州超过 150,000 个客户的电源。 在洛杉矶，市长凯伦·巴斯 (Karen Bass) 因该市对 2025 年致命火灾的反应而受到批评，她指示消防部门在风前部署人员和设备。 消防部门还向州紧急服务办公室请求援助。 舍恩菲尔德表示，圣安娜的风不会像 2025 年初引发致命火灾的风暴那么猛烈，这场火灾在阵风时速高达 100 英里/小时时摧毁了数千所房屋，并造成 30 多人死亡。 但她仍然敦促居民做好准备。 “直到[周六]晚上 8 点，我们仍处于危险信号状态，”霍瓦斯说。 “重要的是我们要保持警惕并做好准备。”</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/us-news/2026/oct/16/southern-california-brush-fires-force-evacuations" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">24</span> US records 4,410 measles cases as outbreak grows</h3><p class="card-meta">世界与社会 · Al Jazeera · 2026-10-17 01:40</p><p class="card-summary">The CDC reports 451 hospitalisations nationwide as health officials expand vacc…</p><p class="card-impact"><span class="label">影响</span> 围绕outbreak，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>美国疾病控制与预防中心 (CDC) 2026 年迄今已记录了 4,410 例麻疹病例，一周内增加了 330 例，并已向宾夕法尼亚州派遣了一名调查员，以帮助遏制该国最大规模的疫情。 CDC 数据还显示，今年全国有 451 例与麻疹相关的住院病例。 5 至 19 岁的儿童和青少年占病例的 42%，其次是 20 岁及以上的成年人，占 41%。 百分之十七的病例是五岁以下的儿童。 推荐故事 3 项清单 - 3CDC报告清单1显示美国有两例麻疹死亡病例，病例创35年来新高 - 随着美国疫情的蔓延，宾夕法尼亚州确认第五例与麻疹相关的死亡，共 3 例 - 列表第 3 个（共 3 个）纽约州在美国疾病死灰复燃之际宣布麻疹灾难 据州卫生部门称，截至周三，宾夕法尼亚州报告了 42 个县的 1,222 例病例，其中包括 10 月 9 日以来新增的 86 例感染病例。 此次疫情已导致 225 人住院治疗，5 人确诊与麻疹相关死亡。 州官员正在积极调查第六起死亡报告。 疾病预防控制中心正在从其流行病情报部门派遣一名所谓的“疾病侦探”，与州卫生官员就宾夕法尼亚州的疫情展开合作。 此次部署是在宾夕法尼亚州请求联邦援助（称为 Epi-Aid）之后进行的。 宾夕法尼亚州扩大了受影响社区的疫苗接种工作。 自 4 月底疫情爆发以来，州卫生中心工作人员已在 202 个临时诊所接种了 5,900 多剂麻疹、腮腺炎和风疹 (MMR) 疫苗。 由于附近宾夕法尼亚州麻疹病例上升，纽约州州长凯西·霍赫尔 (Kathy Hochul) 于 10 月 5 日宣布全州进入紧急状态。 该命令有效期至 11 月 4 日，扩大了授权接种疫苗的医疗保健专业人员的数量，并允许护士更灵活地安排麻疹检测。 美国疾病预防控制中心的数据显示，美国幼儿园儿童的麻疹疫苗接种覆盖率从 2019-2020 学年的 95.2% 下降到 2025-2026 学年的 92.4%。 该机构估计，由于疫苗接种覆盖率的差距，约有 28 万名幼儿园儿童面临风险。</p></div><p class="fulltext-src"><a href="https://www.aljazeera.com/news/2026/10/16/us-records-4410-measles-cases-as-outbreak-grows?traffic_source=rss" rel="noopener noreferrer">查看原文</a></p></details></div></article></section><section class="section" id="sec-延伸"><h2>延伸关注</h2><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">25</span> China’s AI research is booming: what it’s like to be on the front line</h3><p class="card-meta">延伸关注 · Nature · 发布时间未可靠获取</p><p class="card-summary">Nature, Published online: 14 October 2026; doi:10.1038/d41586-026-03223-8 China…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/research，可能影响科研议程或公共卫生响应</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>感谢您访问 nature.com。 您使用的浏览器版本对 CSS 支持有限。 获得 为了获得最佳体验，我们建议您使用更新的浏览器（或关闭兼容模式） 互联网浏览器）。 同时，为了确保持续的支持，我们显示的网站不带样式 和 JavaScript。 今年早些时候，随着计算机科学家陆毅从中国一所顶尖大学毕业的日子临近，他面临着一个艰难的选择。 他是否应该像中国雄心勃勃的人以前经常做的那样，前往美国攻读人工智能博士学位？ 还是应该留在中国？ 美国向人工智能科学家支付更高的薪水，拥有最好的硬件并拥有世界上最先进的人工智能实验室。 但“差距越来越近”，陆说，他的名字已被更改，因为他担心公开谈论他认为敏感的问题。 中国的人工智能研究正在迅速推进。 来自中国大学的人工智能研究人员比来自美国机构的要多得多，而且越来越多的毕业生选择留在原地，或者在美国呆了一段时间后返回中国。 中国的研究人员在全球人工智能相关出版物中占据主导地位，DeepSeek 和 Moonshot AI 等公司制造的人工智能模型的能力与美国竞争对手相差不远，而且价格仅为美国竞争对手的一小部分。 与此同时，由于签证制度日益严格，美国对外国研究人员的吸引力已降低； Lu 见过朋友的申请被拒绝或延迟。 “这是一个担忧，”他说。 最终，卢决定留在中国。 中国的人工智能生态系统在很多方面与加州硅谷有所不同。 在中国，学术界和工业界之间的界限更加宽松，获得计算资源的机会也少得多。 这既带来了机遇，也带来了挑战。 中国企业被指责在追赶竞赛中效仿美国的进步，但它们也找到了使模型更高效的技术。 华盛顿卡内基国际和平基金会中国人工智能项目联席主任斯科特·辛格表示：“有些人肯定认为美国仍然是世界上最适合创造生活和开展这项研究的地方，但更多人对此表示质疑。” 人工智能人才成长和去向的地方</p><p>中国培养的人工智能人才比任何其他国家都多。 根据 Digital Science（由 Holtzbrinck Publishing Group 运营的公司，该公司持有 Nature 出版商 Springer Nature 的股份）的数据，中国拥有 51,000 名活跃的人工智能研究人员，而美国只有 14,000 名。 该数据是根据该公司去年发布的一项研究进行更新的，还显示许多研究人员正处于职业生涯的早期阶段，年长的超级明星比美国要少（参见“活跃的人工智能研究人员”）。 作为研究精英研究人员的代表，许多分析师在著名的 NeurIPS 会议上研究了作者的起源和地点。 卡内基基金会旗下新加坡研究中心卡内基中国于 9 月发布的一项研究报告称，根据大样本，参加 2025 年会议的作者中有 57% 在中国获得本科学位（高于三年前的 46%），但美国仍然吸引着研究生学习者，吸引了大约五分之一的本科生（参见 go.nature.com/4yfsl4v）。 然而，美国的吸引力似乎正在减弱。 研究发现，中国科学家越来越多地呆在家里。 在 NeurIPS 上发表文章的在中国获得本科学位的研究人员中，69% 仍在中国，高于 2022 年的 57%（参见“人工智能人才职业路径”）。 这种留住本土顶尖人工智能人才的能力高于欧洲（60%），但落后于美国（89%）。 一项相关统计数据显示，尽管 2024-25 年有 63,000 名中国学生在美国学习数学或计算机科学，但这比五年前减少了 20%。 香港人工智能和技术领域的独立分析师 Grace Shao 表示，这一下降的原因之一是中美地缘政治竞争的影响正在渗透到研究领域。 她说，现在很多中国人在美国“感觉不太舒服，或者在同龄人中感到敌意”。 每一位接受《自然》杂志采访的中国学生都表示，签证问题是前往美国的首要问题。 越来越多的签证被延迟，美国政府试图限制签证期限，尽管这一点在法庭上受到质疑。 由于新的签证规定可能会影响现有学生重新进入美国，因此一些在美国的中国公民急于回国。 行进方向</p><p>数据尚不清楚已经在美国的人工智能研究人员是否正在涌回中国。 媒体报道往往集中在高调的海归身上，比如 Moonshot 的创始人杨志林，他于 2023 年创建了这家总部位于北京的公司，并于 2019 年在宾夕法尼亚州匹兹堡的卡内基梅隆大学获得了博士学位。但真实情况更为微妙。 卡内基基金会的一项研究表明，美国仍然能够留住备受瞩目的人工智能研究人员（请参阅 go.nature.com/3vxhdic）。 在 NeurIPS 发表论文的作者样本中，87% 2019 年在美国的华裔研究人员（在中国完成本科学位的研究人员）到 2025 年仍留在美国。但数字科学研究表明，当考虑所有积极发表论文的人工智能研究人员的隶属关系变化时，人才流动的最终方向是美国人才流向中国。 对人工智能相关学术论文的分析显示，中国在数量和影响力方面领先于美国。 数字科学研究发现，中国在学术产出（无论是引用量还是数量）以及人工智能相关专利方面均占据主导地位。 研究指出，重点大学和人工智能公司遍布中国各地，中心位于北京、上海、杭州和深圳，有 156 个研究机构，每个机构每年发表 50 多篇人工智能论文。 研究质量也在提高：根据《经济学人》的分析（参见 go.nature.com/4i1ka6e），到 2025 年，NeurIPS 会议中中国的主要作者数量首次超过美国或欧洲。 但其他统计数据却讲述了不同的故事。 总体而言，根据斯坦福人工智能指数 20262，美国比中国拥有更高影响力的专利和更引人注目的人工智能模型。根据 7 月 3 日发布的预印本，发表数据可能会扭曲人工智能的进步，因为中国企业比美国初创企业更有可能发表科学论文。 中国学者还表示，为了提升自己的职业生涯，他们面临着发表论文的巨大压力。 从根本上来说，美国仍然拥有世界上最先进的人工智能。 总部位于加利福尼亚州旧金山的 OpenAI 和 Anthropic 的模型在系统功能排行榜上名列前茅。 “在美国模型中，中国可能落后三到七个月，”辛格说。</p><p>滞后的原因之一是中国训练和运行尖端模型所需的计算芯片要少得多。 自2022年以来，出于国家安全考虑，美国限制向中国出口被称为图形处理单元（GPU）的强大芯片。 中国公司正在竞相制造自己的高质量芯片，但目前还没有能与美国公司使用的芯片相媲美的。 斯坦福大学的报告显示，中国的现金普遍也不太充裕，到 2025 年，美国的私人人工智能投资将达到中国的 23 倍以上。 邵说，中国企业缺乏这些资源是他们的主要瓶颈。 效率就是一切 较低…</p></div><p class="fulltext-src"><a href="https://www.nature.com/articles/d41586-026-03223-8" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">26</span> Preserve research data for tomorrow’s AI-enabled integrity checks</h3><p class="card-meta">延伸关注 · Nature · 发布时间未可靠获取</p><p class="card-summary">Nature, Published online: 13 October 2026; doi:10.1038/d41586-026-03244-3 Prese…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/research，可能影响科研议程或公共卫生响应</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>访问选项</p><p>访问 Nature 和其他 54 种 Nature 组合期刊</p><p>获取 Nature+，我们最超值的在线访问订阅</p><p>32.99 美元/30 天</p><p>随时取消</p><p>订阅本期刊</p><p>接收 52 期印刷刊和在线访问</p><p>每年 199.00 美元</p><p>每期仅需 3.83 美元</p><p>租用或购买本文</p><p>价格因文章类型而异</p><p>1.95 美元起</p><p>至 39.95 美元</p><p>价格可能需缴纳当地税费，该税费是在结帐时计算的</p><p>自然 658, 834 (2026)</p><p>doi：https://doi.org/10.1038/d41586-026-03244-3</p><p>利益竞争</p><p>作者声明没有竞争利益。</p></div><p class="fulltext-src"><a href="https://www.nature.com/articles/d41586-026-03244-3" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">27</span> Artificial intelligence-enabled clinical phenotyping of human brown fat</h3><p class="card-meta">延伸关注 · Nature · 发布时间未可靠获取</p><p class="card-summary">Nature, Published online: 14 October 2026; doi:10.1038/s41586-026-11162-7 Artif…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能影响科研议程或公共卫生响应</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>摘要 脂肪组织在全身能量平衡以及肥胖及其后遗症的发病机制中发挥着核心作用1,2。 与白色脂肪组织相反，棕色脂肪组织 (BAT) 使用能量产生热量3。 人类中可检测到的 BAT 与心脏代谢疾病患病率降低相关4。 然而，与 BAT 相关的完整健康状况仍然未知，并且缺乏量化人类 BAT 活性的高通量方法5,6。 在这里，我们利用大数据和人工智能系统地定义了 BAT 对来自大型癌症中心的 101,243 名患者的临床影响。 我们的公正分析显示，在所有诊断中，心血管和精神疾病在 BAT 患者中的患病率较低。 使用机器学习方法，我们半自动量化了大约 8,700 名患者的 BAT 活性，并证明较高的 BAT 活性（尤其是在腋窝部位）与较低的心脏代谢疾病发生率和更健康的白色脂肪分布相关。 患有 BAT 的人还表现出更有利的血糖参数、血脂、炎症标志物和超声心动图指数。 药物使用分析表明，血管紧张素受体阻滞剂的使用与 BAT 的存在呈正相关。 作为概念证明，我们证明血管紧张素受体阻滞剂氯沙坦可增加棕色脂肪细胞的活性和全身能量消耗。 总而言之，我们利用人工智能和大数据的研究确定了与 BAT 相关的新临床表型，并作为药物重新利用以激活人类这种组织的平台。 其他人正在查看类似内容 主要 肥胖是 2 型糖尿病 (T2D)、高血压和心血管疾病的主要危险因素2,7。 脂肪组织功能障碍是肥胖的一个标志，并导致心脏代谢疾病的病理生理学1。 白色脂肪组织 (WAT) 将能量以甘油三酯1的形式储存在皮下和内脏库中，而内脏脂肪过多是代谢不健康肥胖的一个关键特征8。 相比之下，棕色脂肪组织（BAT）以热量（产热）的形式消耗能量，其在动物模型中的激活可以预防肥胖和代谢疾病3。 然而，BAT 与成人生理学的相关性以及它是否可以作为治疗目标仍不清楚 5,6。</p><p>自从具有里程碑意义的报告称成年人具有诱导型 BAT9,10,11,12 以来，多项临床研究旨在通过冷暴露或 β-肾上腺素能激动剂来招募 BAT13,14,15,16,17。 尽管这些干预措施可以激活 BAT 并改善葡萄糖稳态，但其副作用和研究参与者人数较少限制了其临床影响 5。 最近，我们的小组描述了报告的最大的 BAT 人群，并证明在为临床目的且未接受先前刺激的情况下获得的 18F-氟脱氧葡萄糖 (18F-FDG) 正电子发射断层扫描 (PET)-计算机断层扫描 (CT) (18F-FDG-PET-CT) 扫描中 BAT 的存在与心脏代谢疾病患病率降低相关4。 这项工作需要注意的是，患者的特征是基于 BAT 的存在或不存在，而不是通过定量的 BAT 代谢活动。 与 WAT 一样，人类 BAT 位于不同的解剖学库中18，但这些库是否独特地影响健康仍不清楚。 此外，大多数人类最佳可行技术研究都集中在心脏代谢结果上，但这种组织如何影响其他器官系统和疾病类型在很大程度上仍未得到探索。 这些限制阻碍了促进 BAT 活性的药物的识别，并且没有批准的、广泛使用的药物来利用与该组织相关的心脏代谢益处。 在这项研究中，我们将队列扩大到超过 100,000 名患者，并对所有诊断代码进行了公正、全面的分析，以确定与 BAT 存在相关的新临床表型。 此外，我们利用人工智能 (AI) 半自动量化 18F-FDG-PET-CT 扫描中的总 BAT 代谢活动和特定于库的 BAT 代谢活动。 这使我们能够研究特定 BAT 库、WAT 分布和心脏代谢结果之间的关联。 最后，我们将这些方法与药物使用分析相结合，以确定 BAT 的药理调节剂，并进行概念验证实验，通过独特的过氧化物酶体增殖物激活受体 γ (PPARγ) 依赖性机制，验证氯沙坦作为棕色脂肪细胞的激活剂。 BAT 与所有诊断的关联</p><p>为了发现 BAT 与心脏代谢系统以外的疾病之间的关联，我们通过回顾 2018 年至 2024 年在纪念斯隆凯特琳癌症中心进行的额外 FDG-PET-CT 扫描，扩大了之前描述的队列（已建立的 BAT 队列）4。 其中，4.4% 报告存在 BAT，4,778 名患者 (7.9%) 至少有一次扫描呈 BAT 阳性（以下称为 BAT 阳性 (BAT+)；扩展数据图 1a）。 其余患者被指定为 BAT 阴性（BAT−）。 这些新确定的参与者被分组在扩展 BAT 队列（扩展数据图 1a）中，该队列验证了我们已建立的 BAT 队列 4 的研究结果，表明 BAT+ 人群心脏代谢疾病的患病率较低（扩展数据图 1b）。 为了提高统计功效，我们合并了已建立的 BAT 队列和扩展的 BAT 队列，创建了扩展的 BAT 队列，该队列由 101,243 名患者组成，其中 8,897 名患者为 BAT+，92,346 名患者为 BAT−。 每个患者都被分配了索引扫描作为临床数据收集的参考点（扩展数据图 1a）。 与之前的发现类似4，BAT 在扩展 BAT 队列中的女性中更为普遍，并且其患病率随着年龄、扫描时环境温度的升高以及体重指数 (BMI) 的增加而降低（扩展数据图 1c-f）。 考虑到这些变量对 BAT 患病率的影响，我们使用倾向评分匹配 (PSM) 创建了一组 BAT+ (n = 8,897) 和 BAT− (n = 17,405) 组的患者，在年龄、性别、BMI 和环境温度方面保持平衡（扩展数据图 1g,h）。 由于我们队列中的患者来自癌症中心，我们为 PSM 队列中的每位患者提取了广泛的癌症相关数据（补充表 1 和 2），包括部位、分期和治疗。 我们证实，某些癌症部位的发生率较高（例如，乳腺癌和口腔）、较低（例如消化道）或与 BAT 的存在无关（例如，皮肤、泌尿道）（表 1）。 正如我们之前的报告所述，一些癌症治疗方法在 BAT+ 组中使用得更频繁4（表 1）。 因此，除非本研究的其余部分另有说明，否则所有与癌症相关的变量均受到控制。 然后，我们在这个新的、扩展的 PSM 队列中进行了多变量逻辑回归，并证实了 BAT 的存在与特定心脏代谢疾病患病率下降之间的关联4（扩展数据图 1i）。 鉴于 BAT 存在和心脏代谢特征的性别二态性，我们对女性和男性进行了单独分析，发现 BAT 与我们的 PSM 和扩展 BAT 队列中两性心脏代谢疾病的几率降低相关（扩展数据图 2a、b）。</p><p>接下来，我们使用公正的方法来建立 BAT 与 PSM 队列中所有器官系统疾病之间的关联（图 1a）。 在提取国际疾病分类 (ICD) 代码数据并进行初步筛选分析（图 1a）后，511 个代码中有 104 个与 BAT 表现出显着的、未经调整的关联（补充表 3）。 过度代表性分析显示，心血管和精神病学诊断与 BAT 的关联显着丰富（图 1b）。 然后，我们对 104 个代码中的每一个进行多变量逻辑回归，以建立与 BAT 的关联，并针对……进行调整。</p></div><p class="fulltext-src"><a href="https://www.nature.com/articles/s41586-026-11162-7" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://www.nasa.gov/wp-content/uploads/2026/10/steve-cash-photo.jpg?w=1638" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">28</span> NASA Names Stephen Cash Marshall Space Flight Center Director</h3><p class="card-meta">延伸关注 · NASA Breaking · 2026-10-17 04:14</p><p class="card-summary">NASA Administrator Jared Isaacman has named Stephen Cash director of the agency…</p><p class="card-impact"><span class="label">影响</span> 围绕nasa，可能影响科研议程或公共卫生响应</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>NASA 局长贾里德·艾萨克曼 (Jared Isaacman) 任命斯蒂芬·卡什 (Stephen Cash) 担任该机构位于阿拉巴马州亨茨维尔的马歇尔太空飞行中心主任，该任命于 10 月 19 日星期一生效。卡什是 NASA 资深工程师和航空航天高管，他将重返该中心领导该中心，他在四十多年前就开始了自己的职业生涯。 艾萨克曼说：“马歇尔对美国宇航局任务的贡献是历史性的，毫无疑问为什么它是推进卓越中心。” “史蒂夫·卡什是马歇尔的传奇人物，他的职业生涯围绕着硬件和人员度过，并且在载人航天即将到来时做出决策之前一直在位。随着马歇尔继续在阿尔忒弥斯中发挥关键作用，并在先进推进、核能和将我们带入太阳系更深处的系统方面迎接新的挑战，史蒂夫带来了带领该中心进入下一个篇章所需的经验、技术判断和任务重点。我也感谢雷·安·迈耶为我们提供的领导。 马歇尔在这一转变期间以及她继续为美国宇航局服务。” NASA 副局长兼总工程师 Amit Kshatriya 表示：“领导 NASA 中心需要对其人员以及赋予他们的技术能力做出承诺。” “史蒂夫明白，马歇尔的瑰宝是其员工队伍，通过为人才提供设计、建造、测试和通过实践工作学习的机会来维持工程卓越性。随着马歇尔继续加强支撑 NASA 探索事业的制造、结构负载和动力以及推进能力，史蒂夫的领导将有助于确保员工有机会发展和应用实现该机构最雄心勃勃的任务所需的专业知识。” 作为中心主任，卡什将领导 NASA 最大的现场中心之一，负责监督 5,000 多名公务员和承包商员工以及广泛的推进、空间系统、科学研究和技术开发活动。 马歇尔在 NASA 的阿尔忒弥斯计划中发挥着关键作用，包括 NASA 的 SLS（太空发射系统）火箭的开发、人类着陆系统计划的管理，以及支持月球持续探索和未来火星任务的其他能力。 此外，马歇尔在核能和推进力的进步中发挥着关键作用，随着美国宇航局致力于将第一批人类送上火星，这一领域预计将不断发展。 “能够回到马歇尔太空飞行中心，我感到非常荣幸，”卡什说。 “当我们继续将不可能变成日常历史时，我很荣幸能够与这里的才华横溢的人并肩作战。”</p><p>卡什于 1982 年在马歇尔开始了他的 NASA 职业生涯，并在该机构工作了 34 年，担任高级工程和管理职位，支持美国一些最重要的载人航天计划。 在他的 NASA 职业生涯中，卡什曾担任马歇尔航天飞机推进办公室的经理，负责监督支持航天飞机完成最终任务的关键推进系统。 后来，他从 2011 年起担任马歇尔安全和任务保证局局长，直至 2016 年退休，在安全、可靠性和质量工程方面发挥领导作用，以支持整个中心的任务成功。 从 NASA 退休后，卡什继续在航空航天业工作，包括担任 Axient 先进空间系统副总裁，支持重大航天项目的开发和执行。 2024 年，他入选阿拉巴马州工程名人堂，以表彰他对工程和国家太空计划的贡献。 卡什接替雷·安·迈耶 (Rae Ann Meyer)，雷·安·迈耶自 2025 年 9 月起担任马歇尔中心代理中心主任。迈耶曾担任马歇尔中心副中心主任和副主任，在担任代理中心主任期间，为该中心的项目和运营提供了领导和连续性。 迈耶将继续担任中心副主任。 马歇尔公司成立于 1960 年，六十多年来在美国太空探索中发挥了核心作用，从开发阿波罗计划期间将宇航员送上月球的土星火箭，到推进支持人类航天下一个时代的推进系统、基础设施和技术。 有关 NASA 马歇尔太空飞行中心的更多信息，请访问： -结束- 乔治·奥尔德曼 / 谢丽尔·华纳 总部，华盛顿 202-358-1600 george.a.alderman@nasa.gov / cheryl.m.warner@nasa.gov 兰斯·戴维斯 马歇尔太空飞行中心，阿拉巴马州亨茨维尔。 256-544-0034 lance.d.davis@nasa.gov</p></div><p class="fulltext-src"><a href="https://www.nasa.gov/news-release/nasa-names-stephen-cash-marshall-space-flight-center-director/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">29</span> Advancing subseasonal forecasting with machine learning</h3><p class="card-meta">延伸关注 · Nature · 发布时间未可靠获取</p><p class="card-summary">Nature, Published online: 14 October 2026; doi:10.1038/s41586-026-11126-x The A…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能影响科研议程或公共卫生响应</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>摘要 决策者依靠天气预报来种植农作物、管理野火、分配水和能源以及为极端天气做好准备1、2、3。 如今，由于基于物理的动力学模型和数据驱动的人工智能模型的稳步发展，此类预测的准确度达到了前所未有的长达两周的水平4,5,6,7,8,9,10。 然而，由于复合误差、系统模型偏差和大气的混乱性质，模型技能在次季节时间尺度（提前 2-6 周）急剧下降11,12,13,14,15。 为了应对这种退化，我们引入了概率偏差校正，这是一种机器学习框架，可以通过学习纠正历史概率预测来大幅减少系统误差。 当应用于欧洲中期天气预报中心 (ECMWF) 的领先动​​力和人工智能模型时，概率偏差校正使人工智能预报系统16的适度次季节技能提高了一倍，并提高了可操作的去偏差动力模型17针对 91% 压力、92% 温度和 98% 降水目标的技能。 我们为业务部署设计了概率偏差校正，在ECMWF18的2025年实时预报比赛中，其全球预报在所有天气变量和提前时间上都是最好的，优于六个业务预报中心的动力模型、国际动力多模式集成、ECMWF的人工智能预报系统和全球34个团队的预报系统。 这些概率技能的提高可以转化为对极端事件的更准确预测，并有可能改善脆弱社区的农业规划、能源管理和备灾19。 其他人正在查看类似内容 主要 次季节预报（未来 2-6 周的天气预测）是农业规划、水资源分配、备灾和能源管理的核心1,2,3。 然而，在这个时间尺度上进行准确预测仍然很困难。 如今，我们对未来天气的最佳估计来自于数值模拟大气和海洋如何随时间变化的动态模型4,5，以及学习根据历史数据预测天气的人工智能 (AI) 模型6,7,8。 由于过去半个世纪中建模、计算和数据收集方面的稳步改进，确定性预报系统现在可以提前 1-2 周提供准确的天气点估计10。 然而，两周的时间范围也标志着可预测性的转变：超过这一点，即使初始天气条件的微小差异也可能导致结果的巨大差异，而单一的确定性预测无法捕捉到这种不确定性20。</p><p>为了克服这一可预测性障碍，人们经常转向概率预测，即预测未来天气的分布而不是单点估计21,22,23。 概率预测明确地编码了预测的不确定性，并提供了对高影响极端事件可能性的可行估计。 对于动态模型和人工智能模型，概率预测通常是通过扰动模型的输入、参数或内部状态来生成的，以产生未来可能的天气状态的集合13,23,24,25。 尽管这些集合通常在较短的交付时间内（至 15 天）表现出色，但操作动力集合甚至最先进的概率人工智能在较长的次季节交付时间内通常表现不佳，特别是在热带地区之外13。 一个核心困难是，主要的次季节系综是在许多时间步长上迭代生成的，甚至每步的小建模误差也会在几周内复合成大的系统误差14。 这种影响对于降水尤其明显，降水对模型组件之间的级联误差非常敏感，并且在空间和时间上变化很大4,26。 事实上，由于随着不同时间尺度演变的大气、陆地、海洋和海冰组成部分之间复杂的模型误差和复杂的相互依赖性，次季节预报长期以来一直被认为是“可预测性沙漠”11,15。 尽管现有的次季节集合确实容易出错，但我们表明，使用机器学习可以预测和纠正其系统误差的一部分，从而以最小的成本显着提高技能。 为了实现这一目标，我们引入了一个概率偏差校正（PBC）框架，该框架可以利用模型自身的历史预测和对过去天气的观测来自适应学习来校正模型的预测分布。 PBC 与任何输入模型兼容，我们用它来推进数据驱动和混合（人工智能 + 动态）次季节预测的最新技术。 由此产生的预测是为运营部署而设计的，在实时竞争中18，优于来自全球预测中心和竞争对手的最佳替代动态、人工智能和混合预测系统。 概率偏差校正</p><p>PBC 是一种新的机器学习框架，用于改进动态、人工智能或混合预测系统的次季节预测。 给定确定性预测的原始集合，PBC 输出学习增强的概率，旨在纠正系统错误，同时保留基础模型中的预测信号。 我们的方法受到参考文献的确定性偏差校正框架的启发。 27 但直接在概率分布空间上运行，而不是在原始观察水平上运行。 增加的灵活性使我们不仅可以直接优化分布的中心，还可以直接优化其分布和形状。 图 1 说明了 PBC 的示例应用程序。 首先，将输入集合转换为初始概率预测，与从历史观测或模型后报得出的气候分位数箱进行比较。 接下来，并行应用两个计算高效的机器学习模型——Debias++ 和 Persistence++——对初始预测进行补充修正。 Debias++ 使用位置、日期和分位数特定的校正来扰乱预测，这些校正是通过最小化自适应选择的训练周期内的概率预测误差来学习的。 同时，Persistence++ 将预测与滞后观测和气候学相结合，以解释最近的天气趋势和一年中的影响。 最后，将两个校正投影到有效累积分布函数 (CDF) 的空间上并进行平均以形成最终的 PBC 预测。 该方法提供了更多细节。 该框架可用于改进对任何天气变量、任何空间网格和任何数量的分位数箱的预测。 具体而言，我们采用 ECMWF 举办的 AI Weather Quest 次季节预报竞赛 18 的以下约定。 首先，我们重点在具有五个五分位箱的全球 1.5° 纬度 - 经度网格上预测平均 2 米温度（陆地上空）、总降水量（陆地上空）和平均海平面压力。 其次，我们使用排名概率技能得分 (RPSS)28 评估第 3 周（第 19-25 天）和第 4 周（第 26-32 天）的次季节预报，这是与气候基线相比的预报改进的标准衡量标准。 有关预测目标和评估的更多详细信息在方法中进行了描述。</p><p>为了评估 PBC 的操作效用和多功能性，我们将该框架应用于三个最先进的次季节预报模型：来自 ECMWF17 的业界领先的动态集成、来自 ECMWF16 的次季节人工智能预报系统 (AIFS-SUBS) 和带有变压器的后处理集成 (POET)，这是一种使用卷积和变换神经网络对 ECMWF 动态集成进行后处理的混合模型29。 作为我们对地面事实的衡量，我们采用 ERA5 再分析数据集30，它吸收了广泛的观察结果以生成全球网格......</p></div><p class="fulltext-src"><a href="https://www.nature.com/articles/s41586-026-11126-x" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://www.nasa.gov/wp-content/uploads/2026/10/ksc-20260411-navy01-0045orig-rotated.jpg?w=2048" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">30</span> Artemis II Heat Shield After Splashdown</h3><p class="card-meta">延伸关注 · NASA Breaking · 2026-10-17 00:28</p><p class="card-summary">Shortly after NASA’s Artemis II mission splashed down on April 10, 2026, U.S. N…</p><p class="card-impact"><span class="label">影响</span> 围绕nasa，可能影响科研议程或公共卫生响应</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>2026 年 4 月 10 日，美国宇航局阿耳忒弥斯二号任务溅落后不久，美国海军潜水员拍摄到了猎户座飞船隔热罩的水下图像。 在接下来的几个月里，该机构测量了当航天器重新进入地球大气层时热防护系统是否有效地保护了机组人员和猎户座系统。 这项严格的分析证实了隔热罩的性能符合预期。 图片来源：美国海军</p></div><p class="fulltext-src"><a href="https://www.nasa.gov/image-article/artemis-ii-heat-shield-after-splashdown/" rel="noopener noreferrer">查看原文</a></p></details></div></article></section>
+<details class="footer-notes"><summary>采集说明</summary><ul class="notes-list"><li>覆盖窗口：10-16 08:08–10-17 08:08</li><li>未扩展：严格约 24h 窗口</li><li>生成时间：2026-10-17T08:08:12.322925+08:00</li><li>严格 24h 内且时间戳可靠条目：216；时间戳不可靠：75</li><li>事件簇数：284；入选独立事件：30</li><li>失败来源（已跳过）：<ul><li>BBC Technology: ConnectTimeout: HTTPConnectionPool(host=&#x27;feeds.bbci.co.uk&#x27;, port=80): Max retries exceeded with url: /news/technology/rss.xml (Caused by ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x7f7515b3ce10&gt;, &#x27;Connection to feeds.bbci.co.uk timed out. (connect timeout=15)&#x27;)) (attempts=3)</li><li>BBC World: ConnectTimeout: HTTPConnectionPool(host=&#x27;feeds.bbci.co.uk&#x27;, port=80): Max retries exceeded with url: /news/world/rss.xml (Caused by ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x7f7515d4f750&gt;, &#x27;Connection to feeds.bbci.co.uk timed out. (connect timeout=15)&#x27;)) (attempts=3)</li><li>BBC Business: ConnectTimeout: HTTPConnectionPool(host=&#x27;feeds.bbci.co.uk&#x27;, port=80): Max retries exceeded with url: /news/business/rss.xml (Caused by ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x7f7515bf39d0&gt;, &#x27;Connection to feeds.bbci.co.uk timed out. (connect timeout=15)&#x27;)) (attempts=3)</li></ul></li><li>源状态汇总：ok=17 fail=3</li></ul></details>
+</main>
+</body>
+</html>
