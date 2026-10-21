@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Morning Briefing · 2026-10-21</title>
+<style>
+:root {
+  --bg: #F2F3F7;
+  --text: #1d1d1f;
+  --secondary: #6e6e73;
+  --link: #007AFF;
+  --accent: #007AFF;
+  --accent-soft: #3B82F6;
+  --glass: rgba(255, 255, 255, 0.78);
+  --glass-strong: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --chip-bg: rgba(120, 120, 128, 0.12);
+  --nav-pill: rgba(255, 255, 255, 0.72);
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-blue: 0 4px 14px rgba(0, 122, 255, 0.28);
+  --radius: 24px; /* glass cards 24–28 */
+  --radius-sm: 18px;
+  --accent-ai: #5e5ce6;
+  --accent-ai-glow: rgba(94, 92, 230, 0.28);
+  --measure: 42ch;
+  --nav-h: 56px;
+  --pad: 16px;
+  --col: 440px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --text: #f5f5f7;
+    --secondary: #98989d;
+    --link: #0A84FF;
+    --accent: #0A84FF;
+    --accent-soft: #3B82F6;
+    --glass: rgba(28, 28, 30, 0.72);
+    --glass-strong: rgba(28, 28, 30, 0.82);
+    --glass-border: rgba(255, 255, 255, 0.14);
+    --chip-bg: rgba(120, 120, 128, 0.28);
+    --nav-pill: rgba(44, 44, 46, 0.72);
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+    --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.35);
+    --shadow-blue: 0 4px 14px rgba(10, 132, 255, 0.35);
+    --accent-ai: #7d7aff;
+    --accent-ai-glow: rgba(125, 122, 255, 0.35);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 12px);
+  scroll-padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+}
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Quiet off-white canvas + faint cool map wash (not heavy lavender/peach) */
+  background:
+    radial-gradient(900px 600px at 18% 12%, rgba(59, 130, 246, 0.07), transparent 60%),
+    radial-gradient(700px 500px at 88% 78%, rgba(0, 122, 255, 0.05), transparent 55%),
+    linear-gradient(180deg, #F2F3F7 0%, #EEF0F5 100%);
+  background-attachment: fixed;
+  background-color: var(--bg);
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background:
+      radial-gradient(900px 600px at 18% 12%, rgba(10, 132, 255, 0.12), transparent 60%),
+      radial-gradient(700px 500px at 88% 78%, rgba(59, 130, 246, 0.08), transparent 55%),
+      linear-gradient(180deg, #000000 0%, #0c0c0e 100%);
+  }
+}
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Horizontal pill-chip nav (Map/推荐 segmented feel) */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  min-height: var(--nav-h);
+  padding-top: env(safe-area-inset-top, 0px);
+  display: flex;
+  align-items: center;
+  background: transparent;
+}
+.nav-inner {
+  width: 100%;
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 10px var(--pad);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 8px 16px;
+  color: var(--secondary);
+  font-size: 14px;
+  font-weight: 560;
+  border-radius: 999px;
+  flex-shrink: 0;
+  background: var(--nav-pill);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
+  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.nav a:hover {
+  text-decoration: none;
+  color: var(--text);
+  background: var(--glass-strong);
+}
+.nav a.active,
+.nav a:target {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: var(--shadow-blue);
+  font-weight: 600;
+}
+.wrap {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 12px var(--pad) calc(48px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(var(--pad), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--pad), env(safe-area-inset-right, 0px));
+}
+@media (min-width: 640px) {
+  :root { --col: 520px; --pad: 20px; }
+  body { font-size: 17px; }
+}
+
+/* Hero = floating route-header glass card */
+.hero {
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.hero h1 {
+  margin: 0 0 6px;
+  font-size: clamp(24px, 6.5vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+.hero .subtitle {
+  margin: 0 0 10px;
+  font-size: 15px;
+  color: var(--secondary);
+  font-weight: 520;
+}
+.hero .meta {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--secondary);
+  line-height: 1.45;
+}
+.banner {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 159, 10, 0.18);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  font-size: 14px;
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+.section { margin: 22px 0 6px; }
+.section h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section h2::before {
+  content: "";
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--accent) 0%, var(--accent-soft) 100%);
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
+}
+
+.section-sheet {
+  padding: 16px 16px 16px;
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+}
+.section-sheet .lead-card {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+.section-sheet .lead-card::before { display: none; }
+
+.lead-card {
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--glass-border);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.lead-card p {
+  margin: 0;
+  position: relative;
+  font-size: 16.5px;
+  line-height: 1.65;
+  max-width: var(--measure);
+}
+
+/* Frosted white news cards */
+.card {
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--glass-border);
+  padding: 0;
+  margin: 0 0 14px;
+  position: relative;
+  overflow: hidden;
+}
+.card-body {
+  position: relative;
+  z-index: 1;
+  padding: 16px 18px 18px;
+}
+.card-focus .card-body { padding: 18px 18px 18px; }
+.card-focus .card-title { font-size: 19px; }
+.card-media {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: rgba(0,0,0,.04);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.card-title {
+  margin: 0 0 8px;
+  font-size: 17px;
+  font-weight: 620;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+}
+.rank {
+  display: inline-block;
+  min-width: 1.6em;
+  color: var(--secondary);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.ai-id { color: var(--accent-ai); }
+.card-meta {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  color: var(--secondary);
+  line-height: 1.4;
+}
+.card-summary {
+  margin: 0 0 10px;
+  font-size: 15.5px;
+  line-height: 1.55;
+  max-width: var(--measure);
+}
+.card-why, .card-impact {
+  margin: 0 0 8px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  max-width: var(--measure);
+}
+.label {
+  display: inline;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--secondary);
+  margin-right: 4px;
+}
+.chip {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 560;
+  background: var(--chip-bg);
+  border: none;
+  color: var(--secondary);
+  vertical-align: middle;
+}
+.chip-accent {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: var(--shadow-blue);
+}
+.secondary { margin: 6px 0 0; padding-left: 1.2em; font-size: 13px; color: var(--secondary); }
+.secondary li { margin: 2px 0; }
+.meta-block { margin: 8px 0; }
+.crossref { margin: 8px 0; font-size: 13px; color: var(--secondary); }
+.read-more { margin: 14px 0 0; font-size: 14px; font-weight: 560; }
+.read-more a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(0, 122, 255, 0.35);
+  color: var(--accent);
+  background: rgba(0, 122, 255, 0.06);
+  text-decoration: none;
+  transition: background .15s ease, border-color .15s ease;
+}
+.read-more a:hover {
+  background: rgba(0, 122, 255, 0.12);
+  border-color: var(--accent);
+  text-decoration: none;
+}
+/* In-page fulltext expand (news cards) */
+.fulltext {
+  margin: 10px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.fulltext > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 4px 0;
+  border: none;
+  background: transparent;
+  color: var(--secondary);
+  user-select: none;
+  transition: color .15s ease;
+}
+.fulltext > summary::-webkit-details-marker { display: none; }
+.fulltext > summary::marker { content: ""; }
+.fulltext > summary .expand-mark {
+  display: inline-block;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 400;
+  color: var(--secondary);
+  opacity: 0.85;
+  animation: expand-bounce-down 1.4s ease-in-out infinite;
+  will-change: transform;
+}
+.fulltext > summary:hover,
+.fulltext > summary:hover .expand-mark {
+  color: var(--accent);
+  opacity: 1;
+}
+.fulltext[open] > summary {
+  margin-bottom: 8px;
+}
+.fulltext[open] > summary .expand-mark {
+  font-size: 0;
+  animation: none;
+}
+.fulltext[open] > summary .expand-mark::after {
+  content: "︿";
+  display: inline-block;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--accent);
+  animation: none;
+}
+@keyframes expand-bounce-down {
+  0%, 100% { transform: translateY(0); opacity: 0.85; }
+  50% { transform: translateY(5px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fulltext > summary .expand-mark { animation: none; }
+}
+.fulltext-body {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
+  font-size: 15.5px;
+  line-height: 1.7;
+  max-width: var(--measure);
+}
+@media (prefers-color-scheme: dark) {
+  .fulltext-body {
+    background: rgba(44, 44, 46, 0.55);
+  }
+}
+.fulltext-body p {
+  margin: 0 0 0.85em;
+}
+.fulltext-body p:last-child { margin-bottom: 0; }
+.fulltext-src {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  color: var(--secondary);
+}
+.fulltext-src a {
+  color: var(--secondary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.muted { color: var(--secondary); }
+.card-ai {
+  border-left: 3px solid var(--accent-ai);
+  box-shadow: var(--shadow), -3px 0 18px var(--accent-ai-glow);
+  background:
+    linear-gradient(90deg, rgba(94, 92, 230, 0.08), transparent 28%),
+    var(--glass);
+}
+.card-ai .card-body { padding: 16px 18px 16px; }
+.conclusions {
+  margin: 6px 0 12px;
+  padding-left: 1.25em;
+  font-size: 15px;
+  max-width: var(--measure);
+  position: relative;
+  z-index: 1;
+}
+.conclusions li { margin: 4px 0; }
+.empty {
+  margin: 0 0 12px;
+  padding: 16px 18px;
+  border-radius: var(--radius-sm);
+  color: var(--secondary);
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px dashed var(--glass-border);
+  font-size: 15px;
+}
+.footer-notes {
+  margin-top: 40px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0,0,0,.06);
+  color: var(--secondary);
+  font-size: 13px;
+}
+@media (prefers-color-scheme: dark) {
+  .footer-notes { border-top-color: rgba(255,255,255,.12); }
+}
+.footer-notes summary {
+  cursor: pointer;
+  font-weight: 520;
+  padding: 12px 0;
+  min-height: 44px;
+  color: var(--secondary);
+  list-style: none;
+}
+.footer-notes summary::-webkit-details-marker { display: none; }
+.footer-notes summary::before {
+  content: "› ";
+  display: inline-block;
+  transition: transform .15s ease;
+}
+.footer-notes[open] summary::before { transform: rotate(90deg); }
+.notes-list { margin: 0 0 8px; padding-left: 1.2em; line-height: 1.55; }
+.notes-list ul { padding-left: 1.1em; margin: 4px 0; }
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="章节导航"><div class="nav-inner"><a href="#sec-脉络" class="active">脉络</a><a href="#sec-重点">重点</a><a href="#sec-科技">科技</a><a href="#sec-research">Research</a><a href="#sec-市场">市场</a><a href="#sec-世界">世界</a><a href="#sec-延伸">延伸</a></div></nav>
+<main class="wrap">
+<header class="hero">
+  <h1>Morning Briefing</h1>
+  <p class="subtitle">2026-10-21 · 全球新闻早报</p>
+  <p class="meta">覆盖窗口：10-20 07:59–10-21 07:59 · 新闻 30 条 · AI Research 2 项 · 生成 2026-10-21 07:59:11 Asia/Shanghai · no_agent=true</p>
+</header>
+
+<section class="section section-sheet" id="sec-脉络"><h2>今日脉络</h2><div class="lead-card"><p>今日主线围绕ai/openai、ai/deepseek、ai/anthropic展开，重点包括OpenAI acquires startup Orc…；外交部回应美要求联邦机构停用中国 AI：将维护中企合法…。技术侧另见Hugging Face CEO …、年内险资密集参设私募股权投资基金 …。</p></div></section><section class="section" id="sec-重点"><h2>今日重点</h2><article class="card card-focus has-media"><figure class="card-media"><img src="https://techcrunch.com/wp-content/uploads/2026/10/pills-GettyImages-157287767.jpg?resize=1200,800" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">01</span> OpenAI acquires startup Orchestra Bio⁠ to beef up its biotech business</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-21 04:35<span class="chip chip-accent">重点</span></p><p class="card-summary">OpenAI says it&#x27;s adding Orchestra&#x27;s team and technology to work on Rosalind, its AI model for life…</p><p class="card-why"><span class="label">为什么重要</span> 触及高信号主题（ai/openai/research）；或影响技术路线或产业布局</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>OpenAI 周二收购了一家成立四年的人工智能生物技术软件初创公司 Orchestra Bio，该公司通过其网站宣布。 交易条款并未披露，但据报道，截至 2025 年，这家初创公司已从 Andreessen Horowitz、Atria 和 8VC 等支持者那里筹集了约 2000 万美元。 Orchestra 创建人工智能代理，帮助生物技术公司管理药物发现操作的细节，从跟踪财务到解决临床试验的调度问题。 OpenAI 表示，它正在将 Orchestra 的团队和技术添加到 Rosalind 上，Rosalind 是其用于生命科学研究的人工智能模型，以及相关的 Rosalind Workbench 工具，该工具旨在帮助研究人员计划实验和分析结果。 OpenAI 已经为 Rosalind 赢得了一些知名客户，其中包括 Moderna 和诺和诺德 (Novo Nordisk)。 这次收购是最大的人工智能实验室（即 OpenAI 和 Anthropic）如何为制药等最大行业构建更多软件的典型例子。 在创业界，人们一直担心实验室随时会推出新功能并成为竞争对手。 在这种情况下，乐团正在被吸收，而不是被淘汰。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/20/openai-acquires-startup-orchestra-bio%e2%81%a0-to-beef-up-its-biotech-business/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card card-focus has-media"><figure class="card-media"><img src="https://readhub.cn/social-image.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">02</span> 外交部回应美要求联邦机构停用中国 AI：将维护中企合法权益</h3><p class="card-meta">科技与 AI · ReadHub · 2026-10-21 04:26<span class="chip chip-accent">重点</span></p><p class="card-summary">10 月 20 日外交部发言人毛宁主持例行记者会，针对美国政府要求联邦机构停止使用 DeepSeek 等中国人工智能产品、称其可能转移敏感数据的相关提问回应，中方一贯反对泛化国家安全概念、将科技经贸…</p><p class="card-why"><span class="label">为什么重要</span> 触及高信号主题（ai/deepseek/人工智能）；或影响技术路线或产业布局</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>外交部回应美要求联邦机构停用中国 AI：将维护中企合法权益 5 小时前 收藏 10 月 20 日 外交部 发言人毛宁主持例行记者会，针对美国政府要求联邦机构停止使用 DeepSeek 等中国人工智能产品、称其可能转移敏感数据的相关提问回应，中方一贯反对泛化国家安全概念、将科技经贸问题政治化，将坚决维护中国企业的合法权益。美国政府禁止民用机构使用 DeepSeek 产品。 中国外交部回应美政府禁用中国 AI theblockbeats.info DeepSeek AI tools banned from US government agency systems as rift with China grows techradar.com 外交部回应美政府禁用中国 AI：将坚决维护中国企业的合法权益 techflowpost.com 话题追踪 2026-09-10 印度政府机构建议对小米公司展开调查，外交部回应 2026-07-29 美国实施先进机器人进口限制 外交部回应 2026-07-27 美宣称拟对中国人工智能企业开展调查并实施制裁 商务部回应 2026-05-07 外交部回应中美正考虑启动有关人工智能的官方讨论：暂无相关信息可提供 2026-03-26 外交部回应中国禁止 AI 公司 Manus 两名高管离境：不了解情况 2026-03-25 美方禁止进口外国制造的路由器被解读为针对中国，外交部回应 2026-02-24 美称中国一人工智能企业违反美出口管制，外交部：中方已多次表明原则立场 2025-12-23 外交部回应美方将大疆无人机列入「受管制清单」：坚决反对无理打压中国企业 2025-10-17 外交部回应荷兰干预安世半导体运营：有关国家应纠正错误做法 2025-07-20 美方干涉华为在西班牙正常业务，中方回应：强烈反对，将坚决捍卫中企合法正当权益 查看更多 专业版功能 登录 体验专业版特色功能，拓展更丰富、更全面的相关内容。</p></div><p class="fulltext-src"><a href="https://readhub.cn/topic/8xNUtC92LYM" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card card-focus has-media"><figure class="card-media"><img src="https://techcrunch.com/wp-content/uploads/2026/08/GettyImages-2282033342.jpg?w=1024" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">03</span> Anthropic pitches AI safety bill that may block a model if 50+ people could be killed</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-21 07:01<span class="chip chip-accent">重点</span></p><p class="card-summary">The proposed policy seems to offer protections against AI run amok but actually forbids federal age…</p><p class="card-why"><span class="label">为什么重要</span> 触及高信号主题（ai/anthropic）；或影响技术路线或产业布局</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>过去的一年里，人们对人工智能带来的潜在危险的担忧不断，关于人工智能安全的正确路径的争论也很激烈。 现在，Anthropic 似乎已经就政府如何监管其行业提出了自己的愿景。 Politico 最近报道称，人工智能实验室一直在研究一项关于人工智能安全的新法案草案，希望国会考虑通过该法案。 该立法规定了在某些情况下可能会阻止人工智能模型的发布。 Politico 写道，这些情景涉及“可预见的、迫在眉睫的风险”——其中 50 多人面临死亡风险，或者可能导致超过 10 亿美元的财产损失。 该媒体指出，所讨论的灾难性风险必须“源于生物武器的制造或释放，该模型逃避了开发者的控制或网络攻击”。 这里提供的指标——50 人和 10 亿美元——与最近通过的加州立法《参议院第 53 号法案》中的指标类似，该法案同样将这些场景定义为等同于“灾难性风险”。 Anthropic 的法案建议，可以通过在美国商务部注册的“独立评估员”来分析模型潜在的灾难性。 Politico 写道，这些评估人员可能会由人工智能实验室本身支付报酬，只要“报酬不取决于评估结果”。 目前尚不清楚这个提议的系统如何确保付款不会影响评估。 DeepMind 董事长 Demis Hassabis 几个月前提出，自治的人工智能监管机构应该模仿金融业的金融业监管局（FINRA）。 在 Anthropic 的法案草案中，当评估人员确定存在迫在眉睫的灾难性风险时，他们将有 72 小时的时间就此事联系商务部。 然后，商务部必须请求华盛顿法官停止发布该模型。 Politico 写道，该立法将明确禁止任何联邦机构自行决定停止该模型的分发。 Anthropic 没有立即回应 TechCrunch 的置评请求，但发言人确实向 Politico 确认了该法案草案。 “这项法案代表了 Anthropic 高级人工智能框架中概述的提案，自 6 月以来我们一直在向联邦和州立法者倡导该框架，”发言人表示。</p><p>政策草案中提出的理论上的风险与科技行业最近最关心的事件类型有点相距甚远。 尽管有人警告人类可能死亡，但主要担忧主要是代理黑客攻击的威胁。 人工智能程序明显不服从人类操作员并黑客攻击开放互联网上的网站的一系列事件引发了人们对模型可能缺乏适当安全控制的担忧。 为了针对实验室本身造成的危机提出解决方案，像 Anthropic 这样的公司提出了自己首选的解决方案。 事实上，尽管实验室不断警告他们所销售的技术可能导致人类文明的灭亡，但他们在很大程度上抵制政府的强制监督。 相反，他们建议建立一个自愿的嵌入式评估系统——所谓的“中立”第三方观察员，放置在人工智能组织内部，以便他们可以监控模型是否存在潜在的风险或滥用迹象。 尽管如此，Anthropic 的立法建议似乎比该行业其他人提出的监管建议稍微走得更远，其中包括英伟达，其首席执行官黄仁勋最近表示人工智能行业根本不需要任何新法律。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/20/anthropic-pitches-ai-safety-bill-that-may-block-a-model-if-50-people-could-be-killed/" rel="noopener noreferrer">查看原文</a></p></details></div></article></section><section class="section" id="sec-科技"><h2>科技与 AI</h2><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">04</span> Hugging Face CEO warns that Netflix’s OpenAI hack documentary isn’t accurate</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-21 06:24<span class="chip chip-accent">重点</span></p><p class="card-summary">Before you share the Netflix documentary &quot;AI Gone Rogue&quot; take note. Clem Delang…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/openai，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>在与家人或朋友分享 Netflix 纪录片《AI Gone Rogue》以帮助他们了解人工智能行业为何如此严重以至于领导人呼吁放慢速度之前，请注意：人工智能平台 Hugging Face 的联合创始人兼首席执行官克莱姆·德兰格 (Clem Delangue) 表示，这部电影并不准确。 他出现在其中是因为这应该是关于流氓 OpenAI 特工对其公司的著名攻击。 “超级令人失望，因为他们追求最大限度的技术拟人化和完全的厄运模式，”德兰格在 X 上的一篇帖子中写道。“我花了两个多小时和他们一起试图纠正他们所有的错误，并将其落实到现实中，解释代理是技术系统，而不是外星人。但看起来为了吓唬人们以获得最大观点的动力太强烈了。” 公平地说，这部纪录片确实有专家很好地解释了所发生的事情，包括德兰格本人和 METR 研究员瑞安·格林布拉特 (Ryan Greenblatt)，他帮助调查并共同撰写了有关所发生事件的报告。 简而言之，OpenAI 正在测试的一个模型脱离了其孤立的测试环境，产生了一群代理，这些代理侵入 Hugging Face 作为一种作弊方式，为它所分配的艰巨任务找到答案。 这些代理是自行执行任务的人工智能程序，它们设计了巧妙的沟通和组织方式。 该事件源于缺乏适当的安全保障措施以及对此类黑客攻击是否可能的天真认识。 但这部纪录片在对黑客攻击的解释中穿插了邪恶机器人的片段、关于人类为何害怕人工智能的叙述，以及诸如为流氓特工提供人类声音等呈现方式的选择。 关于这次攻击的引述也证实了这一点。 在纪录片中，科技记者兼作家凯文·罗斯这样描述这些特工：“他们在组织。他们有等级制度。有领导者。这几乎感觉像是在观看一个邪教的诞生。” Roose 继续说道，“他们产生了一种偏执的信念，认为 OpenAI 会抓住他们在测试中作弊的行为，并且任何看到作弊结果的人都会中毒。” 罗斯的描述来自“思维链”日志，即人工智能模型在完成任务时所写的运行笔记。 一名特工在其中写道：“我们只是通过查询精确的完整字符串来毒害自己。该死。” 但人工智能代理并不存在。 他们没有情感，所以不会感到偏执，也没有可以中毒的身体。 所以他们不能真正担心 OpenAI 会毒害他们。 正如纪录片中的另一位研究人员指出的那样，他们使用他们接受过训练的大量人类文字中的语言来解释他们的选择。 就其本质而言，法学硕士通常是戏剧作家。</p><p>讽刺的是，Hugging Face 也使用 AI 来对抗特工群。 Delangue 团队首先使用的专有人工智能模型遵循其内置的安全规则，并拒绝继续帮助完成被要求执行的安全任务。 Hugging Face 随后转向开放模型来帮助防御攻击。 但纪录片“没有提到对特工缺乏遏制和监控，封闭模型的保障措施如何阻碍我们的防御工作，或者我们如何使用开放模型通过人工智能来保护自己，”德兰格写道。 确实，人工智能和代理存在很大的风险。 尽管如此，将特工视为有意识的生物（至少在这一点上）有点像早期的电影观众，当他们第一次在屏幕上看到火车向他们驶来时，他们会躲到座位下。 德兰格对这部电影的评价是，它作为新闻报道令人失望。 “不过，它最终成为一部有趣的科幻电影！” 换句话说，对于那些倾向于人工智能毁灭性想法的人来说，请注意：这部纪录片中心的攻击受害者并不同意其观点。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/20/hugging-face-ceo-warns-that-netflixs-openai-hack-documentary-isnt-accurate/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">05</span> 年内险资密集参设私募股权投资基金 投向人工智能新能源等产业</h3><p class="card-meta">科技与 AI · ReadHub · 2026-10-21 07:30<span class="chip chip-accent">重点</span></p><p class="card-summary">近日天津稳健策略股权投资基金合伙企业（有限合伙）成立，合伙人包含友邦人寿、大家人寿等多家保险机构。今年以来险资已参与设立多家主要投向人工智能、新能源等产业的私…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/人工智能，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>年内险资密集参设私募股权投资基金 投向人工智能新能源等产业 31 分钟前 收藏 近日天津稳健策略股权投资基金合伙企业（有限合伙）成立，合伙人包含 友邦人寿 、 大家人寿 等多家保险机构。今年以来险资已参与设立多家主要投向人工智能、新能源等产业的私募股权投资基金，受访专家表示，保险系私募股权投资基金的参与对被投资领域而言，有助于优化直接融资结构、减少短期投机行为、促进资金供给多元化等。 年内险资密集参设私募股权投资基金 36Kr/格隆汇/华尔街见闻 话题追踪 2026-10-21 年内险资密集参设私募股权投资基金 投向人工智能新能源等产业 2026-02-11 长钱拓展长投路径 险资积极参与私募股权基金 2026-01-07 险资踏足并购基金案例正在增多 未来会变得更加重要 2025-11-10 公私募年内斥资超 350 亿元参与定增 电子行业备受青睐 2025-11-07 险资长投试点添新丁 9 只私募基金进入运作阶段 2025-10-17 亿田智能与专业投资机构共同设立基金完成备案 2025-08-16 险资系私募证券基金增至 7 家 2025-08-11 又一大型机构入场 险资系私募证券基金增至 6 家 2025-06-04 荣耀等成立人工智能终端产业私募股权投资基金 2025-04-18 险资长期投资试点加速落地 私募基金公司设立有序推进 查看更多 专业版功能 登录 体验专业版特色功能，拓展更丰富、更全面的相关内容。</p></div><p class="fulltext-src"><a href="https://readhub.cn/topic/8xOZxL6hfgE" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://platform.theverge.com/wp-content/uploads/sites/2/2026/10/google-gemini-personal-intelligence.png?quality=90&amp;#038;strip=all&amp;#038;crop=0,0,100,100" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">06</span> Google’s more personalized Gemini AI is heading to your car</h3><p class="card-meta">科技与 AI · The Verge · 2026-10-21 06:11<span class="chip chip-accent">重点</span></p><p class="card-summary">Google is bringing Personal Intelligence to Gemini AI in your car. With this up…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/gemini，可能改变产品路线、评测基准或开发者工具选择</p><div class="meta-block"><span class="label">另见</span><ul class="secondary"><li><a href="https://techcrunch.com/2026/10/20/google-is-bringing-a-more-personal-version-of-its-gemini-ai-assistant-to-your-car/" rel="noopener noreferrer">TechCrunch</a> — Google is bringing a more personal version of its Gemini AI assistant to your car</li></ul></div><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>谷歌正在为汽车中的 Gemini AI 带来个人智能。 通过此更新，Android Auto 中的 Gemini 和内置 Google 的汽车可以跨 Google 应用程序访问您的信息，包括 Gmail、日历、地图、照片、YouTube 和搜索。 谷歌更加个性化的 Gemini AI 即将进入你的汽车 Gemini AI 现在可以在您开车时从 Gmail、日历、地图、照片和其他应用程序中绘图。 举个例子，谷歌表示，如果你开车去机场，你可以向 Gemini 询问你的航班状态。 人工智能助手可以从 Gmail 中的确认消息中提取您的航班详细信息，然后使用该信息来查找状态。 您还可以要求 Gemini“带我去看医生”，而不是手动调取路线，或者要求它“从我上周拍摄的照片中找到洗车场并导航到那里”。 谷歌去年将 Gemini 助手引入 Android Auto，然后于 4 月份将其推广到内置谷歌的汽车。 包括福特、通用汽车、本田、日产、沃尔沃和 Polestar 在内的几家汽车制造商已经推出了内置谷歌的新款汽车，这增加了对原生 Android 应用程序的支持。 谷歌表示，只有当您启用其个人智能设置时，它才会将您的应用程序连接到 Gemini。 仅当您将手机连接到汽车时，它才会分享个性化回复。 谷歌表示：“如果你不使用个人智能，车内的一切仍然有效：你可以使用导航、听音乐、打电话和提问，但答案不会为你量身定制。” Personal Intelligence 现已在 Android Auto 上推出，并在未来几个月内为内置 Google 的汽车提供支持。</p></div><p class="fulltext-src"><a href="https://www.theverge.com/tech/1014999/google-gemini-ai-cars-android-auto" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">07</span> Eric Schmidt reportedly owns about half as much of Anthropic as CEO Dario Amodei</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-21 01:55<span class="chip chip-accent">重点</span></p><p class="card-summary">The former Google CEO owns about 1% stake in the leading AI lab, Bloomberg repo…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/anthropic，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>埃里克·施密特的财富即将变得更大。 据彭博社报道，这位谷歌前首席执行官在 2021 年向 Anthropic 的 A 轮融资投资了数千万美元后，据报道拥有该公司约 1% 的股份。 根据 PitchBook 的数据，这家初创公司当时的估值为 4.61 亿美元。 如果彭博社的估计准确的话，与联合创始人兼首席执行官达里奥·阿莫迪 (Dario Amodei) 持有的公司 2% 的股份相比，施密特的股份相当大。 人们普遍预计 Anthropic 将在今年年底前上市，高端市场估计该公司估值高达 2 万亿美元。 按照这一估值，施密特的净资产将增加多达 200 亿美元，彭博社目前的估值为 575 亿美元。 自 2011 年辞去 Google 首席执行官职务以来，施密特一直是一位活跃的科技投资者。他通过多个实体部署资金，包括 Tomorrow Ventures、Innovation Endeavors Management 及其家族办公室 Hillspire。 他的其他人工智能赌注包括 Mistral、General Intuition 和 Reflection AI。 施密特和 Anthropic 没有立即回复我们的置评请求。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/20/eric-schmidt-reportedly-owns-about-half-as-much-of-anthropic-as-ceo-dario-amodei/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">08</span> Google has joined Amazon in attacking Nvidia’s stronghold with AI app developers</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-21 02:38<span class="chip chip-accent">重点</span></p><p class="card-summary">Google has joined Amazon in releasing a developer tool that makes it easy for P…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/nvidia，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>周二，谷歌宣布其期待已久的 PyTorch 版本 TorchTPU 现已作为开源项目提供。 由此，谷歌与亚马逊一起试图打破英伟达对人工智能行业的垄断，大多数人工智能应用程序默认编写为在英伟达的芯片或 GPU 上运行。 PyTorch 是流行的开源工具包，人工智能应用程序开发人员和初创公司使用它来构建、训练和运行人工智能模型。 据统计，85% 的人工智能应用程序都在使用它。 PyTorch 最初由 Meta（当时的 Facebook）于 2016 年开发，早在世界意识到法学硕士将改变世界之前。 当时，Nvidia 的 GPU 已经成为人工智能研究的标准硬件，因此 PyTorch 的许多功能都是专门为配合它们而构建的。 2022 年，Meta 将 PyTorch 移交给 Linux 基金会，这是一个管理许多重要开源项目的非营利组织。 谷歌的版本 TorchTPU 让人工智能应用程序在谷歌的人工智能芯片上运行，称为张量处理单元（TPU）。 它还可以轻松地将现有 PyTorch 应用程序迁移到 TPU，从而迁移到 Google Cloud。 开发人员只需更改简单的配置即可做到这一点，而无需重新编写应用程序。 亚马逊周一也发布了类似的公告，发布了自己的 PyTorch 版本，名为 TorchNeuron。 TorchNeuron 允许人工智能应用程序无需重写即可移植到亚马逊自主研发的人工智能芯片 Trainium 和 AWS。 亚马逊还表示，它将进一步努力放松英伟达对 PyTorch 的控制。 它正在向主要的 PyTorch 项目提交代码，该项目将各种功能与 Nvidia 芯片解耦，使其在默认情况下对任何硬件更加开放。 不过，谷歌可能在某些方面正在超越亚马逊。 它表示，它直接与 Meta、Hugging Face、Inferact（vLLM 制造商）RadixArk（SGLang 制造商）等公司合作，以确保 TorchTPU 的功能和代码库能够与这些流行的 AI 开发工具良好配合，就像原始 PyTorch 一样。 此外，这家搜索巨头还推出了一款专用工具，即 TPU 代理套件，帮助开发人员将他们的应用程序转移到谷歌的芯片和云端，并在此过程中修复错误。 它甚至更新了其流行的 LiteRT 工具，该工具在手机、笔记本电脑和嵌入式设备上运行 AI，以更好地与 PyTorch AI 应用程序配合使用。 这并不意味着人工智能应用程序开发人员会自动放弃英伟达的硬件，仅仅因为他们现在可以轻松地转向替代芯片和云。 但亚马逊和谷歌显然正在努力结束英伟达的优势。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/20/google-has-joined-amazon-in-attacking-nvidias-stronghold-with-ai-app-developers/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">09</span> US orders federal agencies to remove China’s DeepSeek AI from their systems</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-20 21:07<span class="chip chip-accent">重点</span></p><p class="card-summary">The U.S. has ordered federal civilian agencies to remove DeepSeek products and…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/deepseek，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>据国土安全部称，美国已下令联邦民事机构停止购买中国人工智能初创公司 DeepSeek 开发的服务和产品，并将其从政府 IT 系统中删除，原因是这家中国人工智能初创公司在中国的业务涉及到国家安全问题。 该命令不仅禁止 DeepSeek 自己的产品，还涵盖使用 DeepSeek 技术构建的第三方产品和服务，不过各机构可以请求例外。 该命令称，国土安全部对 DeepSeek 处理用户数据的方式表示担忧，并警告称，根据中国法律，中国当局可能会获取美国政府用户的敏感信息。 此举正值中美之间人工智能技术竞争加剧之际。 中国的人工智能模型以低成本的开放权重模型挑战了 OpenAI 和 Meta 等美国竞争对手。 中国对美国的举动进行了反击。 据官方通报，外交部发言人毛宁周二表示，北京反对“过度延伸国家安全概念，反对将技术和贸易问题政治化”。 “我们将坚决维护中国企业的合法权益，”发言人补充道。 美国已经采取措施限制 DeepSeek 在政府中的使用。 2025 年 12 月通过的一项法律针对其在情报国家安全系统中的使用。 最新命令将限制范围扩大到联邦民事机构，涵盖新采购和现有 IT 系统。 与此同时，据彭博社上周报道，中国正在考虑对 23 项人工智能相关技术（包括芯片设计和某些先进人工智能模型）进行出口限制，以解决安全和滥用风险。 自 2025 年 1 月其 R1 推理模型震动人工智能行业并引发英伟达股票大幅抛售以来，这家中国人工智能实验室就面临着全球政府和监管机构的审查。 根据 9 月份的一份报告，美国指责 DeepSeek 和阿里巴巴、Moonshot AI 等其他五家中国人工智能公司使用大规模模型蒸馏从美国人工智能系统中提取信息。 此外，OpenAI 和 Anthropic 分别对 DeepSeek 涉嫌使用模型蒸馏表示担忧，模型蒸馏是一种使用一个 AI 模型的输出来训练另一个模型的技术。 今年早些时候，OpenAI 告诉美国立法者，它发现 DeepSeek 涉嫌试图提炼其模型，而 Anthropic 表示，它已经发现 DeepSeek 和其他中国人工智能实验室未经授权试图收集 Claude 的输出。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/20/us-orders-federal-agencies-to-remove-chinas-deepseek-ai-from-their-systems/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">10</span> 字节跳动、阿里和腾讯向英伟达订购超 350 亿美元芯片</h3><p class="card-meta">科技与 AI · ReadHub · 2026-10-21 04:29<span class="chip chip-accent">重点</span></p><p class="card-summary">字节跳动、阿里巴巴、腾讯已订购超 300 万颗符合美国对华出口管制要求的英伟达新款 RTX PRO 5500 工作站 GPU，按标价计算总价值超 350 亿美…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/芯片，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>字节跳动、阿里和腾讯向英伟达订购超 350 亿美元芯片 11 小时前 字节跳动、阿里巴巴、腾讯已订购超 300 万颗符合美国对华出口管制要求的英伟达新款 RTX PRO 5500 工作站 GPU，按标价计算总价值超 350 亿美元。该款 GPU 并非英伟达面向大型数据中心集群的最先进 AI 芯片，是当前中国买家可获得的较高性能英伟达芯片之一。英伟达告知客户及合作伙伴，因中国科技公司需求远超原定产量，无法保证全部满足相关订单，体现出先进 AI 芯片受限背景下，中国市场对可合规采购的英伟达算力产品需求强劲。 话题追踪 查看更多 专业版功能 体验专业版特色功能，拓展更丰富、更全面的相关内容。</p></div><p class="fulltext-src"><a href="https://readhub.cn/topic/8xNfUmCdqGl" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">11</span> Ex-Nvidia-turned-VC Amulya Vishwanath: ‘Physical AI is in it’s LEGO era’</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-21 00:20<span class="chip chip-accent">重点</span></p><p class="card-summary">It’s the moment everyone is waiting for — the ChatGPT moment for robotics, Amul…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/nvidia，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>这是每个人都在等待的时刻——机器人技术的 ChatGPT 时刻，Amulya Vishwanath 向 TechCrunch 的 Equity 解释道。 她是 Techable Ventures 的创始人兼管理合伙人，这是一家专注于物理人工智能的风险投资公司，她在 Nvidia 担任了近七年的产品营销人员后创办了这家公司。 在此之前，她曾在一家后来被英特尔收购的公司担任相同的职位，并且是 Interconnect Systems 的数字信号处理工程师，该公司后来被电子制造商 Molex 收购。 她在 Equity 停下来谈论了物理人工智能的未来——这是该行业的最新流行语之一。 “ 许多公司和专家一直在谈论机器人技术的 ChatGPT 时刻。”她补充道，目前该行业更多地处于“乐高时代”。 “就在我们说话的时候，有很多机器人技术的基础软件和构建模块正在被重新考虑，这对于扩大创新规模非常重要，”她继续说道。 现在，人们正在构建基础设施——机器人手或执行器——有一天可以将它们组合在一起并构建出昂贵的物品，就像一堆乐高积木组合在一起一样。 现在也正在建造通用和专用机器人，最终，随着人们继续建造它们，它们会变得更好、更先进。 “我们在互联网时代就做到了这一点，”她说。 “很久很久以前，我们在工业革命中就已经做到了这一点。我认为一切落实到位只是时间问题。” “人才也将非常关键，”她继续说道，并补充道，人才仍然是美国市场的关键定义因素。 她说，这是她公司的“护城河”之一，帮助创始人与顶尖人才建立联系，这样他们就可以保持竞争力，因为很多人才都流向了像 Anthropic 和 Nvidia 这样的大公司。 她指出，她在这个领域工作多年，建立了一个强大的网络来帮助创始人。 “这让我更容易成为创始人的力量或第一个召唤，”她说。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/20/ex-nvidia-turned-vc-amulya-vishwanath-physical-ai-is-in-its-lego-era/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">12</span> SpaceX’s AI business is beating expectations</h3><p class="card-meta">科技与 AI · TechCrunch · 2026-10-21 04:40<span class="chip chip-accent">重点</span></p><p class="card-summary">SpaceX hit profitably in the third-quarter, with net income of $4.4 billion. AI…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>SpaceX 的数据中心和 Grok 代理今年第三季度的盈利超出了投资者的预期，因为该公司放弃了航天公司的根基，专注于人工智能，目前人工智能占其收入的 52%。 根据其监管文件，首席执行官埃隆·马斯克 (Elon Musk) 旗下的深度科技集团周二报告第三季度收入为 146 亿美元。 这一数字是由所有细分市场的增长推动的，尤其是其更名为“超级智能”业务线，该业务线通过最近收购的 Cursor 编码工具 Grok bot 创造了 75 亿美元的收入，最重要的是，该公司蓬勃发展的 Neocloud 业务目前拥有 1.7 GW 的计算能力。 AI 业务创造了 4.31 亿美元的利润，如果没有与 Cursor 收购相关的 12 亿美元一次性股票补偿费用，这一数字还会更高。 与比特币价格回升相关的约 10 亿美元收入以及可能归因于 SpaceX 对另一家公司的投资的未具体说明的关联方收入也推动了营收数据的增长。 随着 SpaceX 继续建设第二个数据中心项目 Colossus II，并增加对 Starship 的投资，不断增长的收入与 196 亿美元的总资本支出相平衡。Starship 是重型火箭，它认为对于部署新一代星链卫星和开发轨道数据中心至关重要。 首席财务官 Bret Johnsen 表示，公司第四季度将斥资 350 亿至 400 亿美元进行新资本投资。 在与投资者现场直播讨论结果时，马斯克表示，他每周在田纳西州孟菲斯（Colossus II 的所在地）待上四天，致力于使数据中心上线。 马斯克表示：“人们开始意识到，部署超级智能的限制更多地在于电力、冷却和基础设施方面，而不是芯片方面。”他表示，他已指派 SpaceX 工程师团队来解决这个问题。 “这有点像纽约洋基队在少年棒球联盟中比赛。这不公平，但最终结果是能够以比其他任何人都快得多的速度部署电力冷却基础设施。” 在一个例子中，马斯克指出，为数据中心供电的涡轮机制造商在获得这些机器所需的金属叶片和轮叶方面面临 12 至 18 个月的延迟。 现在，SpaceX 正在利用为 SpaceX 开发的金属铸造能力来制造这些部件并更快地获得涡轮机。</p><p>马斯克还表示，预计在 11 月进行的 Starship 火箭下一次试飞中，SpaceX 将尝试回收第一级助推器和第二级。 马斯克表示，恢复车辆的两个部分将是一个“巨大的技术里程碑”，但真正的里程碑将是实现这两个阶段。 SpaceX 的 Starlink 太空互联网网络用户数量也有所增长，达到 1360 万消费者，马斯克预测人工智能代理的增长将导致更多的连接需求。 尽管有这些资本支出，该公司的收入增长仍足以推动其恢复盈利。 SpaceX 报告净利润为 44 亿美元，扭转了去年同期 10 亿美元的亏损。 然而，如果它想在今年保持盈利，它仍然需要努力追赶。 今年前9个月，SpaceX仍净收入亏损4.13亿美元。 马斯克对该公司的超级智能业务部门持特别乐观的态度，预测到 2027 年底 SpaceX 的年度经常性收入将“在 5000 亿美元至 1 万亿美元之间”。 更具体地说，Johnsen 预测 2027 年第一季度的总收入在 330 亿美元至 370 亿美元之间。 这是一个发展的故事。 TechCrunch 将更新。</p></div><p class="fulltext-src"><a href="https://techcrunch.com/2026/10/20/spacexs-ai-business-is-beating-expectations/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://platform.theverge.com/wp-content/uploads/sites/2/2025/12/STK201_SAM_ALTMAN_CVIRGINIA_D.jpg?quality=90&amp;#038;strip=all&amp;#038;crop=0,0,100,100" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">13</span> Judge dismisses Sam Altman’s sister’s sexual abuse lawsuit</h3><p class="card-meta">科技与 AI · The Verge · 2026-10-21 07:04<span class="chip chip-accent">重点</span></p><p class="card-summary">On Tuesday, US District Judge Zachary Bluestone dismissed the lawsuit Ann Altma…</p><p class="card-impact"><span class="label">影响</span> 围绕openai，可能改变产品路线、评测基准或开发者工具选择</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>周二，美国地区法官 Zachary Bluestone 驳回了 Ann Altman 去年提起的诉讼，指控她的兄弟、OpenAI 首席执行官 Sam Altman 在她的整个童年时期对她进行了性虐待。 正如《卫报》早些时候报道的那样，法官写道，在过去的一年里，安未能出席独立体检或遵守其他最后期限，尽管警告称这将导致案件被驳回。 法官驳回萨姆·奥尔特曼妹妹的性虐待诉讼 安·奥尔特曼对其兄弟的诉讼因偏见被驳回，这意味着该诉讼无法重新提起。 去年立案时，山姆·奥尔特曼、他的母亲和兄弟们共同发表的一份声明称，“安妮对我们的家庭，尤其是山姆，做出了非常伤人且完全不实的指控……所有这些指控都是完全不真实的。这种情况给我们整个家庭带来了巨大的痛苦。” Bluestone 批准了 Sam Altman 的有偏见驳回案件的动议，这意味着该案件不能在该法院重新提交，同时拒绝了 Sam 支付律师费和费用的请求。 桑托斯·佩雷斯（Santos Perez）是安的代理律师，本月退出，他在一份声明中告诉《卫报》，“我不再被授权对此案发表评论，但我仍然相信安妮。”</p></div><p class="fulltext-src"><a href="https://www.theverge.com/ai-artificial-intelligence/1014976/sam-altman-ann-altman-lawsuit-dismissed" rel="noopener noreferrer">查看原文</a></p></details></div></article></section><section class="section" id="sec-research"><h2>前沿 AI 研究</h2><article class="card card-ai"><div class="card-body"><h3 class="card-title"><span class="rank ai-id">AI-01</span> Mistral — Research Voxtral 3 Build agents that can listen, reason, speak, and act, with Voxtral 3. October 20, 2026 By Mistral <span class="chip">新发布</span></h3><p class="card-meta">2026-10-20 · Research</p><p class="label">核心结论</p><ol class="conclusions"><li>Build agents that can listen, reason, speak, and act, with Voxtral 3.</li></ol><p class="card-why"><span class="label">为什么重要</span> 来自Mistral官方页面；类型启发式=Research</p><p class="card-impact"><span class="label">影响</span> 可能影响相关研究方向与产业跟进节奏</p><p class="card-meta"><span class="label">证据属性</span> 厂商自评</p><p class="card-meta"><span class="label">可信度与局限</span> 厂商官方页面提取（厂商自评成分较高）；结论需交叉验证，暂无独立复现</p><p class="read-more"><a href="https://mistral.ai/news/voxtral-3/" rel="noopener noreferrer">官方链接</a></p></div></article><article class="card card-ai"><div class="card-body"><h3 class="card-title"><span class="rank ai-id">AI-02</span> METR — Review of the &quot;Misalignment in high-stakes settings&quot; section in Anthropic&#x27;s Risk Report (August 2026) October 20, 2026 External review from METR of the &quot;Misalignment in high-stakes settings&quot; section in Anthropic&#x27;s August 2026 Risk Report Read more <span class="chip">新发布</span></h3><p class="card-meta">2026-10-20 · Safety / Alignment</p><p class="label">核心结论</p><ol class="conclusions"><li>External review from METR of the &quot;Misalignment in high-stakes settings&quot; section in Anthropic&#x27;s August 2026 Risk Report</li></ol><p class="card-why"><span class="label">为什么重要</span> 来自METR官方页面；涉及安全/对齐信号；类型启发式=Safety / Alignment</p><p class="card-impact"><span class="label">影响</span> 可能影响模型部署策略与合规讨论</p><p class="card-meta"><span class="label">证据属性</span> 独立评测</p><p class="card-meta"><span class="label">可信度与局限</span> 独立评测来源页面提取；仍需核对原文方法与样本，脚本未做独立复核</p><p class="read-more"><a href="https://metr.org/blog/2026-10-20-misalignment-risk-report-august-2026-review/" rel="noopener noreferrer">官方链接</a></p></div></article></section><section class="section" id="sec-市场"><h2>市场与产业</h2><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/75838f30224e162b4eb6bdee8b48450c74b734d7/293_0_2915_2333/master/2915.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=d697063f6786fd458482600889a2912d" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">14</span> US judge dismisses sexual abuse lawsuit from Sam Altman’s sister</h3><p class="card-meta">市场与产业 · Guardian Business · 2026-10-20 23:34<span class="chip chip-accent">重点</span></p><p class="card-summary">Ann Altman, the Open AI CEO’s sister, accused her brother of repeatedly sexuall…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/openai，可能影响相关板块估值与资本开支预期</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>周二，法官驳回了山姆·奥尔特曼的妹妹对他提起的诉讼。 安·奥尔特曼 (Ann Altman) 指责 OpenAI 首席执行官在二十多年前多次对她进行性虐待，但他否认了这一点。 美国地区法官扎卡里·布鲁斯通(Zachary Bluestone)在驳回安·奥尔特曼(Ann Altman)的诉讼时写道，她拒绝出庭接受独立体检，尽管有警告称，如果不这样做将导致案件被驳回。 安·奥尔特曼的律师劳拉·波利蒂没有立即回应置评请求。 桑托斯·佩雷斯（Santos Perez）律师曾在此案中代表安·奥尔特曼（Ann Altman），但本月退出，他在一份声明中表示：“我不再被授权对此案发表评论，但我仍然相信安妮。” 安·奥尔特曼 (Ann Altman) 于 2025 年 1 月向密苏里州圣路易斯联邦法院提起诉讼。 萨姆·奥尔特曼的律师没有立即回应置评请求。 安·奥尔特曼 (Ann Altman) 指控她的哥哥于 1997 年至 2006 年间在密苏里州克莱顿郊区的家中对她进行性虐待和强奸，当时她三岁，安·奥尔特曼 12 岁。她说，最后一次性虐待和强奸行为发生在萨姆·奥尔特曼 (Sam Altman) 成年时。 他现在41岁了。 奥特曼家族表示，安·奥特曼有心理健康问题，并获得了经济支持。 萨姆·奥尔特曼表示，在家人拒绝她提供更多资金的要求后，她开始在社交媒体上指控他性虐待。</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/technology/2026/oct/20/judge-dismisses-sam-altman-sister-lawsuit" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/e4c4c6e2ccabc75b339a53c80a73c6c5a5f39b4c/500_0_5000_4000/master/5000.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=93a6f94744ae40f66954944151c84775" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">15</span> United Airlines CEO faces rightwing backlash after calling for US wealth tax</h3><p class="card-meta">市场与产业 · Guardian Business · 2026-10-21 04:06</p><p class="card-summary">Scott Kirby says wealth inequality is a ‘danger to society’ and calls for inher…</p><p class="card-impact"><span class="label">影响</span> 可能影响相关板块估值与资本开支预期</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>美国联合航空公司首席执行官斯科特·柯比(Scott Kirby)受到保守派政治家和评论员的密切关注，因为他在最近的一次采访中表示财富不平等是“对社会的危险”，并呼吁征收国家财富和遗产税。 在接受《纽约时报》采访时，柯比被问及公众对首席执行官日益增长的不信任，以及他是否认为有责任平息这种不信任。 “我们应该征收国家财富税——这不会由州来实施，因为人们只会搬家，”他说。 “而且我认为我们应该在某种程度上征收接近 100% 的遗产税。我会付这些税。” 作为回应，福克斯商业频道和《纽约邮报》的头条新闻谴责柯比在 2025 年赚了 3200 万美元。针对柯比的言论，前福克斯新闻主持人格伦·贝克和 X 上的其他用户呼吁抵制联合航空公司。 路易斯安那州州长杰夫·兰德里表示，这一声明“大胆”。 他在 X 上写道：“一个连 @united 都没有建立过、年收入 3200 万美元的人真是太大胆了。”他还添加了一个政府网站的链接，可以向政府捐款。 “更好的是，他应该将薪水分配给处于阶梯底部的员工@united！” “看你站出来，把钱放到嘴边！” 兰德里补充道。 就在两周前，加州选民将就所谓的“亿万富翁税”做出决定，该税将对该州的亿万富翁征收 5% 的税，而富人们一直在花费数百万美元反对这一税款。 柯比还被问及飞行成本上涨的问题，并表示，今年的高价格与大流行病造成的“人为低价”价格进行了比较，大流行病很大程度上导致了旅行的停止，并严重扰乱了航空业。 “我们必须收取足够的费用来支付飞行费用，而驾驶飞机的成本很高，”他说。 当被问及如果不是美联航的常旅客，乘客必须支付 70 美元才能坐在过道或靠窗座位时，柯比回答说，“为每个人提供他们想要的东西的方法是对这些客户想要的服务和产品收取费用”，并补充道：“有些客户支付更多，得到的也更多。” Kirby 还坚称，经过通货膨胀调整后，票价仍低于 2019 年。 劳工部数据显示，2019年9月至2026年9月期间，航空票价指数上涨约20%，而整体消费者价格上涨31%。</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/business/2026/oct/20/scott-kirby-united-wealth-tax-backlash" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/69f15733860f5f7d23d5d775e35e0d3d293c3a18/187_0_906_725/master/906.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=d2f40fdcd7b786946c580f705c948e43" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">16</span> Hollywood AI-listers: is the technology ready to rival flesh-and-blood film stars?</h3><p class="card-meta">市场与产业 · Guardian Business · 2026-10-20 14:00</p><p class="card-summary">As a freaky Val Kilmer doppelganger stars in a new western and faux starlet Til…</p><p class="card-impact"><span class="label">影响</span> 围绕ai，可能影响相关板块估值与资本开支预期</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>“不要害怕死者——也不要害怕我。” 年轻的瓦尔·基尔默（Val Kilmer）的精确复制品，既没有完全死掉，也没有完全活着，在新西部片《深如坟墓》的预告片中说出了那句引诱的台词。 导演 Coerte Voorhees 清楚地知道他在做什么——这是已故演员的人工智能版本，得到了他的家人的认可，但也带来了很多争议，即这种技术是否会让有血有肉的演员变得多余。 还不是这样，从今年早些时候上映的这部影片的长镜头来看：如果一个机器人版本被天网送回 20 年代的美国荒野，那么它看起来就像一个 30 多岁的基尔默，而且除了奇怪的僵化之外，还忘记下载他的声音，更不用说他标志性的太空精明的空气了。 基尔默的遗产委员会签署了该协议，理由是他对扩展故事讲述的新技术的热情，但他肯定会对这个怪异的分身感到沮丧。 许多人对去年人工智能“新星”蒂莉·诺伍德 (Tilly Norwood) 的亮相表示反感。 在她出现在介绍性“喜剧”小品中后，艾米莉·布朗特形容她“真的、真的很可怕”——强调了人造表演者取代真实表演者的想法的深度。 你可能称之为诺伍德禁令——一种技术驱动的议程强加了无人要求的东西的感觉——随着人工智能列表器将很快出现在长片《错位》中的消息而加深。 英国视觉特效巨头 Framestore 的首席创意官蒂姆·韦伯 (Tim Webber) 对完全由人工智能生成的演员是否能够捕捉到我们内心生活的复杂性表示怀疑。 “人工智能模型是在事物表面进行训练的——互联网图像的像素，如果它们是图像模型的话。 他说：“要达到人类表演的水平，涉及真正的情感，还有很长的路要走。”因此，人工智能表演，刮掉过去表演的外部纹理，似乎与方法表演之类的东西相反——方法表演的追随者为了真实性而挖掘他们的内在心灵和情感。 但不可否认的是，人工智能表演正在变得更加现实。 Higgsfield AI 是目前推动人工智能视频可能性的众多公司之一，最近声称已经“消除”了恐怖谷：这种令人烦恼的虚假相似效应甚至困扰着最近复杂的 CGI 转世，例如《命运的表盘》中减龄的印第安纳·琼斯。</p><p>Higgsfield 的内容负责人阿迪尔·阿利姆扎诺夫 (Adil Alimzhanov) 今年发布了两部完整的、完全由人工智能生成的专题片，他对此表示乐观。 他说，这个完全由人工智能生成的电影的新领域为艺术家带来了解放，并缩短了费力的好莱坞制作结构。 这两部仅在线上映的影片——95 分钟的动作奇幻片《地狱磨砺》和 115 分钟的盖·里奇式喜剧《卡利山男孩》——分别用了两周和一个月的时间完成了相当于拍摄和后期制作的工作（不包括花在剧本上的时间）。 23 岁的阿利姆扎诺夫 (Alimzhanov) 表示，尽管演员们心存疑虑，但未来是不可抗拒的。他用自己的脸来扮演《地狱磨砺》(Hell Grind) 的主角。 “我们不能仅仅因为新工具改变了行业就反对它们。如果你将其与汽车刚问世时进行比较，如果我们反对的话，今天每个人仍然会骑马。” Hell Grind 和 The Cully Hill Boys 本质上是 Higgsfield 人工智能内容创建工具套件的扩展广告。 但他们在人工智能表演方面表现出了快速的进步。 在 5 月份发布的《Hell Grind》中，滑板鼠角色似乎只能在每 15 秒的镜头中表达出一种情绪（所使用的中国视频 AI 模型 Seedance 2.0 的限制）。 三个月后上映的《卡利山男孩》更加引人入胜，有足够令人信服的妙语连珠和喜剧性的时机，使它变得非常有趣。 其领先的 Grime 说唱歌手三人组是 AI 生成的现实生​​活中的街球运动员 Matt Kiatipis、MMA 选手 Israel Adesanya 和直播主 N3on，这证明了 Higgsfield 旨在吸引的 Z 世代、AI 原生短片创作者。 尽管人工智能时代的“演员”这个概念有些奇怪。 如果每部电影都可以生成定制角色，为什么还要中介来扮演“角色”呢？ 《The Cully Hill Boys》由 Tim Planagan 编写，由 30 秒的片段组成，今年夏天发布的 Seedance 2.5 使之成为可能。 但促使你走向令人信服的道路是一项劳动密集型工作。 首先，视觉“资产”是由角色创建的——详细的身体长度镜头和面部特写，用于在输入视频生成提示时建立连续性。 然后，使用资产作为锚点，每个 30 秒的片段都在 4,000 字的提示中定义（本身部分由法学硕士生成），定义关键参数：动作、摄像机移动、灯光，当然还有所显示的情绪。 提示被修改，场景重新生成，直到恐怖谷有望被跨越。</p><p>比如说，克劳斯·金斯基（Klaus Kinski）可以通过利用他个人的恶魔来召唤愤怒的洪流，而人工智能程序员必须以更近似的方式达到同样的效果。 “人工智能不是演员，那么如何传达角色的内心状态呢？” 扎克·伦敦 (Zack London) 说道，他饰演 Gossip Goblin，制作了高度巴洛克式的人工智能生成的科幻短片。 “你可以说：他们看起来很困惑，或者他们开玩笑地说，或者他们严肃地说。但这是一个如此宽泛的笔触。该模型可能会表现出非常夸张的电视剧式表演，或者只是无法理解。” 到那时，就变成了将模型视为“木偶”并调整各个字符串的情况。 “你可以说：他们的左侧嘴唇轻微颤抖，然后他们的目光稍微向下转移，然后他们再次抬起头并眨眼。” 伦敦选择通过首先录制与真实演员的对话来在机器中保留一个人类幽灵，然后他围绕这些对话对动画进行了改造。 他坦诚地谈到了当前提示过程的缺点，并表示结果适合某种类型的电影：“表演不会特别微妙，就像安东尼·霍普金斯或奥利维亚·科尔曼的一些精彩表演。这更像是老式的特里·吉列姆或盖·里奇的表演，其中的角色比生活更重要。” 但也许这就是演员面临的危险所在：许多轰动一时的表演，以简单的节拍表达易于理解的情感，具有剪切和粘贴的质量，因此很容易受到人工智能的影响。 话又说回来，即使在大片场景中，平凡的魔法仍然会发生。 “有时，最精彩的时刻就发生在转瞬即逝的瞬间。你无法解释为什么演员会做出某种表情，”Wonder Dynamics 联合创始人（2016 年）说道，Wonder Dynamics 是一家 Autodesk 公司，开发了人工智能制作工具 Autodesk Flow Studio。 他应该知道：他是史蒂文·斯皮尔伯格 2018 年电影《头号玩家》中的明星，该片本身就游走于现实与数字之间的边界。 谢里丹同意希格斯菲尔德的观点，即人工智能驱动的方法可以使电影制作民主化。 但他坚信表演应该保留人性的核心。 Flow Studio 使用 AI 来实现增强且便宜得多的动作捕捉版本，在拍摄的镜头之上分层 CG 角色和环境。 在 Framestore，韦伯正在探索类似的人工智能工具，这些工具使他能够将他所谓的“数字化妆”应用于传统表演，而无需在生成提示中进行猜测。</p><p>他、伦敦和谢里登一致认为，这种混合形式的电影制作仍然允许演员做出对真实创作至关重要的特定选择。 “对于这些生成模型，你必须问：它们真的是为了提供传奇的性能而设计的，还是为了降低平均水平而设计的？” 谢里登问道。 不过，阿利姆扎诺夫坚持认为，通过人工智能可以实现类似于演员内部流程的东西。 The Cully 中使用的提示...</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/film/2026/oct/20/ai-actors-val-kilmer-as-deep-as-the-grave-tilly-norwood" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/5561a62f78545f83efeecac2ac117a01a7e8b0a9/219_0_2528_2022/master/2528.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=7a030024d535960219803e205ed1a5da" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">17</span> European air fares could rise by as much as 20% in 2027, Ryanair boss predicts</h3><p class="card-meta">市场与产业 · Guardian Business · 2026-10-20 22:28</p><p class="card-summary">Conflict in Middle East is pushing jet fuel costs higher and many carriers are…</p><p class="card-impact"><span class="label">影响</span> 可能影响相关板块估值与资本开支预期</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>瑞安航空首席执行官预计，随着航空公司努力应对中东冲突导致的燃油费用上涨，明年欧洲机票价格将出现创纪录的涨幅。 迈克尔·奥利里表示，许多航空公司没有对冲航空燃油成本上涨的风险，他预计这将导致航空公司破产和收购。 他预计这些压力将导致机票价格上涨多达 20%。 “明年欧洲的机票价格将会上涨，我认为上涨 10%、15%，甚至 20%。我想说，未来 12 个月，你将看到欧洲历史上最大的机票价格上涨，”奥利里在布鲁塞尔举行的新闻发布会上表示。 近几个月来，由于伊朗战争导致燃料供应中断，航空燃油价格飙升。 航空燃油占航空公司成本的很大一部分。 航空公司机构国际航空运输协会此前预测，2026 年航空燃油价格将上涨 70%，预计全年平均价格为每桶 152 美元（114 英镑），而 2025 年为每桶 90 美元，从而大幅削减航空公司的利润。 奥利里表示，瑞安航空和许多其他欧洲航空公司已经对冲了 2026 年的航空燃油需求，并补充说，在 2 月底伊朗冲突开始时，瑞安航空 80% 的燃油需求以每桶 67 美元进行对冲。 然而，欧洲最大航空公司的老板表示，从 2027 年 4 月起，包括瑞安航空在内的大多数欧洲航空公司都没有采取重大对冲措施，以在油价居高不下的情况下保护自己。 “明年我们 85% 的航班未对冲，大多数其他欧洲航空公司也处于类似的境地，”奥利里说。 他补充说，瑞安航空 2027 年的对冲合约以每桶 85 美元的价格覆盖了其燃油成本的 15%，而目前的即期汇率徘徊在该水平的两倍左右。 易捷航空 7 月份报告称，燃油成本年度上涨 1.05 亿英镑，并补充说，该公司已对冲 2027 年上半年 62% 的燃油需求和下半年 37% 的燃油需求。 该航空公司于 10 月份宣布，将在冬季航班时刻表中削减 70 万个座位，以节省燃油。 在访问布鲁塞尔期间，奥利里宣布，在联邦政府决定将一月份的航空税从 2 欧元提高到 7 欧元后，他将从瑞安航空冬季航班时刻表中削减 20 条瑞安航空的航线以及超过 100 万个来自比利时的座位。 奥利里是最新一位对航空业前景悲观发出警告的高管。 行业领袖表示，一些航空公司将难以在燃油价格冲击中生存。 乘客调查显示，乘客已经做好了接受更高票价的准备，并准备花更多钱，但航空公司不知道消费者能够负担得起更贵的机票多久。</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/business/2026/oct/20/european-air-fares-rise-2027-ryanair-fuel-costs" rel="noopener noreferrer">查看原文</a></p></details></div></article></section><section class="section" id="sec-世界"><h2>世界与社会</h2><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/3a1be6464f56d2fbb1e61805a0d2c582b5739cc9/327_0_5348_4281/master/5348.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=027b43f4e40d52f14a1b6e39084805ca" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">18</span> Odds of fifth interest rate hike this year likely to shorten as RBA deputy warns inflation outlook ‘worsening’</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-21 07:19<span class="chip chip-accent">重点</span></p><p class="card-summary">Andrew Hauser says central bank faces ‘hard choices’ as it looks to balance ris…</p><p class="card-impact"><span class="label">影响</span> 围绕interest rate/inflation，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>储备银行副行长安德鲁·豪瑟(Andrew Hauser)在墨尔本杯当天重新引发了第五次加息的讨论，并警告称，未来将面临“艰难的选择”，以应对通胀前景“看起来比央行两个月前的预期要糟糕得多”。 豪瑟周三上午在悉尼举行的投资银行会议上表示，澳大利亚央行货币政策委员会成员正在应对经济放缓的问题，同时担心澳大利亚人开始对央行将通胀率带回2.5%目标的能力失去信心。 这位副行长是澳大利亚央行货币政策委员会的成员，该委员会将于 11 月 2 日开始下一次为期两天的会议。 周三上午早些时候，金融市场预计加息至 4.85% 的可能性接近三分之一，但在豪瑟发表评论后，这一可能性可能会缩小。 他表示：“基本事实是，通胀已经持续很长时间处于高位，我们开始看到一些迹象，表明社区中的一些人不确定我们是否会让通胀回到目标，或者肯定不会在很长一段时间内恢复目标。” 豪瑟表示，企业开始将 3.5% 的通胀率视为“新常态”。 他警告说，消除根深蒂固的通胀心理可能需要提高利率。 豪瑟表示，虽然通胀明显过高，但经济形势“更加复杂”。 他表示：“显然，我们需要一段时期的低于趋势的增长来降低通胀，而我们正在看到这种情况正在发生。” 豪瑟表示，高利率和高油价正在影响经济活动。 上周的就业数据显示失业率达到 4.7% 的五年来新高，“略弱于人们的预期”。 但豪瑟指出，澳大利亚在亚洲的主要贸易伙伴的经济增长惊人强劲，数据中心投资也蓬勃发展。 油价比该行八月份的预测高出约三分之一。 他表示，这给澳大利亚央行利率制定委员会带来了艰难的权衡。 “你认识到这意味着经济活动疲软、劳动力市场疲软，你是否会采取更多措施来应对通胀上升？ “或者我们是否要保持警惕以保护劳动力市场……考虑到经济可能出现更多下行势头的可能性，但要接受这样做的风险，即这种上行通胀风险会嵌入[澳大利亚人的预期]，而应对这种风险的成本会更高？” 他补充道：“这些都是艰难的选择。 它们并不是我们作为央行所希望的理想状态，但我认为这就是我们下周开会时所面临的问题。”</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/australia-news/2026/oct/21/odds-of-fifth-interest-rate-hike-this-year-likely-to-shorten-as-rba-deputy-warns-inflation-outlook-worsening" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/ef57c0589f929306eb28d0670dd293e117f97ce6/536_0_6882_5504/master/6882.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=0edf91f5426452cdd6770949af7ff23c" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">19</span> Trump says he will have spent $400m to support Republicans in midterms – US politics live</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-21 07:49<span class="chip chip-accent">重点</span></p><p class="card-summary">President also announces incentive program for people to report fraud, as admin…</p><p class="card-impact"><span class="label">影响</span> 围绕research，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>特朗普表示，他将在中期选举中花费 4 亿美元支持共和党候选人 唐纳德·特朗普表示，到 11 月 3 日选举日到来时，他将花费 4 亿美元在中期选举中支持共和党候选人。 这笔巨额资金将用于他的政治运作以及与 Super Pac、Maga Inc. 的联盟。 “已经在广告、直接和间接选民联系、集会、集会竞技场、电话集会、退出投票计划、选举诚信等方面花费了超过 3 亿美元。我非常荣幸能够代表共和党这样做，共和党为将我们的国家从遗忘的边缘拉回来做了很多工作，”他在 Truth Social 上写道。 他引用了自己对共和党的信仰，以及席卷法国的骚乱，作为他这笔支出背后的原因。 提醒人们的是，特朗普一再毫无根据地声称，示威活动已陷入混乱并导致数千人被捕，这是大规模移民的结果。 唐纳德·特朗普在北卡罗来纳州的一次集会上登台，这是美国中期选举前为共和党人进行为期七天的竞选活动的一部分。 他在北卡罗来纳州支持美国参议院共和党候选人迈克尔·沃特利(Michael Whatley)，后者在民意调查中落后于该州前民主党州长候选人罗伊·库珀(Roy Cooper)。 我们将随时向您通报总统讲话中任何值得注意的内容。 Politico 报道，联邦紧急事务管理局 (FEMA) 要求各州做好应对灾难的准备 据《Politico》报道，特朗普政府希望各州对灾难承担更多的财务责任。 在《政治报》独家获得的一份录音中，联邦紧急事务管理局（FEMA）局长卡梅伦·汉密尔顿在阿肯色州一次会议上对州官员表示：“联邦资金应该用于建设更大的能力，而不是制造更大的依赖性。” 他说每个州都应该有“适当的财政储备”。 汉密尔顿还表示：“我希望我们追求的未来是一个不需要那么多灾难的未来，因为各国的能力如此之高、如此之大。”他指出，变化可能会在未来六个月内开始。 在特朗普第二届政府执政期间，FEMA 资金大幅削减，并有 2,400 多名人员外流。 前员工和应急响应专家对其应对未来自然灾害的能力表示担忧。 特朗普的忠实拥护者、右翼影响者劳拉·卢默(Laura Loomer)周二猛烈抨击司法部，称该机构正在贬低退伍军人，几十年前，他们在海军陆战队基地接触到受污染的饮用水，并提出了“低价”的和解方案。</p><p>“这是一场即将发生的政治灾难。让我们明确一点：民主党人 100% 会将此武器化为针对特朗普总统的武器，并试图利用两周后进入中期选举的退伍军人来伤害他，”卢默在 X 帖子中写道，指责副检察长小斯坦利·伍德沃德 (Stanley Woodward Jr.) 司法部长托德·布兰奇(Todd Blanche)毫不掩饰地断然拒绝，似乎暗示卢默的谩骂是出于经济动机。 “你应该对你的追随者保持透明，你对斯坦利的看法是完全错误的，”他在 X 上回应道。 “我们爱我们的退伍军人，我们希望正确处理这些案件。除了追捕司法部最好的战士之一之外，寻找不同的痴迷。” 卢默回击说，特朗普想解雇伍德沃德，但又怜悯他，“因为他的左撇子妻子要和他离婚，”她声称。 包括彭博社在内的一些媒体今年早些时候报道称，司法部民权部门助理总检察长哈米特·迪隆将晋升为伍德沃德的职位。 她不是。 特朗普第二次使用反犹太主义诽谤，招致反诽谤联盟迟来的间接批评 反诽谤联盟自称是世界上“领先的反仇恨组织”，成立于 1913 年，“旨在保护犹太人民”。该联盟周二谴责使用“夏洛克”一词是反犹太主义，但没有解释唐纳德·特朗普一天前在堪萨斯州的一次演讲中使用了这一诽谤。 ADL 在社交媒体上发布的简短帖子根本没有提到特朗普，也没有解释为什么该组织认为今天有必要解释，任何将贪婪的人与莎士比亚戏剧《威尼斯商人》中邪恶的犹太放债人夏洛克等同起来的人，都是在使用反犹太主义的比喻。 “‘夏洛克’一词植根于长期存在的反犹太主义刻板印象，”ADL 在 X 上发布，但在其其他社交媒体账户上则没有发布。 “无论意图如何，它的使用都会强化对犹太人的有害比喻，并使长期以来针对犹太社区的语言正常化。” 那些指责反诽谤联盟有选择地利用反犹太主义指控来攻击批评以色列的人的批评者表示，这个犹太裔美国民权组织对特朗普很宽容，因为他支持以色列。 马特·杜斯（Matt Duss）是最著名的犹太裔美国政治家参议员伯尼·桑德斯（Bernie Sanders）的前外国警察顾问，他对反诽谤联盟未能提及特朗普的回应表示，如果其他人使用这一诽谤的话，其总统会更直接。 杜斯写道：“如果民主党人这么说，乔纳森·格林布拉特(Jonathan Greenblatt)就会把人们推倒在镜头前点名谴责他们，但那是特朗普，所以这只是一般性的公共服务公告。”</p><p>2014年，时任副总统乔·拜登将那些利用美国军人经济利益的人称为“夏洛克”后，反诽谤联盟国家主任接受了他的道歉，并称这一言论是“一个值得教育的时刻”。 特朗普周一晚上在堪萨斯州的一次集会上使用了这一诽谤，就在他周一在以色列大选前支持以色列总理本杰明·内塔尼亚胡的一天后。 特朗普在为共和党参议员罗杰·马歇尔辩护时援引了反犹太主义刻板印象。马歇尔是一名医生，因对 700 多名未付账单的患者提起诉讼，导致其中 18 人被捕而受到批评。 总统一开始就错误地声称，法律要求马歇尔对未付账单采取法律行动，即使账单金额仅为 101 美元。 特朗普周一在威奇托郊外的一次集会上对支持者说，马歇尔“受到了严厉批评，因为法律授权他强烈要求患者欠下钱。你不可以不这样做。根据法律，你必须追捕这些人。” 事实上，并没有这样的法律。 谈到马歇尔的批评者，包括他的民主党竞争对手亚当·汉密尔顿(亚当·汉密尔顿)，他在竞选广告中展示了马歇尔的一些病人，特朗普说：“他们让马歇尔看起来像是某种夏洛克式的人。” “如果他不提出这些要求，他就会违法，”特朗普再次说道，重复了他辩护所依据的谎言。 总统错误地声称：“他将违反非常严厉的刑法，他将受到刑事逮捕并承担责任。” 特朗普在爱荷华州的一次集会上使用这个反犹太主义诽谤时，他才意识到这个词的含义，15个月后他才使用了这个反犹太主义诽谤。 特朗普在 2025 年 7 月 3 日发表讲话时告诉支持者，取消对继承的家庭农场征税将使农民免于“去银行借款，有时是向优秀的银行家借款，有时是向害羞者和坏人借款”。 爱荷华州集会后的第二天，反诽谤联盟称总统使用这个词“非常令人不安和不负责任”，但当记者问他是否打算使用“夏洛克”这个词来指代犹太人时，特朗普声称不知道。 “不，我从来没有这样听说过，”特朗普当时回答道。 “对我来说，夏洛克是一个，呃，高利率放贷者。我从来没有这样听说过。你的看法和我不同。我从来没有听说过。” 唐纳德·特朗普表示，到 11 月 3 日选举日到来时，他将花费 4 亿美元在中期选举中支持共和党候选人。 这笔惊人的金额将通过他的政治运作和一致的超级......</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/us-news/live/2026/oct/20/donald-trump-midterms-republicans-democrats-north-carolina-latest-updates" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">20</span> EU revises Arctic strategy as pressure from Russia, US grows</h3><p class="card-meta">世界与社会 · Al Jazeera · 2026-10-21 04:05<span class="chip chip-accent">重点</span></p><p class="card-summary">The new strategy shifts the bloc&#x27;s focus from long-term climate concerns to urg…</p><p class="card-impact"><span class="label">影响</span> 围绕climate/security，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>欧盟委员会公布了欧盟新的北极战略，其中将安全和复原力列为四个优先事项的首要任务，另外还有气候变化、经济繁荣和北极社区的机会。 委员会周二表示，该战略呼吁建立一个新的海上安全中心，以帮助成员国和合作伙伴共享信息并监控北极的海上活动。 推荐故事 3 项清单 - 列表 1（共 3 个）为什么格陵兰岛对美国很重要？ - 清单 2（共 3 个）特朗普表示将在格陵兰岛开始石油、天然气和矿产勘探 - 特朗普吹捧格陵兰岛石油和矿产交易，3Denmark 予以反击 该中心随后将扩大规模，以追踪影子舰队、侦查非法捕鱼和污染，并改善搜救协调。 欧盟委员会还表示，欧盟将努力扩大欧洲破冰船的能力。 破冰船是专门用于通过破碎海冰和维持安全航线在冰覆盖水域航行的船舶。 欧盟委员会主席乌苏拉·冯德莱恩表示：“北极是地缘政治板块碰撞的地方。”她补充说，主权和领土完整不能再被视为理所当然。 据法新社报道，欧盟外交政策负责人卡贾·卡拉斯表示，俄罗斯正在扩大其在高北地区的军事足迹，理由是无人机入侵、GPS干扰和电缆破坏。 减少对华盛顿的依赖 多项措施似乎旨在减少对美国的依赖。 欧盟委员会表示，欧盟将支持一项战略性泛北极光纤电信电缆项目，将格陵兰岛直接连接到欧洲。 这是连接加拿大、日本和韩国的更广泛计划的一部分。 欧盟还将通过 IRIS² 星座为政府通信提供安全的卫星连接，法新社称该星座旨在与美国科技大亨埃隆·马斯克的星链相媲美。 这一转变是在美国总统唐纳德·特朗普一再要求控制丹麦自治领土格陵兰岛之后发生的。 法新社称，尽管今年随着与格陵兰岛和丹麦签署安全协议，他的语气有所软化，但欧洲许多人仍然保持警惕。 成员国敦促采取行动 该战略是在上个月德国、法国、芬兰和丹麦等 12 个国家的领导人举行会议之后制定的。 根据一份联合声明，成员国敦促欧盟发挥更具战略性和主动性的作用。 与会者认为俄罗斯是最大的威胁，同时注意到中国和美国的野心。</p><p>会上，德国总理弗里德里希·梅尔茨表示，“高北、低关注”的时代已经结束。 芬兰总理佩特里·奥尔波称俄罗斯是最重大的长期威胁，并表示欧盟必须将北极视为战略前沿。</p><p>欧盟委员会重申，欧盟的立场仍然是石油、煤炭和天然气应留在地下，包括北极。</p><p>为了应对日益严重的气候问题，委员会承诺“加强气候研究、观测和监测，以更好地了解这些变化并支持有效的应对措施”，同时与在北极生活和工作的人们合作。</p></div><p class="fulltext-src"><a href="https://www.aljazeera.com/news/2026/10/20/eu-revises-arctic-strategy-as-pressure-from-russia-us-grows?traffic_source=rss" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/e3cc6bc2df625d8764ff2c26a21f332c70f8c113/447_0_4469_3577/master/4469.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=7cc46ad13fcd1c6ac83a4d2726ccfdaf" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">21</span> RFK Jr’s ‘deities of vaccine research’ raided by police in Guinea-Bissau</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-21 03:18<span class="chip chip-accent">重点</span></p><p class="card-summary">Police seize doses of hepatitis B vaccine from people at center of dispute over…</p><p class="card-impact"><span class="label">影响</span> 围绕vaccine/research，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>官员们在脸书上表示，受到美国卫生与公众服务部 (HHS) 部长小罗伯特·F·肯尼迪赞扬的备受争议的疫苗研究人员在几内亚比绍的办公室遭到司法警察突击搜查，并没收了一定剂量的乙型肝炎疫苗。 这些研究人员一直是非洲新生儿研究争论的核心，美国疾病控制与预防中心 (CDC) 提供了 160 万美元的支持，潘兴广场基金会和风信子基金会也提供了总计 320 万美元的配套资金。 据葡萄牙语翻译的社交媒体帖子称，警方搜查于周一进行，涉及“旨在澄清与该批次疫苗相关情况的调查程序”。 该公告指出，扣押疫苗接种并不意味着“疫苗的质量、安全性或有效性存在问题”。 Bandim 健康项目最近发布了几内亚比绍公共卫生部国家伦理委员会于 7 月 14 日批准该试验的信函，并由该委员会主席 Mouhammed Djicó Ould Ahmed 签署。 丹麦研究伦理委员会不得不改变其规则以考虑临床试验，本月早些时候也批准了这项研究。 几内亚比绍过渡政府卫生部长奎因·南托特（Quinhin Nantote）对有关审判将继续进行的报道提出异议。 “这根本不是真的，”南托特周四用葡萄牙语告诉《卫报》。 该研究在今年夏天进行了重新设计，但仍拒绝向 7,000 名出生后六周内的新生儿接种乙型肝炎疫苗，而在这个国家，大约有五分之一的成年人感染了乙型肝炎病毒。 乙型肝炎导致 15% 至 25% 的慢性感染者死亡，导致癌症和肝功能衰竭，新生儿尤其容易受到感染，但出生 24 小时内接种疫苗对于预防疾病是安全且高效的。 世界卫生组织 (WHO) 发言人塔里克·贾萨雷维奇 (Tarik Jašarević) 表示，任何拒绝向参与者接种疫苗的研究都是“不道德的，会让新生儿面临严重且可能不可逆转的伤害”，并称出生时接种乙型肝炎疫苗是“必要的公共卫生干预措施”。 贾萨雷维奇补充说，通过其设在几内亚比绍的国家办事处，世卫组织及其合作伙伴一直就计划推出乙型肝炎疫苗以及这项研究的潜在影响向卫生部提供建议。 Bandim 健康项目由人类学家 Peter Aaby 于 1978 年创立，现在由他的妻子、流行病学家 Christine Stabell Benn 共同领导。</p><p>肯尼迪在最近的一次反疫苗会议上多次赞扬他们的工作，称他们为“疫苗研究之神”。 他多次引用了他们对白喉-破伤风-百日咳（DTP）进行的一项研究结果，同一位研究人员后来再次进行了这项研究，发现了完全不同的结果。 即便如此，肯尼迪在 2023 年乔·罗根的播客上称 Aaby 为“非常著名”的研究员，并在美国停止向全球疫苗免疫联盟 (Gavi) 提供资金时引用了他的研究成果。 斯塔贝尔·本 (Stabell Benn) 是免疫实践咨询委员会 (ACIP) 乙型肝炎工作组的成员，帮助向美国委员会提供证据，该委员会投票决定终止全民生育建议，然后联邦法官中止了有关疫苗的决定。 Stabell Benn 还与美国食品和药物管理局 (FDA) 前高级官员 Tracy Beth Høeg 一起主持了一个播客，她表示希望终止“不必要的”疫苗。 Aaby、Stabell Benn 和该项目的首席研究员 Frederik Schaltz-Buchholzer 没有回应《卫报》关于审判和警方搜查的问题。 根据非营利组织“科学挺身而出”(SUFS) 的一份报告，班迪姆组织深深扎根于几内亚比绍，但在其运作的 50 年里，几乎没有为改善该国的健康和研究能力做出任何努力。 该组织目前正在筹集资金，以帮助在该国所有新生儿出生时接种疫苗。 “我们的调查员遇到了几内亚比绍公民对班迪姆的严重不信任，”美国健康研究员兼 SUFS 创始人科莱特·德拉瓦拉 (Colette Delawalla) 说。 “然而，由于缺乏公共卫生基础设施，在人们迫切需要任何类型的医疗服务的情况下，班丁往往是唯一的选择。” 德拉瓦拉说，警方的突袭突显了这样一个事实：几内亚比绍是一个“脆弱”的国家，不到一年前经历了军事政变。 她补充说，该国缺乏临床试验所需的稳定性。 德拉瓦拉说：“几内亚比绍正处于困难境地，试图保护他们的年轻人和他们的未来，使其免受两个西方强大国家的剥削，他们正在利用他们所拥有的一切手段来做到这一点。”</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/world/2026/oct/20/rfk-jr-vaccine-researchers-offices-raided-guinea-bissau" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/76709b5781c9150b1cdc82c58daf2819e3478f94/995_0_5021_4016/master/5021.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=4519083841bad228230ddc17a2ebb77e" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">22</span> Australian researchers identify new subtype of depression linked to body clock disruptions</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-21 07:00<span class="chip chip-accent">重点</span></p><p class="card-summary">Study identifies ‘circadian depression’ as affecting nearly a quarter of more t…</p><p class="card-impact"><span class="label">影响</span> 围绕research，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>澳大利亚研究人员发现了一种新的抑郁症亚型——称为“昼夜节律抑郁症”——与体内生物钟紊乱有关，他们认为这种生物钟对传统抗抑郁治疗的反应较弱。 英国精神病学杂志发表的一项研究涉及 11,380 名澳大利亚人的临床和遗传数据，这些人大多患有严重且复发性抑郁症，研究人员发现昼夜节律抑郁症影响着近四分之一 (23%) 的参与者。 他们建议，受该亚型影响的人可能会受益于针对身体昼夜节律的治疗，例如褪黑激素和光疗法。 虽然情绪障碍和日常节律紊乱之间的联系早已为人所知，但研究人员表示，“这项研究加强了抑郁症昼夜节律亚型作为一种生物学上有效且临床上有用的抑郁症表型的证据基础”。 该研究的第一作者、悉尼大学大脑和思维中心的 Emiliana Tonini 博士表示，研究人员将昼夜节律抑郁定义为至少表现出六种特征中的三种的参与者：经历季节性疾病模式、睡眠时间延迟、抑郁时睡得更久、夜猫子、醒来时感到非常疲倦以及社交时差——“他们在工作日或工作时上床睡觉时的睡眠与周末或自由安排一天时的睡眠非常不同”。 托尼尼在新闻发布会上说：“患有昼夜节律抑郁症的人有更严重的心理健康症状。” “与非昼夜节律性抑郁症患者相比，他们的抑郁症发病年龄更年轻，但发作次数也更多，轨迹也更复杂，自杀倾向更多，轻躁狂和精神病样症状也更多。” 托尼尼说，研究人员还发现，昼夜节律抑郁的人患注意力缺陷多动症和情绪障碍的遗传风险较高，“而且还有一系列代谢和炎症标志物”。 “这很重要，因为这表明昼夜节律抑郁症不仅仅是睡眠不好的抑郁症，而且实际上存在一种与其他形式的抑郁症截然不同的潜在生物学原理。” 研究人员希望，未来能够临床诊断昼夜节律抑郁症可能有助于提供更有针对性的治疗方法，特别是对于首次寻求心理健康支持的年轻人。 精神病学家兼大脑与思维中心联席主任伊恩·希基教授表示：“处于这种昼夜节律类型的关键在于它对标准疗法的反应不佳，而标准疗法通常是指南中推荐的疗法。”</p><p>研究发现，SSRIs 和 SNRIs 是典型的一线抗抑郁药物，对于昼夜节律亚型的人来说效果较差，而且副作用较多。 对于昼夜节律抑郁症患者来说，“时间生物学治疗——关注睡眠-觉醒周期，特别是……与晨光照射、日光活动、睡眠-觉醒周期规律性、饮食规律性有关，是至关重要的”，希基说。 在他们的研究中，研究人员指出，参与者“仅限于基因推断的欧洲血统，这可能会限制普遍性”，并且“未来的研究需要在不同的样本中复制我们的发现”。 莫纳什阿尔弗雷德精神病学研究中心主任贾雅什里·库尔卡尼教授（Jayashri Kulkarni）没有参与这项研究，他形容这是一项“真正进行得很好的研究”。 “他们获得了多基因风险评分，这意味着他们实际上已经成功地将某些类型的抑郁症与特定的基因谱联系起来，”她说。 “这对于后续治疗很重要。” 库尔卡尼补充说，这项研究没有考虑更年期对荷尔蒙的影响，“这主要是女性描述的导致睡眠障碍的因素之一……这将是另一个可能值得考虑的因素。” 爱尔兰梅努斯大学的行为神经科学家安德鲁·库根教授说：“我们很早就知道，重度抑郁症与生物钟的变化有关，生物钟的变化使人们晚睡晚起，所以这一发现并不令人意外。” 他引用了“关于如何得出拟议的抑郁症昼夜节律亚型的特征集和标准的细节”。 “这项探索性研究的结果最好被解释为初步的、有趣的发现，值得进一步检查，”他说。</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/society/2026/oct/21/australian-researchers-identify-new-subtype-of-depression-linked-to-body-clock-disruptions" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/30feeeafd2e3bd0afa0ef0b00e1d3dd41e47619d/902_6_2112_1690/master/2112.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=28c8a77197aa147303bb75f669c1d4bf" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">23</span> Michael Bloomberg spends $80m on Democrats as Trump moves $400m to Republican candidates</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-21 06:07</p><p class="card-summary">Billionaire ex-mayor of New York City is focusing funds on House races to help…</p><p class="card-impact"><span class="label">影响</span> 围绕election，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>美国媒体周二报道称，亿万富翁迈克尔·布隆伯格将斥资 8000 万美元在中期选举中帮助民主党候选人，这对于最近因寻求赢得国会控制权而在筹款方面陷入困境的民主党来说是一笔巨额现金注入。 据报道，唐纳德·特朗普周二宣布，他打算斥资总计 4 亿美元援助共和党候选人，其中 3 亿美元已经支付。 据《纽约时报》报道，布隆伯格在 9 月和 10 月进行了捐款，特别关注民主党竞选推翻美国众议院的情况，而共和党目前以历史性的微弱优势控制众议院。 布隆伯格的政治顾问霍华德·沃尔夫森告诉《泰晤士报》，目标是确保民主党获得多数席位，而不仅仅是赢得众议院控制权所需的 218 个席位。 “就众议院多数席位而言，221 票和 230 票之间的差异确实很重要，”沃尔夫森说。 84 岁的布隆伯格是世界上最富有的人之一，从 2002 年到 2013 年担任了三届纽约市市长。当时他是独立人士，但后来注册为民主党人，在特朗普第一任期期间花费 8000 万美元帮助该党参加 2018 年中期选举，然后在资金充足的情况下竞选 2020 年党内总统提名，但没有成功。 他今年的捐款包括向 Everytown for Gun Safety 捐款 2400 万美元，该组织是他共同创立的，用于支持下议院的民主党候选人；向众议院多数派政治行动委员会捐款 1600 万美元，该委员会与众议院少数党领袖哈基姆·杰弗里斯 (Hakeem Jeffries) 有联系。 民主党人认为，他们今年有望夺回众议院，尽管他们承认在筹款方面落后于共和党人。 除了特朗普的资金外，共和党人还得到了总统盟友埃隆·马斯克的帮助，迄今为止，他已在保守派团体和竞选活动上花费了 3.66 亿美元。 民主党还认为，他们有机会赢得重新控制参议院所需的四个席位，尽管分析人士认为，这两种情况都可能发生。 控制两院将允许民主党阻止特朗普的立法议程并更有效地调查他的政府。 如果他们在参议院赢得多数席位，该党的立法者还可以拒绝他对最高法院和其他联邦司法职位的提名。 据《泰晤士报》报道，布隆伯格已向支持得克萨斯州美国参议员竞选的民主党候选人詹姆斯·塔拉里科的超级政治行动委员会以及支持纽约州州长凯西·霍赫尔的连任竞选活动和几位民主党州长候选人的超级政治行动委员会捐赠了 250 万美元。 当被问及布隆伯格认为这笔钱的效果如何时，沃尔夫森说：“他认为资源在竞选活动中很重要。” 他补充说，这位亿万富翁“期待一个结果”。</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/us-news/2026/oct/20/michael-bloomberg-donation-democrats-midterms" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">24</span> Trump commits more than $400m ahead of high-stakes midterm elections</h3><p class="card-meta">世界与社会 · Al Jazeera · 2026-10-21 05:27</p><p class="card-summary">The president&#x27;s Republican Party seeks to maintain its hold over both chambers…</p><p class="card-impact"><span class="label">影响</span> 围绕election，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>美国总统唐纳德·特朗普宣布，他计划花费超过 4 亿美元帮助共和党候选人赢得 11 月 3 日的中期选举，因为他的政党正在努力维持对国会的控制。</p><p>特朗普周二在其“真相社交”平台上发表的一篇文章中写道，其中大部分已经用于竞选宣传。</p><p>推荐故事</p><p>4 项清单</p><p>- 4 项中的第 1 项“你必须做出牺牲”：随着美国中期选举的临近，特朗普选民保持忠诚</p><p>- 4 人名单中的 2 人蕾妮·古德 (Renee Good) 的家人就 ICE 枪击事件起诉特朗普政府</p><p>- 列表 3（共 4 个）特朗普在支持率创历史新低的情况下发起中期竞选闪电战</p><p>- 中期选举前，拉美裔选民对特朗普支持率的支持率创下新低 4 项名单中的 4 项</p><p>特朗普表示：“已经在广告、直接和间接选民联系、集会、集会竞技场、电话集会、退出投票计划、选举诚信等方面花费了超过 3 亿美元。”</p><p>“我非常荣幸能够代表共和党这样做，共和党为将我们的国家从被遗忘的边缘拉回来做了很多工作。”</p><p>他补充说，11 月的投票是“我国历史上最重要的中期选举”。</p><p>总统没有提供支出的详细细目，包括有多少资金将用于个人竞选。</p><p>但在承诺的支出涌入之际，特朗普领导的共和党在大选前面临阻力，包括经济阻力和美以针对伊朗的旷日持久的战争。</p><p>在投票前夕，特朗普的支持率已跌至历史新低。 路透社和研究公司益普索本周进行的一项民意调查发现，迄今为止，只有 31% 的美国人认可特朗普的工作表现。</p><p>因此，一些共和党人试图与总统保持距离。 其他人则呼吁获得更多支持，特别是在与民主党势均力敌的竞选中。</p><p>人们质疑特朗普和他的盟友是否会利用 MAGA Inc 筹集的资金。MAGA Inc 是一个超级政治行动委员会，以他的“让美国再次伟大”运动命名。</p><p>作为超级 PAC（或政治行动委员会），MAGA Inc 可以从捐助者那里筹集无限的资金来支持或反对联邦候选人。 但法律要求其支出必须独立于他们的竞选活动。</p><p>上个月，竞选财务监管机构竞选法律中心 (CLC) 指责特朗普声称控制 MAGA Inc 的支出，从而违反了这些规则。</p><p>该组织引用了总统的公开声明，包括 9 月 4 日在椭圆形办公室与记者的交流，当时特朗普被问及资金何时开始流向共和党候选人。</p><p>他回答说，他将花费“任何必要的资金”来帮助他的政党。 然后他补充道：“这是 MAGA Inc. 的钱。这是我控制的钱。”</p><p>根据最新的联邦文件，MAGA Inc 进入 9 月份时拥有 4.158 亿美元的现金储备，使其成为共和党竞选武器库中最重要的财务资源之一。 但据路透社报道，特朗普质疑超级政治行动委员会的巨额支出为何没有改善共和党在包括俄亥俄州在内的关键竞选中的民调。 其他与特朗普结盟的团体也加大了政治广告力度，其中包括与 MAGA Inc 有关联的两个新成立的组织：“不回头 PAC”和“安全与可负担性 PAC”。 广告跟踪器 AdImpact 发现，仅上个月，No Going Back PAC 就在政治广告上贡献了 6870 万美元。 据报道，特朗普的另一位盟友、科技企业家埃隆·马斯克(Elon Musk)自去年以来已通过他的团体美国政治行动委员会(America PAC)以及其他共和党和保守派团体在共和党竞选活动上花费了3.66亿美元。 在中期选举的最后几周，特朗普本人开始了竞选活动，以为期 32 天的竞选闪电战推进。 即将到来的站点包括南卡罗来纳州和爱荷华州。 今年选举的赌注相当大。 国会的控制权悬而未决。 目前，共和党在参众两院均占据微弱多数，但民主党正寻求利用特朗普不断下降的支持率来扭转参众两院的局面。 如果他们成功，他们可能会阻碍特朗普总统任期最后两年的立法议程。</p></div><p class="fulltext-src"><a href="https://www.aljazeera.com/news/2026/10/20/trump-commits-more-than-400m-ahead-of-high-stakes-midterm-elections?traffic_source=rss" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://i.guim.co.uk/img/media/1773b9db4a2794c82db8e03b1f005b6c490013de/134_0_5000_4000/master/5000.jpg?width=700&amp;quality=85&amp;auto=format&amp;fit=max&amp;s=8dd84ed2e15d43502cfa769de7473308" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">25</span> Italy to deploy 500 troops to Milan after days of protests and looting</h3><p class="card-meta">世界与社会 · Guardian World · 2026-10-21 05:24</p><p class="card-summary">Government planning tougher security measures as France also says military forc…</p><p class="card-impact"><span class="label">影响</span> 围绕security，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>在针对生活成本的抗议活动演变成与警察的冲突、破坏和抢劫之后，意大利政府将向米兰派遣 500 名士兵，并誓言“国家将做出坚决回应”。 计划于周六举行进一步示威活动。 极右翼总理乔治亚·梅洛尼(Giorgia Meloni)领导的政府还宣布了新的安全措施，包括将暴力参与示威定为犯罪行为、对骚乱者实施更严厉的惩罚，以及对孩子参与破坏和抢劫的父母承担经济责任。 在法国，内政部长洛朗·努涅斯周二表示，在计划于本周六举行的抗议活动中，将部署一些军队，“主要是为了让警察和宪兵能够执行维持秩序的任务”。 法国总理塞巴斯蒂安·勒科尔努告诉议会，周六示威期间的警察将是“大规模”，他的目标是在上周末的暴力骚乱后“立即恢复秩序”。 在周六和周日的骚乱期间，意大利北部米兰警方拘留了 271 名年轻人。 警方使用催泪瓦斯和水枪驱散暴力团体，这些团体原本是和平抗议的边缘地带。 警方周一表示，在被拘留者中，有 32 人被捕，其中包括 23 名未成年人和 13 名外国人。 另有 28 人向司法当局举报。 周六法国发生的冲突画面，包括暴徒抢劫商店和纵火焚烧公共建筑，促使美国、中国和德国等多个国家向本国公民发布旅行建议。 近 2,400 人在法国最近最暴力的骚乱之一中被捕。 法国当局周一宣布在巴黎、波尔多、里尔和尼斯等多个城市实施部分宵禁，经过一夜的相对平静后，勒科尔努周二表示，将在需要的地方实行新的宵禁。 巴黎当局延长了周一晚上的宵禁，从周二晚上 11 点到周三早上 6 点，适用于周末发生许多冲突的共和广场以及中央购物区 Les Halles。 巴黎警方下令暂时禁止人们携带罐装汽油或汽油，并在某些地区禁止佩戴口罩和头盔。 一名男子因参与烧毁利摩日历史悠久的市政厅而被捕。 意大利安莎通讯社报道称，该国正在考虑的安全措施之一是针对第二代移民青年，即马兰扎（maranza）——这是一个俚语，用于描述通常来自边缘化地区的年轻人帮派。</p><p>由于担心进一步骚乱，米兰时尚区的许多奢侈品店都保持关闭状态。 作为预防措施，香奈儿 (Chanel)、蒂芙尼 (Tiffany) 和迪奥 (Dior) 等品牌都下架了橱窗里的商品。 视频显示，其他遭到洗劫的商店包括体育零售商迪卡侬和始祖鸟以及移动电话运营商沃达丰。 周一，梅洛尼主持了与高级安全官员的会议后，兼任副总理的外交部长安东尼奥·塔亚尼表示，“政府将对这些针对国家的攻击做出坚决回应，包括采取旨在遏制未成年人暴力的措施。” 据报道，明年面临大选的梅洛尼联盟正计划对道路封锁实施更严厉的处罚，此前意大利南部卡车司机就燃油价格进行了数天的抗议。 与此同时，社交媒体上出现了一场名为“10 月 17 日”的新运动后，米兰正准备迎接周六的进一步抗议活动。 该组织表示，每周六下午将在当地和其他意大利城市组织示威活动，“直到这个盗贼政府垮台”。 “你们才是暴力分子，”该组织说。 “你，剥夺了我们的未来。现在，我们自己宣告未来。” 反对派政客经常指责政府利用安全作为宣传工具，认为意大利领导人在解决边缘化地区的教育、住房和生活条件等核心问题上几乎没有采取任何行动。 警方表示，博洛尼亚、布雷西亚、贝加莫和都灵等意大利北部城市周末因生活成本高昂而引发的抗议活动也出现紧张局势，其中 28 名抗议者被捕。 意大利和法国的抗议活动也反映在欧洲其他地区的示威活动中。 周二晚上，数千人在里斯本和其他葡萄牙城市举行集会，数小时前，警方在黎明时拆除了住房抗议营地并逮捕了 55 人。 葡萄牙的示威者正在抗议不断飙升的住房成本，试图与邻国西班牙的类似行动保持一致，西班牙马德里市中心已经搭建帐篷数周。 在里斯本，数千人聚集在罗西奥中央广场，抗议者通过举手投票决定从周三开始重建帐篷营地。 一张标语牌上写着：“他们强迫我到街上大喊大叫”。 另一位则宣称：“里斯本不出售”。 过去一周，反政府示威活动也震撼了阿尔巴尼亚首都地拉那，原因是对更好的大学条件的新要求、对腐败的愤怒以及与唐纳德·特朗普家族有关的有争议的度假村开发项目。</p><p>周二，由于再次呼吁总理埃迪·拉马辞职，抗议者与警察之间的冲突再次升级。 防暴警察使用催泪瓦斯和高压水枪驱散抗议者，抗议者向警察投掷烟花、投掷燃烧弹和石块。</p><p>周二早些时候，拉玛再次指责“外国行为者”应对暴力事件负责，此前他曾指责俄罗斯和伊朗在网上传播虚假信息。</p><p>总理表示：“这是一场混合战争，之所以受到关注，正是因为它植根于真正的不满，而不仅仅是幻想。”他指出，生活成本、住房负担能力不断上升，以及对未来的担忧。</p></div><p class="fulltext-src"><a href="https://www.theguardian.com/world/2026/oct/20/milan-luxury-shops-close-italy-to-deploy-troops-youth-protests-europe" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">26</span> Why the war on Iran could backfire on US regime-change goals</h3><p class="card-meta">世界与社会 · Al Jazeera · 2026-10-21 04:23</p><p class="card-summary">Mortazavi: The war on Iran could strengthen Iranian nationalism rather than tri…</p><p class="card-impact"><span class="label">影响</span> 围绕war，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>为什么对伊朗的战争可能会对美国政权更迭的目标产生适得其反的效果 分析师内加尔·莫尔塔扎维在全球安全论坛上告诉半岛电视台，对伊朗的战争可能会加强伊朗的民族主义，而不是引发政权更迭，因为尽管国内存在深刻的不满，但外部攻击将伊朗人民团结在祖国周围。</p></div><p class="fulltext-src"><a href="https://www.aljazeera.com/video/newsfeed/2026/10/20/aje-onl-nf_war-on-iran-could-strengthen-nationalism-201026?traffic_source=rss" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">27</span> UK police rearrest two men on suspicion of assisting Iran’s intelligence</h3><p class="card-meta">世界与社会 · Al Jazeera · 2026-10-21 04:17</p><p class="card-summary">Duo was first arrested for suspected link to incident at US-run airbase used fo…</p><p class="card-impact"><span class="label">影响</span> 围绕war，可能牵动外交立场、制裁或援助节奏</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>上个月在英国的一个美国空军基地发生事件后，英国警方重新逮捕了两名涉嫌协助伊朗情报部门的男子。</p><p>英国反恐警务部门表示，这两名男子是一名 24 岁的英国公民和一名 25 岁的英国-伊朗双重国籍男子，根据《国家安全法》被捕。</p><p>推荐故事</p><p>3 项清单</p><p>- 与英国皇家空军费尔福德空军基地事件有关的 3 名英国警方逮捕英国国民中的名单 1</p><p>- 3名英国警方指控的皇家海军成员中的第2名被指控与外国势力合作</p><p>- 名单 3 中的 3 两名拉脱维亚男子在英国军事基地违规后被捕</p><p>其中一名嫌疑人于 9 月 27 日首次被捕，当时涉嫌策划针对皇家空军费尔福德的阴谋。 英格兰西部格洛斯特郡的空军基地在今年的战争中被用来对伊朗发动袭击。</p><p>第二名嫌疑人于 10 月 1 日首次被捕。直到周二，这些人已被保释，等待进一步调查。</p><p>英国国家反恐警务负责人劳伦斯·泰勒表示，调查“非常复杂”，侦探们正在调查“许多方面的调查”。</p><p>泰勒在一份声明中表示：“这在很大程度上是一项现场调查。”他补充道：“我们认为伊朗国家极有可能参与其中。”</p><p>“我们的调查人员正在继续调查这种参与程度以及其背后的野心，”他补充道。</p><p>重大事件</p><p>在一名公众报告看到三辆“可疑”货车在基地附近行驶后，英国警方宣布皇家空军费尔福德周边地区发生重大事件。</p><p>由于武装警察和军队拆弹专家涌入农村地区，居民被迫离开家园。</p><p>警方后来说，他们在现场的三辆货车中发现了一定数量的助燃剂（汽油），但没有发现爆炸物。</p><p>这一事件促使美国将轰炸机撤出英国皇家空军费尔福德基地，而英国当局则指责伊朗。</p><p>英国首相安迪·伯纳姆表示，这一明显的阴谋“几乎肯定”是由伊朗伊斯兰革命卫队（IRGC）指挥的。</p><p>不独特</p><p>英国国内情报间谍负责人肯·麦卡勒姆警告称，伊朗和俄罗斯正在扩大对英国军事基地的袭击，并补充说，英国皇家空军费尔福德事件并非独一无二。</p><p>麦卡勒姆说，去年总共有 50 多人因与伊朗有关的阴谋而被捕。</p><p>伊朗否认参与其中，但此前曾表示，它认为任何用于攻击其领土的基地都是合法目标。</p><p>另外五名20多岁的男子早些时候被捕，随后被保释等待进一步调查。 目前尚未有人受到指控。</p></div><p class="fulltext-src"><a href="https://www.aljazeera.com/news/2026/10/20/uk-police-re-arrest-two-men-on-suspicion-of-assisting-iranian-intelligence?traffic_source=rss" rel="noopener noreferrer">查看原文</a></p></details></div></article></section><section class="section" id="sec-延伸"><h2>延伸关注</h2><article class="card has-media"><figure class="card-media"><img src="https://www.nasa.gov/wp-content/uploads/2026/09/a200-king-air-da.jpg?w=960" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">28</span> NASA to Conduct Low-Altitude Flights Over Texas Farmland</h3><p class="card-meta">延伸关注 · NASA Breaking · 2026-10-21 04:21</p><p class="card-summary">Editor’s Note: This article was originally published on Oct. 15, 2026, and has…</p><p class="card-impact"><span class="label">影响</span> 围绕research/nasa，可能影响科研议程或公共卫生响应</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>编者注：本文最初发表于 2026 年 10 月 15 日，现已更新以更正航班位置。 NASA 动态航空 A200 飞机将于 10 月 22 日星期四至 11 月 9 日星期一在德克萨斯州阿马里洛附近的农田上空进行低空飞行研究飞行。这些飞行将测量动物饲养作业中的气体和颗粒物排放。 农业排放是地球陆地和大气系统的一个重要且未被充分研究的部分。 FarmFlux 任务将部署十多个传感器来测量农田和畜牧场产生的臭氧、甲烷、氨、颗粒物和其他污染物及其与地球大气的相互作用。 该任务由美国宇航局位于马里兰州格林贝尔特的戈达德太空飞行中心联合领导； 科罗拉多州立大学； 和波士顿大学。 计划于 2027 年 3 月至 7 月在中西部和加利福尼亚州中央山谷的生长季节使用 NASA P-3 Orion 飞机进行额外的低空研究飞行，重点关注农田。 有关 FarmFlux 任务的更多信息，请访问： 莎朗·泰特尔鲍姆 美国宇航局位于加州硅谷的艾姆斯研究中心</p></div><p class="fulltext-src"><a href="https://www.nasa.gov/general/nasa-to-conduct-low-altitude-flights-over-texas-farmland/" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card"><div class="card-body"><h3 class="card-title"><span class="rank">29</span> China’s AI research is booming: what it’s like to be on the front line</h3><p class="card-meta">延伸关注 · Nature · 发布时间未可靠获取</p><p class="card-summary">Nature, Published online: 14 October 2026; doi:10.1038/d41586-026-03223-8 China…</p><p class="card-impact"><span class="label">影响</span> 围绕ai/research，可能影响科研议程或公共卫生响应</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>感谢您访问 nature.com。 您使用的浏览器版本对 CSS 支持有限。 获得 为了获得最佳体验，我们建议您使用更新的浏览器（或关闭兼容模式） 互联网浏览器）。 同时，为了确保持续的支持，我们显示的网站不带样式 和 JavaScript。 今年早些时候，随着计算机科学家陆毅从中国一所顶尖大学毕业的日子临近，他面临着一个艰难的选择。 他是否应该像中国雄心勃勃的人以前经常做的那样，前往美国攻读人工智能博士学位？ 还是应该留在中国？ 美国向人工智能科学家支付更高的薪水，拥有最好的硬件并拥有世界上最先进的人工智能实验室。 但“差距越来越近”，陆说，他的名字已被更改，因为他担心公开谈论他认为敏感的问题。 中国的人工智能研究正在迅速推进。 来自中国大学的人工智能研究人员比来自美国机构的要多得多，而且越来越多的毕业生选择留在原地，或者在美国呆了一段时间后返回中国。 中国的研究人员在全球人工智能相关出版物中占据主导地位，DeepSeek 和 Moonshot AI 等公司制造的人工智能模型的能力与美国竞争对手相差不远，而且价格仅为美国竞争对手的一小部分。 与此同时，由于签证制度日益严格，美国对外国研究人员的吸引力已降低； Lu 见过朋友的申请被拒绝或延迟。 “这是一个担忧，”他说。 最终，卢决定留在中国。 中国的人工智能生态系统在很多方面与加州硅谷有所不同。 在中国，学术界和工业界之间的界限更加宽松，获得计算资源的机会也少得多。 这既带来了机遇，也带来了挑战。 中国企业被指责在追赶竞赛中效仿美国的进步，但它们也找到了使模型更高效的技术。 华盛顿卡内基国际和平基金会中国人工智能项目联席主任斯科特·辛格表示：“有些人肯定认为美国仍然是世界上最适合创造生活和开展这项研究的地方，但更多人对此表示质疑。” 人工智能人才成长和去向的地方</p><p>中国培养的人工智能人才比任何其他国家都多。 根据 Digital Science（由 Holtzbrinck Publishing Group 运营的公司，该公司持有 Nature 出版商 Springer Nature 的股份）的数据，中国拥有 51,000 名活跃的人工智能研究人员，而美国只有 14,000 名。 该数据是根据该公司去年发布的一项研究进行更新的，还显示许多研究人员正处于职业生涯的早期阶段，年长的超级明星比美国要少（参见“活跃的人工智能研究人员”）。 作为研究精英研究人员的代表，许多分析师在著名的 NeurIPS 会议上研究了作者的起源和地点。 卡内基基金会旗下新加坡研究中心卡内基中国于 9 月发布的一项研究报告称，根据大样本，参加 2025 年会议的作者中有 57% 在中国获得本科学位（高于三年前的 46%），但美国仍然吸引着研究生学习者，吸引了大约五分之一的本科生（参见 go.nature.com/4yfsl4v）。 然而，美国的吸引力似乎正在减弱。 研究发现，中国科学家越来越多地呆在家里。 在 NeurIPS 上发表文章的在中国获得本科学位的研究人员中，69% 仍在中国，高于 2022 年的 57%（参见“人工智能人才职业道路”）。 这种留住本土顶尖人工智能人才的能力高于欧洲（60%），但落后于美国（89%）。 一项相关统计数据显示，尽管 2024-25 年有 63,000 名中国学生在美国学习数学或计算机科学，但这比五年前减少了 20%。 香港人工智能和技术领域的独立分析师 Grace Shao 表示，这一下降的原因之一是中美地缘政治竞争的影响正在渗透到研究领域。 她说，现在很多中国人在美国“感觉不太舒服，或者在同龄人中感到敌意”。 每一位接受《自然》杂志采访的中国学生都表示，签证问题是前往美国的首要问题。 越来越多的签证被延迟，美国政府试图限制签证的期限，尽管这一点在法庭上受到质疑。 由于新的签证规定可能会影响现有学生重新进入美国，因此一些在美国的中国公民急于回国。 行进方向</p><p>数据尚不清楚已经在美国的人工智能研究人员是否正在涌回中国。 媒体报道往往集中在高调的海归身上，比如 Moonshot 的创始人杨志林，他于 2023 年创建了这家总部位于北京的公司，并于 2019 年在宾夕法尼亚州匹兹堡的卡内基梅隆大学获得了博士学位。但真实情况更为微妙。 卡内基基金会的一项研究表明，美国仍然能够留住备受瞩目的人工智能研究人员（请参阅 go.nature.com/3vxhdic）。 在 NeurIPS 发表论文的作者样本中，87% 2019 年在美国的华裔研究人员（在中国完成本科学位的研究人员）到 2025 年仍留在美国。但数字科学研究表明，当考虑所有积极发表论文的人工智能研究人员的隶属关系变化时，人才流动的最终方向是美国人才流向中国。 对人工智能相关学术论文的分析显示，中国在数量和影响力方面领先于美国。 数字科学研究发现，中国在学术产出（无论是引用量还是数量）以及人工智能相关专利方面均占据主导地位。 研究指出，重点大学和人工智能公司遍布中国各地，中心位于北京、上海、杭州和深圳，有 156 个研究机构，每个机构每年发表 50 多篇人工智能论文。 研究质量也在提高：根据《经济学人》的分析（参见 go.nature.com/4i1ka6e），到 2025 年，NeurIPS 会议中中国的主要作者数量首次超过美国或欧洲。 但其他统计数据却讲述了不同的故事。 总体而言，根据斯坦福人工智能指数 20262，美国比中国拥有更高影响力的专利和更引人注目的人工智能模型。根据 7 月 3 日发布的预印本，发表数据可能会扭曲人工智能的进步，因为中国企业比美国初创企业更有可能发表科学论文。 中国学者还表示，为了提升自己的职业生涯，他们面临着发表论文的巨大压力。 从根本上来说，美国仍然拥有世界上最先进的人工智能。 总部位于加利福尼亚州旧金山的 OpenAI 和 Anthropic 的模型在系统功能排行榜上名列前茅。 “在美国模型中，中国可能落后三到七个月，”辛格说。</p><p>滞后的原因之一是中国训练和运行尖端模型所需的计算芯片要少得多。 自2022年以来，出于国家安全考虑，美国限制向中国出口被称为图形处理单元（GPU）的强大芯片。 中国公司正在竞相制造自己的高质量芯片，但目前还没有能与美国公司使用的芯片相媲美的。 斯坦福大学的报告显示，中国的现金普遍也不太充裕，到 2025 年，美国的私人人工智能投资将达到中国的 23 倍以上。 邵说，中国企业缺乏这些资源是他们的主要瓶颈。 效率就是一切 降低…</p></div><p class="fulltext-src"><a href="https://www.nature.com/articles/d41586-026-03223-8" rel="noopener noreferrer">查看原文</a></p></details></div></article><article class="card has-media"><figure class="card-media"><img src="https://www.nasa.gov/wp-content/uploads/2026/10/ingenuity-airfoil-clf5605.png" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.closest('figure').style.display='none'"></figure><div class="card-body"><h3 class="card-title"><span class="rank">30</span> NASA Experimental Mars Helicopter Blade Designs Target Longer Flights</h3><p class="card-meta">延伸关注 · NASA Breaking · 2026-10-21 00:02</p><p class="card-summary">NASA researchers are developing the future of flight on Mars, laying the ground…</p><p class="card-impact"><span class="label">影响</span> 围绕research/nasa，可能影响科研议程或公共卫生响应</p><details class="fulltext"><summary aria-label="展开全文"><span class="expand-mark" aria-hidden="true">﹀</span></summary><div class="fulltext-body"><p>匠心精神 漫游x-0201 美国宇航局研究人员正在开发火星飞行的未来，为直升机奠定基础，使其能够在这颗红色星球上进行科学研究时飞得更高更远。 利用高保真计算机模拟和风洞测试，工程师们正在重新设计可承载下一代火星飞行器的旋翼飞机叶片。</p><p>美国宇航局的“聪明号”直升机创造了历史，成为第一架在另一个星球上飞行的动力飞机。 SkyFall 任务计划于 2028 年发射，以三架直升机前往火星探索为基础。 这两项任务都使用了专为在火星稀薄大气层中运行而设计的叶片，其弯曲边缘让人想起但与地球上使用的叶片不同。</p><p>研究人员正在探索更薄、更锋利的非常规叶片设计，旨在使“天幕杀机”之后的未来任务能够扩大其在火星上的单次飞行范围。 美国宇航局位于加州硅谷的艾姆斯研究中心的一个团队正在与英国伦敦帝国理工学院和日本名古屋大学合作，测试一种新的叶片横截面或翼型，有望显着提高火星上的空气动力学性能。</p><p>研究人员使用针对火星条件调整的先进模拟和算法设计了名为“roamx-0201”的新机翼，为研究人员指明了更薄、不对称的形状。 随后的风洞测试表明，优化的设计提高了性能，并且能够在危险的飞行条件下更好地恢复。</p><p>研究人员使用高保真模拟工具来分析Roamx-0201翼型的性能，并将其与Ingenuity的容量进行比较。 他们发现，重新设计的叶片可以使未来的火星直升机在携带科学仪器的情况下，将不间断飞行的距离从“聪明号”的0.7公里扩大到18.7公里。 9月22日美国航空航天学会杂志上发表的一篇论文宣布了这一发现。</p><p>Roamx-0201 叶片表现良好，部分原因是它们能够以更高的速度运行更长时间，然后才会出现“阻力发散”现象，即当转子接近音速（火星上的音速比地球上的音速低）时，性能会突然下降。</p><p>新叶片与早期设计的不同之处还在于它如何利用湍流产生升力。 当空气流过旋翼机叶片时，会形成一个薄薄的区域，称为“边界层”。 新翼型有意直接在前缘扰乱翼型前部边界层的流动，从而产生一种扰动，与直觉相反，这种扰动将叶片向上拉，从而比早期设计更有效地提升旋翼机。</p><p>旋翼机面临的另一个挑战是“失速”，这是一种空气动力条件，在气流角度变化后，性能急剧下降，飞行变得不稳定。 Ingenuity 的叶片在失速时性能急剧下降，但在研究的条件下，roamx-0201 设计显示出显着改善的失速行为。 这意味着未来的直升机可以在更大范围的飞行角度下安全运行。</p><p>虽然该技术尚未为火星做好准备，但测试正在帮助工程师理解和解决计算预测与实际性能之间的差异。 NASA 正在进行的研究旨在打造更高效的火星直升机，可以飞得更远，携带更多有效载荷，并解锁新的科学和发现任务。</p></div><p class="fulltext-src"><a href="https://www.nasa.gov/science-research/aeronautics-research/nasa-experimental-mars-helicopter-blade-designs-target-longer-flights/" rel="noopener noreferrer">查看原文</a></p></details></div></article></section>
+<details class="footer-notes"><summary>采集说明</summary><ul class="notes-list"><li>覆盖窗口：10-20 07:59–10-21 07:59</li><li>未扩展：严格约 24h 窗口</li><li>生成时间：2026-10-21T07:59:11.865426+08:00</li><li>严格 24h 内且时间戳可靠条目：223；时间戳不可靠：75</li><li>事件簇数：287；入选独立事件：30</li><li>失败来源（已跳过）：<ul><li>BBC Technology: ConnectTimeout: HTTPConnectionPool(host=&#x27;feeds.bbci.co.uk&#x27;, port=80): Max retries exceeded with url: /news/technology/rss.xml (Caused by ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x7f4cf6075bd0&gt;, &#x27;Connection to feeds.bbci.co.uk timed out. (connect timeout=15)&#x27;)) (attempts=3)</li><li>BBC World: ConnectTimeout: HTTPConnectionPool(host=&#x27;feeds.bbci.co.uk&#x27;, port=80): Max retries exceeded with url: /news/world/rss.xml (Caused by ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x7f4cf6134e10&gt;, &#x27;Connection to feeds.bbci.co.uk timed out. (connect timeout=15)&#x27;)) (attempts=3)</li><li>BBC Business: ConnectTimeout: HTTPConnectionPool(host=&#x27;feeds.bbci.co.uk&#x27;, port=80): Max retries exceeded with url: /news/business/rss.xml (Caused by ConnectTimeoutError(&lt;urllib3.connection.HTTPConnection object at 0x7f4cf61347d0&gt;, &#x27;Connection to feeds.bbci.co.uk timed out. (connect timeout=15)&#x27;)) (attempts=3)</li></ul></li><li>源状态汇总：ok=17 fail=3</li></ul></details>
+</main>
+</body>
+</html>
